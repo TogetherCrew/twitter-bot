@@ -1,3 +1,7 @@
+from datetime import datetime
+from typing import Type
+
+
 class BaseProperties:
     created_at: str = "createdAt"
 
@@ -43,7 +47,10 @@ class EdgeLabels:
 
 class Properties:
     def __init__(
-        self, property_name: str, property_value: str, property_format: str
+        self,
+        property_name: str,
+        property_value: str,
+        property_format: Type[str] | Type[list] | Type[datetime] | Type[int],
     ) -> None:
         """
         The properties class for setting a property in a cypher query

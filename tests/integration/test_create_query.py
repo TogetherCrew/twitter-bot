@@ -1,5 +1,7 @@
 from datetime import datetime
-from query_creator.enums_data import NodeLabels, Properties, TwitterAccountProperties
+
+from query_creator.enums_data import (NodeLabels, Properties,
+                                      TwitterAccountProperties)
 from query_creator.utils import create_query
 
 
@@ -47,7 +49,8 @@ def test_create_query_multiple_property():
     )
 
     print(query)
-    assert (  # flake8: noqa
-        query
-        == """CREATE (a:TwitterAccount {userName: 'sepehr', bio: 'My Age is 22 :)', userId: '123456', createdAt: 1681740235000})"""
-    )
+    expected_query = "CREATE (a:TwitterAccount {userName: 'sepehr', "
+    expected_query += "bio: 'My Age is 22 :)', "
+    expected_query += "userId: '123456', createdAt: 1681740235000})"
+
+    assert query == expected_query

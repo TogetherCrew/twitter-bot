@@ -1,11 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-# fmt: off
-from .utils import (create_query, relation_query, tweet_type_finder,
-                   update_query)
-
-# fmt: on
+from .utils import create_query, relation_query, tweet_type_finder, update_query
 
 from query_creator.enums_data import (  # isort: skip
     EdgeLabels,
@@ -24,10 +20,10 @@ Tweets's structure: {
     text: text body of tweet,
     image_url: urls for images in this tweet (list),
     video_url: urls for videos in this tweet (list),
-    type: showing the type of tweet (quote, reply etc.) 
+    type: showing the type of tweet (quote, reply etc.)
     even using refrenced_tweets for this section,
     hashtags: contains hashtags of this tweet (list),
-    account_mentions: contains list of accounts' id 
+    account_mentions: contains list of accounts' id
     and username which are mentioned (list),
     likes: shows accounts who are like this tweet (list),
     replies: shows accounts who are reply this tweet (list),

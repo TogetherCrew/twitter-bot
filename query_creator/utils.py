@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timezone
+
 from .enums_data import EdgeLabels, Properties
 
 
@@ -143,11 +144,11 @@ def make_val_by_type(
 
     Returns:
     ----------
-    converted_data : str | int | datetime | list
+    converted_data : str | int | list
         the converted data to be retuernd
         if datetime, the format must match `%Y-%m-%d %H:%M:%S%z`
     """
-    converted_data: str | int | datetime | list
+    converted_data: str | int | list
 
     if type_val is str:
         # def fix_quotation_marks(text):
