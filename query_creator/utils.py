@@ -1,4 +1,5 @@
 import logging
+from typing import Type
 from datetime import datetime, timezone
 
 from .enums_data import EdgeLabels, Properties
@@ -129,7 +130,7 @@ def relation_query(
 
 
 def make_val_by_type(
-    value: str, type_val: str | datetime | int | list
+    value: str, type_val: Type[str] | Type[datetime] | Type[int] | Type[list]
 ) -> str | int | list:
     """
     In this function, we try to translate value based on the given type
