@@ -18,7 +18,6 @@ from query_creator.enums_data import (  # isort: skip
 )
 
 
-
 """
 Tweets's structure: {
     tweetId: an unique id for every tweet,
@@ -235,8 +234,8 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     Properties(TweetProperties.tweet_id, tweet["tweet_id"], str),
                     relation_name=EdgeLabels.liked,
                     relation_properties=[
-                        Properties('', '', list)
-                    ], # BUG: no createdAt in available data for relation_properties
+                        Properties("", "", list)
+                    ],  # BUG: no createdAt in available data for relation_properties
                 )
                 cypher_queries.append(query)
 
@@ -338,7 +337,9 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     Properties(TwitterAccountProperties.user_id, ret["user_id"], str),
                     Properties(TweetProperties.tweet_id, tweet["tweet_id"], str),
                     relation_name=EdgeLabels.retweeted,
-                    relation_properties=None,  # BUG: Where's the createdAt?
+                    relation_properties=[
+                        Properties("", "", list)
+                    ],  # BUG: no createdAt in available data for relation_properties
                 )
                 cypher_queries.append(query)
 
