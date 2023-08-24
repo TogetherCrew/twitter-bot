@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from query_creator.utils import ( # isort: skip
+from query_creator.utils import (  # isort: skip
     create_query,
     relation_query,
     tweet_type_finder,
@@ -16,6 +16,8 @@ from query_creator.enums_data import (  # isort: skip
     TweetProperties,
     TwitterAccountProperties,
 )
+
+
 
 """
 Tweets's structure: {
@@ -232,7 +234,9 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     Properties(TwitterAccountProperties.user_id, like["user_id"], str),
                     Properties(TweetProperties.tweet_id, tweet["tweet_id"], str),
                     relation_name=EdgeLabels.liked,
-                    relation_properties=None,  # BUG: where's the createdAt?
+                    relation_properties=[
+                        Properties('', '', list)
+                    ], # BUG: no createdAt in available data for relation_properties
                 )
                 cypher_queries.append(query)
 
