@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from query_creator.enums_data import (NodeLabels, Properties,
-                                      TwitterAccountProperties)
+from query_creator.enums_data import NodeLabels, Properties, TwitterAccountProperties
 from query_creator.utils import create_query
 
 

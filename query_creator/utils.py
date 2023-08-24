@@ -1,8 +1,8 @@
 import logging
-from typing import Type
 from datetime import datetime, timezone
+from typing import Type
 
-from .enums_data import EdgeLabels, Properties
+from query_creator.enums_data import EdgeLabels, Properties
 
 
 def create_query(node_label: str, properties: list[Properties]) -> str:

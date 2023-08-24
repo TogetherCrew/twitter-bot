@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from query_creator.enums_data import (EdgeLabels, NodeLabels, Properties,
-                                      TweetProperties)
+from query_creator.enums_data import EdgeLabels, NodeLabels, Properties, TweetProperties
 from query_creator.utils import relation_query
 
 
