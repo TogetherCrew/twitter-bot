@@ -21,7 +21,7 @@ def test_relation_query_single_property():
     print("query: ", query)
 
     assert (
-        """MATCH (a:Tweet {authorId:'123321'}), (b:Tweet {authorId:'345543'})"""
+        "MERGE (a:Tweet {authorId:'123321'}) MERGE (b:Tweet {authorId:'345543'})"
         in query
     )
     assert """MERGE (a)-[:QUOTED {createdAt: 1681740235000}]->(b)""" in query
@@ -45,7 +45,7 @@ def test_relation_query_multiple_properties():
     print("query: ", query)
 
     assert (
-        """MATCH (a:Tweet {authorId:'123321'}), (b:Tweet {authorId:'345543'})"""
+        "MERGE (a:Tweet {authorId:'123321'}) MERGE (b:Tweet {authorId:'345543'})"
         in query
     )
     assert (

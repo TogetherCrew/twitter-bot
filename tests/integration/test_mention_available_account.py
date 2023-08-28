@@ -35,8 +35,8 @@ def test_mention_available_account():
 
     queries = create_twitter_data_query([sample_data])
 
-    query1 = "MATCH (a:Tweet {tweetId:'000000'}), "
-    query1 += "(b:TwitterAccount {userId:'123456'}) "
+    query1 = "MERGE (a:Tweet {tweetId:'000000'}) "
+    query1 += "MERGE (b:TwitterAccount {userId:'123456'}) "
     query1 += "MERGE (a)-[:MENTIONED {createdAt: 1681505818000}]->(b)"
     assert query1 in queries
 

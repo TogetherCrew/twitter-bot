@@ -1,7 +1,8 @@
 from query_creator.cypher_query_creator import create_twitter_data_query
+from neo4j_connection import connect_neo4j
 
 
-def test_create_hashtags():
+def test_create_hashtags_neo4j():
     sample_data = {
         "tweet_id": "000000",
         "created_at": "2023-04-14 20:56:58+00:00",
@@ -31,18 +32,20 @@ def test_create_hashtags():
 
     print(queries)
 
-    query1 = """CREATE (a:Hashtag {hashtag: 'jobs'})"""
-    assert query1 in queries
+    neo4j_ops = connect_neo4j()
+    neo4j_ops.gds.run_cypher(
+        """
+        MATCH (n) DETACH DELETE (n)
+        """
+    )
+    neo4j_ops.store_data_neo4j(query_list=queries, message="test_create_hashtags")
 
-    query2 = """CREATE (a:Hashtag {hashtag: 'web3'})"""
-    assert query2 in queries
-
-    query3 = """MERGE (a:Tweet {tweetId:'000000'}) """
-    query3 += """MERGE (b:Hashtag {hashtag:'jobs'}) """
-    query3 += """MERGE (a)-[:HASHTAGGED {createdAt: 1681505818000}]->(b)"""
-    assert query3 in queries
-
-    query4 = """MERGE (a:Tweet {tweetId:'000000'}) """
-    query4 += """MERGE (b:Hashtag {hashtag:'web3'}) """
-    query4 += """MERGE (a)-[:HASHTAGGED {createdAt: 1681505818000}]->(b)"""
-    assert query4 in queries
+    results = neo4j_ops.gds.run_cypher(
+        """
+        MATCH (h:Hashtag)
+        RETURN
+        h{.*} as h
+        """
+    )
+    for _, row in results.iterrows():
+        assert row["h"]["hashtag"] in ["web3", "jobs"]

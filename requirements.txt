@@ -31,3 +31,4 @@ tc-messageBroker==1.4.0
 tomli==2.0.1
 types-pyOpenSSL==23.2.0.2
 tzdata==2023.3
+tc-neo4j-lib

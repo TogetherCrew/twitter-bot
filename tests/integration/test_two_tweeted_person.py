@@ -118,8 +118,8 @@ def test_create_tweeted_person():
 
     assert query2 in queries
 
-    query3 = "MATCH (a:TwitterAccount {userId:'89129821'}), "
-    query3 += "(b:Tweet {tweetId:'000000'}) "
+    query3 = "MERGE (a:TwitterAccount {userId:'89129821'}) "
+    query3 += "MERGE (b:Tweet {tweetId:'000000'}) "
     query3 += "MERGE (a)-[:TWEETED {createdAt: 1679095170000}]->(b)"
 
     assert query3 in queries
@@ -128,8 +128,8 @@ def test_create_tweeted_person():
 
     assert query4 in queries
 
-    query5 = "MATCH (a:Tweet {tweetId:'000000'}), "
-    query5 += "(b:TwitterAccount {userId:'1111111'}) "
+    query5 = "MERGE (a:Tweet {tweetId:'000000'}) "
+    query5 += "MERGE (b:TwitterAccount {userId:'1111111'}) "
     query5 += "MERGE (a)-[:MENTIONED {createdAt: 1679095170000}]->(b)"
 
     assert query5 in queries
@@ -152,7 +152,8 @@ def test_create_tweeted_person():
     query10 = "CREATE (a:TwitterAccount {userId: '09458723', userName: 'Ac2'})"
     assert query10 in queries
 
-    query11 = "MATCH (a:Tweet {tweetId:'66666666'}), (b:Tweet {tweetId:'8374981'}) "
+    query11 = "MERGE (a:Tweet {tweetId:'66666666'}) "
+    query11 += "MERGE (b:Tweet {tweetId:'8374981'}) "
     query11 += "MERGE (a)-[:RETWEETED {createdAt: 1678473822000}]->(b)"
 
     assert query11 in queries

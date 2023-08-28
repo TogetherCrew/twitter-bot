@@ -29,11 +29,12 @@ def test_reply_query():
 
     queries = create_twitter_data_query([sample_data])
 
-    query = "MATCH (a:Tweet {tweetId:'000000'}), (b:Tweet {tweetId:'8765432'}) "
+    query = "MERGE (a:Tweet {tweetId:'000000'}) "
+    query += "MERGE (b:Tweet {tweetId:'8765432'}) "
     query += "MERGE (a)-[:REPLIED {createdAt: 1672065313000}]->(b)"
 
     assert query in queries
 
-    query2 = "MATCH (a:Tweet {tweetId:'000000'}), "
-    query2 += "(b:TwitterAccount {userId:'535353'}) "
+    query2 = "MERGE (a:Tweet {tweetId:'000000'}) "
+    query2 += "MERGE (b:TwitterAccount {userId:'535353'}) "
     query2 += "MERGE (a)-[:MENTIONED {createdAt: 1672065313000}]->(b)"

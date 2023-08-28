@@ -109,8 +109,8 @@ def relation_query(
         match_properties2.property_value, match_properties2.property_format
     )
 
-    query = f"MATCH (a:{node_label1} {{{match_properties1.property_name}:{val1}}}), "
-    query += f"(b:{node_label2} {{{match_properties2.property_name}:{val2}}}) "
+    query = f"MERGE (a:{node_label1} {{{match_properties1.property_name}:{val1}}}) "
+    query += f"MERGE (b:{node_label2} {{{match_properties2.property_name}:{val2}}}) "
     query += f"MERGE (a)-[:{relation_name} "
 
     # for properties
