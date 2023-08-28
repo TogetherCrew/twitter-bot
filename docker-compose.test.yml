@@ -29,6 +29,8 @@ services:
       - SAGA_DB_COLLECTION=saga
       - SENTRY_DSN=sample_dsn
       - SENTRY_ENV=local
+    networks:
+      - python_service_network
     volumes:
       - ./coverage:/project/coverage
     depends_on:
@@ -44,6 +46,8 @@ services:
     image: "redis:7.0.12-alpine"
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+    networks:
+      - python_service_network
   mongo:
     image: "mongo:6.0.8"
     environment:
@@ -55,6 +59,8 @@ services:
       timeout: 10s
       retries: 2
       start_period: 40s
+    networks:
+      - python_service_network
   neo4j:
     image: "neo4j:5.9.0"
     environment:
@@ -67,6 +73,8 @@ services:
       timeout: 10s
       retries: 2
       start_period: 40s
+    networks:
+      - python_service_network
   rabbitmq:
     image: "rabbitmq:3-management-alpine"
     environment:
@@ -78,3 +86,9 @@ services:
       timeout: 30s
       retries: 2
       start_period: 40s
+    networks:
+      - python_service_network
+
+networks:
+  python_service_network:
+    driver: bridge

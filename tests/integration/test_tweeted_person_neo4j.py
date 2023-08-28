@@ -1,5 +1,5 @@
-from query_creator.cypher_query_creator import create_twitter_data_query
 from neo4j_connection import connect_neo4j
+from query_creator.cypher_query_creator import create_twitter_data_query
 
 
 def test_create_tweeted_person_neo4j():
@@ -43,8 +43,8 @@ def test_create_tweeted_person_neo4j():
 
     results_tweet = neo4j_ops.gds.run_cypher(
         """
-        MATCH (t:Tweet) 
-        RETURN t{.*} as tweet 
+        MATCH (t:Tweet)
+        RETURN t{.*} as tweet
         """
     )
     assert len(results_tweet) == 1
@@ -88,7 +88,7 @@ def test_create_tweeted_person_neo4j():
     results = neo4j_ops.gds.run_cypher(
         """
         MATCH (a:Tweet)-[r:MENTIONED]->(b:TwitterAccount)
-        RETURN 
+        RETURN
             r{.*} as mentioned,
             a{.*} as tweet,
             b{.*} as account
