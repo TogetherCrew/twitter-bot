@@ -31,8 +31,6 @@ services:
       - SENTRY_ENV=local
     volumes:
       - ./coverage:/project/coverage
-    networks:
-      - python_service_network
     depends_on:
       mongo:
         condition: service_healthy
@@ -51,11 +49,6 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=pass
-  rabbitmq:
-    image: "rabbitmq:3-management-alpine"
-    environment:
-      - RABBITMQ_DEFAULT_USER=root
-      - RABBITMQ_DEFAULT_PASS=pass
   neo4j:
     image: "neo4j:5.9.0"
     environment:
