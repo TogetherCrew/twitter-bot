@@ -33,15 +33,16 @@ def test_create_tweeted_person():
     queries = create_twitter_data_query([sample_data])
 
     print(queries)
-    query1 = """CREATE (a:Tweet {tweetId: '0000', createdAt: 1681348911000, """
-    query1 += f"authorId: '12344321', text: '{sample_data['text']}', "
-    query1 += f"""likeCounts: 5, imageUrl: {str(sample_data['image_url'])}, """
-    query1 += f"""videoUrl: {str(sample_data['video_url'])}}})"""
+    query1 = """MERGE (a:Tweet {tweetId: '0000'}) """
+    query1 += "SET a.createdAt=1681348911000, "
+    query1 += f"a.authorId='12344321', a.text='{sample_data['text']}', "
+    query1 += f"""a.likeCounts=5, a.imageUrl={str(sample_data['image_url'])}, """
+    query1 += f"""a.videoUrl={str(sample_data['video_url'])}"""
 
     assert query1 in queries
 
-    query2 = "CREATE (a:TwitterAccount {userId: '12344321', "
-    query2 += "bio: 'Amazing man with a perfect profile!'})"
+    query2 = "MERGE (a:TwitterAccount {userId: '12344321'}) "
+    query2 += "SET a.bio='Amazing man with a perfect profile!'"
 
     assert query2 in queries
 
@@ -51,7 +52,7 @@ def test_create_tweeted_person():
 
     assert query3 in queries
 
-    query4 = "CREATE (a:TwitterAccount {userId: '987789', userName: 'user2'})"
+    query4 = "MERGE (a:TwitterAccount {userId: '987789'}) SET a.userName='user2'"
 
     assert query4 in queries
 

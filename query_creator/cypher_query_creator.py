@@ -80,7 +80,7 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
         j_iter += 1
         features = []
 
-        features.append(Properties(TweetProperties.tweet_id, tweet["tweet_id"], str))
+        # features.append(Properties(TweetProperties.tweet_id, tweet["tweet_id"], str))
         features.append(
             Properties(TweetProperties.created_at, tweet["created_at"], datetime)
         )
@@ -108,7 +108,11 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             )
             cypher_queries.append(query)
         else:
-            query = create_query(NodeLabels.tweet, features)
+            query = create_query(
+                NodeLabels.tweet,
+                Properties(TweetProperties.tweet_id, tweet["tweet_id"], str),
+                features,
+            )
             tweets.add(str(tweet["tweet_id"]))
             cypher_queries.append(query)
 
@@ -121,13 +125,17 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             cypher_queries.append(query)
         else:
             acc_features = []
-            acc_features.append(
-                Properties(TwitterAccountProperties.user_id, tweet["author_id"], str)
-            )
+            # acc_features.append(
+            #     Properties(TwitterAccountProperties.user_id, tweet["author_id"], str)
+            # )
             acc_features.append(
                 Properties(TwitterAccountProperties.bio, tweet["author_bio"], str)
             )
-            query = create_query(NodeLabels.twitter_account, acc_features)
+            query = create_query(
+                NodeLabels.twitter_account,
+                Properties(TwitterAccountProperties.user_id, tweet["author_id"], str),
+                acc_features,
+            )
             cypher_queries.append(query)
             accounts.add(str(tweet["author_id"]))
 
@@ -145,7 +153,9 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
         for h in tweet["hashtags"]:
             if h not in hashtags:
                 query = create_query(
-                    NodeLabels.hashtag, [Properties(HashtagProperties.hashtag, h, str)]
+                    NodeLabels.hashtag,
+                    Properties(HashtagProperties.hashtag, h, str),
+                    [],
                 )
                 hashtags.add(h)
             cypher_queries.append(query)
@@ -174,13 +184,17 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                 )
                 cypher_queries.append(query)
             else:
-                m_features.append(
-                    Properties(TwitterAccountProperties.user_id, m["id"], str)
-                )
+                # m_features.append(
+                #     Properties(TwitterAccountProperties.user_id, m["id"], str)
+                # )
                 m_features.append(
                     Properties(TwitterAccountProperties.user_name, m["username"], str)
                 )
-                query = create_query(NodeLabels.twitter_account, m_features)
+                query = create_query(
+                    NodeLabels.twitter_account,
+                    Properties(TwitterAccountProperties.user_id, m["id"], str),
+                    m_features,
+                )
                 cypher_queries.append(query)
                 accounts.add(str(m["id"]))
             query = relation_query(
@@ -218,12 +232,18 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                             TwitterAccountProperties.user_name, like["username"], str
                         )
                     )
-                    l_features.append(
+                    # l_features.append(
+                    #     Properties(
+                    #         TwitterAccountProperties.user_id, like["user_id"], str
+                    #     )
+                    # )
+                    query = create_query(
+                        NodeLabels.twitter_account,
                         Properties(
                             TwitterAccountProperties.user_id, like["user_id"], str
-                        )
+                        ),
+                        l_features,
                     )
-                    query = create_query(NodeLabels.twitter_account, l_features)
                     cypher_queries.append(query)
                     accounts.add(str(like["user_id"]))
 
@@ -244,9 +264,9 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             for reply in tweet["replies"]:
                 r_features = []
                 if str(reply["id"]) not in tweets:
-                    r_features.append(
-                        Properties(TweetProperties.tweet_id, reply["id"], str)
-                    )
+                    # r_features.append(
+                    #     Properties(TweetProperties.tweet_id, reply["id"], str)
+                    # )
                     r_features.append(
                         Properties(TweetProperties.author_id, reply["author_id"], str)
                     )
@@ -262,18 +282,30 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     )
                     r_features.append(Properties("type", EdgeLabels.replied, str))
 
-                    query = create_query(NodeLabels.tweet, r_features)
+                    query = create_query(
+                        NodeLabels.tweet,
+                        r_features.append(
+                            Properties(TweetProperties.tweet_id, reply["id"], str)
+                        ),
+                        r_features,
+                    )
                     cypher_queries.append(query)
                     tweets.add(str(reply["id"]))
 
                 if str(reply["author_id"]) not in accounts:
                     tmp_f = []
-                    tmp_f.append(
+                    # tmp_f.append(
+                    #     Properties(
+                    #         TwitterAccountProperties.user_id, reply["author_id"], str
+                    #     )
+                    # )
+                    query = create_query(
+                        NodeLabels.twitter_account,
                         Properties(
                             TwitterAccountProperties.user_id, reply["author_id"], str
-                        )
+                        ),
+                        tmp_f,
                     )
-                    query = create_query(NodeLabels.twitter_account, tmp_f)
                     cypher_queries.append(query)
                     accounts.add(str(reply["author_id"]))
 
@@ -316,18 +348,24 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             for ret in tweet["retweets"]:
                 ret_features = []
                 if str(ret["user_id"]) not in accounts:
-                    ret_features.append(
-                        Properties(
-                            TwitterAccountProperties.user_id, ret["user_id"], str
-                        )
-                    )
+                    # ret_features.append(
+                    #     Properties(
+                    #         TwitterAccountProperties.user_id, ret["user_id"], str
+                    #     )
+                    # )
                     ret_features.append(
                         Properties(
                             TwitterAccountProperties.user_name, ret["username"], str
                         )
                     )
                     ret_features.append(Properties("type", EdgeLabels.retweeted, str))
-                    query = create_query(NodeLabels.twitter_account, ret_features)
+                    query = create_query(
+                        NodeLabels.twitter_account,
+                        Properties(
+                            TwitterAccountProperties.user_id, ret["user_id"], str
+                        ),
+                        ret_features,
+                    )
                     cypher_queries.append(query)
                     accounts.add(str(ret["user_id"]))
 
@@ -348,9 +386,9 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             for quote in tweet["quote_retweets"]:
                 q_features = []
                 if str(quote["id"]) not in tweets:
-                    q_features.append(
-                        Properties(TweetProperties.tweet_id, quote["id"], str)
-                    )
+                    # q_features.append(
+                    #     Properties(TweetProperties.tweet_id, quote["id"], str)
+                    # )
                     q_features.append(
                         Properties(TweetProperties.author_id, quote["author_id"], str)
                     )
@@ -365,20 +403,23 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                             datetime,
                         )
                     )
-                    query = create_query(NodeLabels.tweet, q_features)
+                    query = create_query(
+                        NodeLabels.tweet,
+                        Properties(TweetProperties.tweet_id, quote["id"], str),
+                        q_features,
+                    )
                     cypher_queries.append(query)
                     tweets.add(str(quote["id"]))
 
                 if str(quote["author_id"]) not in accounts:
                     query = create_query(
                         NodeLabels.twitter_account,
-                        [
-                            Properties(
-                                TwitterAccountProperties.user_id,
-                                quote["author_id"],
-                                str,
-                            )
-                        ],
+                        Properties(
+                            TwitterAccountProperties.user_id,
+                            quote["author_id"],
+                            str,
+                        ),
+                        [],
                     )
                     accounts.add(str(quote["author_id"]))
                     cypher_queries.append(query)

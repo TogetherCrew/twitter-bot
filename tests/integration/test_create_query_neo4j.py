@@ -8,9 +8,8 @@ from neo4j_connection import connect_neo4j
 def test_create_query_single_property_neo4j():
     query = create_query(
         node_label=NodeLabels.twitter_account,
-        properties=[
-            Properties(TwitterAccountProperties.user_name, "sepehr", str),
-        ],
+        merge_property=Properties(TwitterAccountProperties.user_name, "sepehr", str),
+        properties=[],
     )
 
     print(query)
@@ -38,8 +37,8 @@ def test_create_query_single_property_neo4j():
 def test_create_query_double_property_neo4j():
     query = create_query(
         node_label=NodeLabels.twitter_account,
+        merge_property=Properties(TwitterAccountProperties.user_name, "sepehr", str),
         properties=[
-            Properties(TwitterAccountProperties.user_name, "sepehr", str),
             Properties(TwitterAccountProperties.bio, "My Age is 22 :)", str),
         ],
     )
@@ -68,10 +67,10 @@ def test_create_query_double_property_neo4j():
 def test_create_query_multiple_property_neo4j():
     query = create_query(
         node_label=NodeLabels.twitter_account,
+        merge_property=Properties(TwitterAccountProperties.user_id, "123456", str),
         properties=[
             Properties(TwitterAccountProperties.user_name, "sepehr", str),
             Properties(TwitterAccountProperties.bio, "My Age is 22 :)", str),
-            Properties(TwitterAccountProperties.user_id, "123456", str),
             Properties(
                 TwitterAccountProperties.created_at,
                 "2023-04-17 14:03:55+00:00",

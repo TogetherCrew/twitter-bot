@@ -107,14 +107,14 @@ def test_create_tweeted_person():
     queries = create_twitter_data_query(sample_data)
 
     print(queries)
-    query1 = """CREATE (a:Tweet {tweetId: '000000', createdAt: 1679095170000, """
-    query1 += "authorId: '89129821', text: 'samplesamplesample', "
-    query1 += "likeCounts: 15})"
+    query1 = "MERGE (a:Tweet {tweetId: '000000'}) SET a.createdAt=1679095170000, "
+    query1 += "a.authorId='89129821', a.text='samplesamplesample', "
+    query1 += "a.likeCounts=15"
 
     assert query1 in queries
 
-    query2 = "CREATE (a:TwitterAccount {userId: '89129821', "
-    query2 += """bio: 'We"re together in togetherCrew'})"""
+    query2 = "MERGE (a:TwitterAccount {userId: '89129821'}) "
+    query2 += """SET a.bio='We"re together in togetherCrew'"""
 
     assert query2 in queries
 
@@ -124,7 +124,7 @@ def test_create_tweeted_person():
 
     assert query3 in queries
 
-    query4 = "CREATE (a:TwitterAccount {userId: '1111111', userName: 'iqwe2qw'})"
+    query4 = "MERGE (a:TwitterAccount {userId: '1111111'}) SET a.userName='iqwe2qw'"
 
     assert query4 in queries
 
@@ -134,11 +134,11 @@ def test_create_tweeted_person():
 
     assert query5 in queries
 
-    query6 = """CREATE (a:TwitterAccount {userId: '222222', userName: 'tashhfa'})"""
+    query6 = "MERGE (a:TwitterAccount {userId: '222222'}) SET a.userName='tashhfa'"
     assert query6 in queries
 
-    query7 = "CREATE (a:Tweet {tweetId: '66666666', createdAt: 1678473822000, "
-    query7 += "authorId: '89129821', text: 'RT sample', likeCounts: 0})"
+    query7 = "MERGE (a:Tweet {tweetId: '66666666'}) SET a.createdAt=1678473822000, "
+    query7 += "a.authorId='89129821', a.text='RT sample', a.likeCounts=0"
 
     assert query7 in queries
 
@@ -146,10 +146,10 @@ def test_create_tweeted_person():
     query8 += """SET a.bio = 'We"re together in togetherCrew'"""
     assert query8 in queries
 
-    query9 = "CREATE (a:TwitterAccount {userId: '567893212', userName: 'Ac1'})"
+    query9 = "MERGE (a:TwitterAccount {userId: '567893212'}) SET a.userName='Ac1'"
     assert query9 in queries
 
-    query10 = "CREATE (a:TwitterAccount {userId: '09458723', userName: 'Ac2'})"
+    query10 = "MERGE (a:TwitterAccount {userId: '09458723'}) SET a.userName='Ac2'"
     assert query10 in queries
 
     query11 = "MERGE (a:Tweet {tweetId:'66666666'}) "

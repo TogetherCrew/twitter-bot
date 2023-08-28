@@ -31,10 +31,10 @@ def test_create_hashtags():
 
     print(queries)
 
-    query1 = """CREATE (a:Hashtag {hashtag: 'jobs'})"""
+    query1 = "MERGE (a:Hashtag {hashtag: 'jobs'}) "
     assert query1 in queries
 
-    query2 = """CREATE (a:Hashtag {hashtag: 'web3'})"""
+    query2 = "MERGE (a:Hashtag {hashtag: 'web3'}) "
     assert query2 in queries
 
     query3 = """MERGE (a:Tweet {tweetId:'000000'}) """
