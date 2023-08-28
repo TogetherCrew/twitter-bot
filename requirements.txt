@@ -8,7 +8,7 @@ dnspython==2.2.1
 exceptiongroup==1.1.0
 iniconfig==2.0.0
 jsonschema==4.17.3
-neo4j==5.10.0
+neo4j==5.8.0
 networkx==3.1
 numpy==1.24.1
 packaging==23.0
