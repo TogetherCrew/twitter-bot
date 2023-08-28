@@ -284,27 +284,19 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
 
                     query = create_query(
                         NodeLabels.tweet,
-                        r_features.append(
-                            Properties(TweetProperties.tweet_id, reply["id"], str)
-                        ),
+                        Properties(TweetProperties.tweet_id, reply["id"], str),
                         r_features,
                     )
                     cypher_queries.append(query)
                     tweets.add(str(reply["id"]))
 
                 if str(reply["author_id"]) not in accounts:
-                    tmp_f = []
-                    # tmp_f.append(
-                    #     Properties(
-                    #         TwitterAccountProperties.user_id, reply["author_id"], str
-                    #     )
-                    # )
                     query = create_query(
                         NodeLabels.twitter_account,
                         Properties(
                             TwitterAccountProperties.user_id, reply["author_id"], str
                         ),
-                        tmp_f,
+                        [],
                     )
                     cypher_queries.append(query)
                     accounts.add(str(reply["author_id"]))
@@ -348,11 +340,6 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             for ret in tweet["retweets"]:
                 ret_features = []
                 if str(ret["user_id"]) not in accounts:
-                    # ret_features.append(
-                    #     Properties(
-                    #         TwitterAccountProperties.user_id, ret["user_id"], str
-                    #     )
-                    # )
                     ret_features.append(
                         Properties(
                             TwitterAccountProperties.user_name, ret["username"], str
@@ -386,9 +373,6 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             for quote in tweet["quote_retweets"]:
                 q_features = []
                 if str(quote["id"]) not in tweets:
-                    # q_features.append(
-                    #     Properties(TweetProperties.tweet_id, quote["id"], str)
-                    # )
                     q_features.append(
                         Properties(TweetProperties.author_id, quote["author_id"], str)
                     )

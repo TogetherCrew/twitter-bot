@@ -1,8 +1,8 @@
 from datetime import datetime
 
+from neo4j_connection import connect_neo4j
 from query_creator.enums_data import NodeLabels, Properties, TwitterAccountProperties
 from query_creator.utils import create_query
-from neo4j_connection import connect_neo4j
 
 
 def test_create_query_single_property_neo4j():

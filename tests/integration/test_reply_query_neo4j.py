@@ -1,5 +1,5 @@
-from query_creator.cypher_query_creator import create_twitter_data_query
 from neo4j_connection import connect_neo4j
+from query_creator.cypher_query_creator import create_twitter_data_query
 
 
 def test_reply_query_neo4j():
@@ -50,8 +50,8 @@ def test_reply_query_neo4j():
 
     results_mention = neo4j_ops.gds.run_cypher(
         """
-        MATCH 
-            (a:Tweet {tweetId: '000000'}) 
+        MATCH
+            (a:Tweet {tweetId: '000000'})
                 -[r:MENTIONED]->(:TwitterAccount {userId: '535353'})
         RETURN r{.*} as mention
         """

@@ -1,5 +1,5 @@
-from query_creator.cypher_query_creator import create_twitter_data_query
 from neo4j_connection import connect_neo4j
+from query_creator.cypher_query_creator import create_twitter_data_query
 
 
 def test_create_hashtags_neo4j():
