@@ -171,3 +171,5 @@ interactions/credentials.py
 interactions/temp.ipynb
 test*.ipynb
 analyzer/rndao_analyzer/analysis/credentials.py
+
+twitter_bot_env/*
