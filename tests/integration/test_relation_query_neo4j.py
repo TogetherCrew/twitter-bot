@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from bot.db.neo4j_connection import connect_neo4j
-from bot.db.enums_data import EdgeLabels, NodeLabels, Properties, TweetProperties
+from bot.db.utils.enums_data import EdgeLabels, NodeLabels, Properties, TweetProperties
 from bot.db.utils import relation_query
 
 

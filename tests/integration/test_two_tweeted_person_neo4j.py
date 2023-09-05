@@ -1,5 +1,5 @@
 from bot.db.neo4j_connection import connect_neo4j
-from bot.db.cypher_query_creator import create_twitter_data_query
+from bot.db.twitter_data_to_cypher import create_twitter_data_query
 
 
 def test_create_two_person_tweeted_neo4j():

@@ -1,4 +1,4 @@
-from bot.db.utils import tweet_type_finder
+from bot.db.utils.referenced_tweet_type_finder import tweet_type_finder
 
 
 def test_tweet_type_finder_replied():

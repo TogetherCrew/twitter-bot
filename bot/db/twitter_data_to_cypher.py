@@ -1,13 +1,12 @@
 from datetime import datetime
 from typing import Any
 
-from .utils import (  # isort: skip
-    create_query,
-    relation_query,
-    tweet_type_finder,
-)
+from .utils.query_create_entity import create_query
+from .utils.query_create_relation import relation_query
+from .utils.referenced_tweet_type_finder import tweet_type_finder
 
-from .enums_data import (  # isort: skip
+
+from .utils.enums_data import (  # isort: skip
     EdgeLabels,
     HashtagProperties,
     NodeLabels,

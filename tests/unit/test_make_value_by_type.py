@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from bot.db.utils import make_val_by_type
+from bot.db.utils.update_value_by_type import make_val_by_type
 
 
 def test_make_value_by_type_input_int():

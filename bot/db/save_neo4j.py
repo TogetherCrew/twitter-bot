@@ -1,8 +1,8 @@
 from typing import Any
 
 from numpy import unique
-from .cypher_query_creator import create_twitter_data_query
-from .neo4j_connection import connect_neo4j
+from .twitter_data_to_cypher import create_twitter_data_query
+from .neo4j_connection import Neo4jConnection
 
 
 def save_tweets_in_neo4j(twitter_data: list[dict[str, Any]], message: str = "") -> None:
@@ -18,7 +18,8 @@ def save_tweets_in_neo4j(twitter_data: list[dict[str, Any]], message: str = "") 
         default is empty
     """
     # connect to neo4j
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     # create related queries
     queries = create_twitter_data_query(twitter_data)
     # store data into database
