@@ -30,6 +30,7 @@ def get_rabbit_mq_credentials() -> dict[str, any]:
 
     return rabbit_mq_creds
 
+
 def prepare_rabbit_mq(rabbit_creds):
     rabbitmq = RabbitMQ(
         broker_url=rabbit_creds["broker_url"],

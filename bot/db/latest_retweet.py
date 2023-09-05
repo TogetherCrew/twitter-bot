@@ -1,8 +1,9 @@
 from .neo4j_connection import Neo4jConnection
 
+
 def get_latest_retweet(
-        user_id : str, 
-    ) -> str:
+    user_id: str,
+) -> str:
     """
     get the user handle to get their latest retweet's tweetId
 
@@ -31,4 +32,3 @@ def get_latest_retweet(
     latest_retweet_id = df_latest_retweet["latest_retweet_id"].iloc[0]
 
     return latest_retweet_id
-

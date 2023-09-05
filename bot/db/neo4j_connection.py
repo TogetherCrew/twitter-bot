@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 from tc_neo4j_lib import Neo4jOps
 
-class Neo4jConnection():
+
+class Neo4jConnection:
     def __init__(self) -> None:
         self.neo4j_ops = self.connect_neo4j()
 

@@ -1,8 +1,9 @@
 from .neo4j_connection import Neo4jConnection
 
+
 def get_latest_quote(
-        user_id : str, 
-    ) -> str:
+    user_id: str,
+) -> str:
     """
     get the user handle to get their latest quote's tweetId
 
@@ -31,5 +32,3 @@ def get_latest_quote(
     latest_quoted_id = df_latest_quote["latest_quoted_id"].iloc[0]
 
     return latest_quoted_id
-
-

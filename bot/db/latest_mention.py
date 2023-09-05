@@ -1,8 +1,9 @@
 from .neo4j_connection import Neo4jConnection
 
+
 def get_latest_mention(
-        user_id : str, 
-    ) -> str:
+    user_id: str,
+) -> str:
     """
     get the user handle to get their latest mantion's tweetId
 
@@ -31,5 +32,3 @@ def get_latest_mention(
     latest_mention_id = df_latest_mention["latest_mention_id"].iloc[0]
 
     return latest_mention_id
-
-
