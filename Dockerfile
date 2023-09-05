@@ -5,8 +5,8 @@ COPY . .
 RUN pip3 install -r requirements.txt
 
 FROM base AS test
-RUN python3 -m coverage run -m pytest tests
-CMD ["python3", "-m", "coverage", "lcov" ,"-o", "coverage/lcov.info"]
+RUN chmod +x docker-entrypoint.sh
+CMD ["./docker-entrypoint.sh"]
 
 FROM base AS prod
 CMD ["python3", "server.py"]

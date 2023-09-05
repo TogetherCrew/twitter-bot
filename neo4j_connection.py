@@ -1,30 +1,31 @@
 import os
 
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
-
-load_dotenv()
-
-user = os.getenv("NEO4J_USER")
-protocol = os.getenv("NEO4J_PROTOCOL")
-password = os.getenv("NEO4J_PASSWORD")
-host = os.getenv("NEO4J_HOST")
-port = os.getenv("NEO4J_PORT")
-db_name = os.getenv("NEO4J_DB")
-
-neo4j_url = f"{protocol}://{host}:{port}"
-neo4j_auth = (user, password)
-
-driver = GraphDatabase.driver(neo4j_url, auth=neo4j_auth)
-with GraphDatabase.driver(neo4j_url, auth=neo4j_auth) as driver:
-    driver.verify_connectivity()
+from tc_neo4j_lib import Neo4jOps
 
 
-def read(cypher, database="neo4j"):
-    records, summary, keys = driver.execute_query(cypher, database_=database)
-    return records, summary, keys
+def connect_neo4j() -> Neo4jOps:
+    load_dotenv()
 
+    protocol = os.getenv("NEO4J_PROTOCOL", "")
+    host = os.getenv("NEO4J_HOST", "")
+    port = os.getenv("NEO4J_PORT", "")
+    user = os.getenv("NEO4J_USER", "")
+    password = os.getenv("NEO4J_PASSWORD", "")
 
-def write(cypher, database="neo4j"):
-    records, summary, keys = driver.execute_query(cypher, database_=database)
-    return summary
+    neo4j_db = os.getenv("NEO4J_DB", "")
+
+    neo4j_ops = Neo4jOps()
+
+    neo4j_ops.set_neo4j_db_info(
+        neo4j_db_name=neo4j_db,
+        neo4j_host=host,
+        neo4j_password=password,
+        neo4j_port=port,
+        neo4j_user=user,
+        neo4j_protocol=protocol,
+    )
+
+    neo4j_ops.neo4j_database_connect()
+
+    return neo4j_ops
