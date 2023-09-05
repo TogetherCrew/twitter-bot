@@ -316,10 +316,6 @@ def extract_twitter_user_information(username: str):
     # 
     # finally get all users's infos that we don't have
 
-
-    # Steps to save data better than before
-    # 1. save all tweets 
-
     mentioned_tweets = get_mentioned_tweets_by_username(username= username)
     save_tweets_in_neo4j(mentioned_tweets)
 
@@ -357,9 +353,4 @@ def extract_twitter_user_information(username: str):
 
 
 
-# extract_twitter_user_information("katerinabohlec")
-
-user_tweets = get_user_tweets(user_handler= "katerinabohlec")
-for i in user_tweets:
-    from pprint import pprint
-    pprint(i.data)
+extract_twitter_user_information("katerinabohlec")
