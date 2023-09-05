@@ -5,7 +5,7 @@ import functools
 from itertools import count
 import tweepy
 
-from bot.db.save_neo4j import save_tweets_in_neo4j
+from db.save_neo4j import save_tweets_in_neo4j
 
 
 def retry_function_if_fail(func, /, *args, **keywords):
@@ -36,6 +36,12 @@ consumer_secret = os.getenv("CONSUMER_SECRET")
 bearer_token = os.getenv("BEARER_TOKEN")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
+print("consumer_key", consumer_key)
+print("consumer_secret", consumer_secret)
+print("bearer_token", bearer_token)
+print("access_token", access_token)
+print("access_token_secret", access_token_secret)
+
 
 
 client = tweepy.Client(

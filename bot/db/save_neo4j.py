@@ -1,7 +1,7 @@
 from typing import Any
 
-from bot.db.cypher_query_creator import create_twitter_data_query
-from bot.db.neo4j_connection import connect_neo4j
+from .cypher_query_creator import create_twitter_data_query
+from .neo4j_connection import connect_neo4j
 
 def save_tweets_in_neo4j(
         twitter_data: list[dict[str, Any]],

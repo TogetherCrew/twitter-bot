@@ -1,14 +1,14 @@
 from datetime import datetime
 from typing import Any
 
-from bot.db.utils import (  # isort: skip
+from .utils import (  # isort: skip
     create_query,
     relation_query,
     tweet_type_finder,
     update_query,
 )
 
-from bot.db.enums_data import (  # isort: skip
+from .enums_data import (  # isort: skip
     EdgeLabels,
     HashtagProperties,
     NodeLabels,
