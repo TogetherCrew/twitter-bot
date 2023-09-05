@@ -1,4 +1,4 @@
-from query_creator.enums_data import BaseProperties
+from bot.db.enums_data import BaseProperties
 
 
 def test_base_properties():

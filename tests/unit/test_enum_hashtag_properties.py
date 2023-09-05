@@ -1,4 +1,4 @@
-from query_creator.enums_data import HashtagProperties
+from bot.db.enums_data import HashtagProperties
 
 
 def test_enum_hashtag_properties():

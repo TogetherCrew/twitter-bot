@@ -1,4 +1,4 @@
-from query_creator.enums_data import TwitterAccountProperties
+from bot.db.enums_data import TwitterAccountProperties
 
 
 def test_enum_twitter_account_properties():

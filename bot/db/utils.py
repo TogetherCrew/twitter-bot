@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Type
 
-from query_creator.enums_data import EdgeLabels, Properties
+from bot.db.enums_data import EdgeLabels, Properties
 
 
 def create_query(

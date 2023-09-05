@@ -1,4 +1,4 @@
-from query_creator.enums_data import NodeLabels
+from bot.db.enums_data import NodeLabels
 
 
 def test_enum_node_labels():

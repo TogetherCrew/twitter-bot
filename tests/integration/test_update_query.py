@@ -1,5 +1,5 @@
-from query_creator.enums_data import NodeLabels, Properties, TweetProperties
-from query_creator.utils import update_query
+from bot.db.enums_data import NodeLabels, Properties, TweetProperties
+from bot.db.utils import update_query
 
 
 def test_update_query_single_add_properties():

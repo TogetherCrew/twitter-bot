@@ -1,4 +1,4 @@
-from query_creator.enums_data import EdgeLabels
+from bot.db.enums_data import EdgeLabels
 
 
 def test_enum_edge_labels():
