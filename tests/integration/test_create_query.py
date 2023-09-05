@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from bot.db.utils.enums_data import NodeLabels, Properties, TwitterAccountProperties
-from bot.db.utils import create_query
+from bot.db.utils.query_create_entity import create_query
 
 
 def test_create_query_single_property():

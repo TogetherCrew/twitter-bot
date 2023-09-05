@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from bot.db.neo4j_connection import connect_neo4j
+from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.utils.enums_data import NodeLabels, Properties, TwitterAccountProperties
-from bot.db.utils import create_query
+from bot.db.utils.query_create_entity import create_query
 
 
 def test_create_query_single_property_neo4j():
@@ -13,7 +13,8 @@ def test_create_query_single_property_neo4j():
     )
 
     print(query)
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
 
     neo4j_ops.gds.run_cypher(
         """
@@ -44,7 +45,8 @@ def test_create_query_double_property_neo4j():
     )
 
     print(query)
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)
@@ -80,7 +82,8 @@ def test_create_query_multiple_property_neo4j():
     )
 
     print(query)
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)

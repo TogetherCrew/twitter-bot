@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from bot.db.neo4j_connection import connect_neo4j
+from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.utils.enums_data import EdgeLabels, NodeLabels, Properties, TweetProperties
-from bot.db.utils import relation_query
+from bot.db.utils.query_create_relation import relation_query
 
 
 def test_relation_query_single_property_no_previous_data():
@@ -18,7 +18,8 @@ def test_relation_query_single_property_no_previous_data():
             )
         ],
     )
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)

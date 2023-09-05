@@ -1,4 +1,4 @@
-from bot.db.neo4j_connection import connect_neo4j
+from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
 
 
@@ -107,7 +107,8 @@ def test_create_two_person_tweeted_neo4j():
 
     queries = create_twitter_data_query(sample_data)
 
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)
