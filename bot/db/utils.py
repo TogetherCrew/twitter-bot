@@ -35,47 +35,11 @@ def create_query(
     if len(properties) != 0:
         query += "SET "
 
-    # query = f"CREATE (a:{node_label} " + "{"
     for idx, property in enumerate(properties):
         value = make_val_by_type(property.property_value, property.property_format)
         query += f"a.{property.property_name}={value}"
 
         if idx + 1 != len(properties):
-            query += ", "
-
-    return query
-
-
-def update_query(
-    node_label: str, match_properties: Properties, add_properties: list[Properties]
-) -> str:
-    """
-    make a query to update a specific node
-    (meaning to add proeprties to it)
-
-    Parameters:
-    ------------
-    node_label : str
-        the node label to add add_properties
-    match_properties : Properties
-        the properties to match the node on (finding node)
-    add_properties : list[Properties]
-        a list of peroperties to add to the matched node
-
-    Returns:
-    ---------
-    query : str
-        the query to update a node properties
-    """
-    val = make_val_by_type(
-        match_properties.property_value, match_properties.property_format
-    )
-    query = f"MERGE (a:{node_label} {{{match_properties.property_name}: {val}}}) SET "
-    for idx, attr in enumerate(add_properties):
-        value = make_val_by_type(attr.property_value, attr.property_format)
-        query += f"a.{attr.property_name} = {value}"
-
-        if idx + 1 != len(add_properties):
             query += ", "
 
     return query
@@ -170,7 +134,7 @@ def make_val_by_type(
                 converted_data = r'"{}"'.format(converted_data)
             else:
                 converted_data = r'"{}"'.format(value)
-            
+
         except Exception as exp:
             logging.error(exp)
             logging.error("cannot convert to string, defaulting to save empty text")

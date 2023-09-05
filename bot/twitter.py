@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+import logging
 import functools
 from itertools import count
 import tweepy
@@ -9,23 +10,23 @@ from db.save_neo4j import save_tweets_in_neo4j
 
 
 def retry_function_if_fail(func, /, *args, **keywords):
-
-
-    retry_number = keywords["retry_number"] if "retry_number" in keywords else 5 #default retry number 
-    function = functools.partial(
-        func, *args, **keywords
-    )
+    retry_number = (
+        keywords["retry_number"] if "retry_number" in keywords else 5
+    )  # default retry number
+    function = functools.partial(func, *args, **keywords)
     for counter in count(1):
         try:
             response = function()
             return response
-        
+
         except Exception as ex:
             print("[Exception(retry_function_if_fail)]", ex)
-        
+
         finally:
             if counter == retry_number:
-                raise RuntimeError("Something went wrong when communicating with Twitter")
+                raise RuntimeError(
+                    "Something went wrong when communicating with Twitter"
+                )
 
 
 load_dotenv()
@@ -42,6 +43,8 @@ print("bearer_token", bearer_token)
 print("access_token", access_token)
 print("access_token_secret", access_token_secret)
 
+logging.basicConfig()
+logging.getLogger().setLevel(logging.INFO)
 
 
 client = tweepy.Client(
@@ -50,12 +53,12 @@ client = tweepy.Client(
     consumer_secret=consumer_secret,
     access_token=access_token,
     access_token_secret=access_token_secret,
-    wait_on_rate_limit=True
+    wait_on_rate_limit=True,
 )
 
 max_like_results = 10
 max_tweet_results = 10
-tweet_fields=[
+tweet_fields = [
     "id",
     "text",
     "entities",
@@ -81,19 +84,19 @@ user_fields = [
     "verified",
 ]
 
-def get_user_tweets(user_handler: str):
 
-    query = f'from:{user_handler}'
+def get_user_tweets(user_handler: str):
+    query = f"from:{user_handler}"
 
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
         tweets = retry_function_if_fail(
-            client.search_recent_tweets, 
-            query= query, 
-            tweet_fields= tweet_fields, 
-            max_results= max_tweet_results,
-            next_token= next_token
+            client.search_recent_tweets,
+            query=query,
+            tweet_fields=tweet_fields,
+            max_results=max_tweet_results,
+            next_token=next_token,
         )
         tweets_list = tweets.data
         tweets_meta = tweets.meta
@@ -102,28 +105,28 @@ def get_user_tweets(user_handler: str):
         all_tweets += tweets_list
 
         if not "next_token" in tweets_meta:
-            break # when we don't have "next_token" in meta object, there is no more data
+            break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
-
 
     return all_tweets
 
+
 def get_all_replies_of_tweet(tweet_id: str):
     """
-        Just for "Tweet" and "Quote Tweet"
+    Just for "Tweet" and "Quote Tweet"
     """
-    query = f'conversation_id:{tweet_id}'
+    query = f"conversation_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
         tweets = retry_function_if_fail(
-            client.search_recent_tweets, 
-            query= query, 
-            tweet_fields= tweet_fields, 
-            max_results= max_tweet_results,
-            next_token= next_token
+            client.search_recent_tweets,
+            query=query,
+            tweet_fields=tweet_fields,
+            max_results=max_tweet_results,
+            next_token=next_token,
         )
         reply_list = tweets.data
         tweets_meta = tweets.meta
@@ -132,26 +135,25 @@ def get_all_replies_of_tweet(tweet_id: str):
         all_reply += reply_list
 
         if not "next_token" in tweets_meta:
-            break # when we don't have "next_token" in meta object, there is no more data
+            break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
 
-
     return all_reply
+
 
 def get_first_depth_replies_of_tweet(tweet_id: str):
-    
-    query = f'in_reply_to_tweet_id:{tweet_id}'
+    query = f"in_reply_to_tweet_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
         tweets = retry_function_if_fail(
-            client.search_recent_tweets, 
-            query= query, 
-            tweet_fields= tweet_fields, 
-            max_results= max_tweet_results,
-            next_token= next_token
+            client.search_recent_tweets,
+            query=query,
+            tweet_fields=tweet_fields,
+            max_results=max_tweet_results,
+            next_token=next_token,
         )
         reply_list = tweets.data
         tweets_meta = tweets.meta
@@ -160,26 +162,25 @@ def get_first_depth_replies_of_tweet(tweet_id: str):
         all_reply += reply_list
 
         if not "next_token" in tweets_meta:
-            break # when we don't have "next_token" in meta object, there is no more data
+            break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
 
-
     return all_reply
 
-def get_quotes_of_tweet(tweet_id: str):
 
-    query = f'quotes_of_tweet_id:{tweet_id}'
+def get_quotes_of_tweet(tweet_id: str):
+    query = f"quotes_of_tweet_id:{tweet_id}"
 
     all_quotes: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
         tweets = retry_function_if_fail(
-            client.search_recent_tweets, 
-            query= query, 
-            tweet_fields= tweet_fields, 
-            max_results= max_tweet_results,
-            next_token= next_token
+            client.search_recent_tweets,
+            query=query,
+            tweet_fields=tweet_fields,
+            max_results=max_tweet_results,
+            next_token=next_token,
         )
         quote_list = tweets.data
         tweets_meta = tweets.meta
@@ -188,26 +189,25 @@ def get_quotes_of_tweet(tweet_id: str):
         all_quotes += quote_list
 
         if not "next_token" in tweets_meta:
-            break # when we don't have "next_token" in meta object, there is no more data
+            break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
 
-
     return all_quotes
 
-def get_retweets_of_tweet(tweet_id: str):
 
-    query = f'retweets_of_tweet_id:{tweet_id}'
+def get_retweets_of_tweet(tweet_id: str):
+    query = f"retweets_of_tweet_id:{tweet_id}"
 
     all_retweets: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
         tweets = retry_function_if_fail(
-            client.search_recent_tweets, 
-            query= query, 
-            tweet_fields= tweet_fields, 
-            max_results= max_tweet_results,
-            next_token= next_token
+            client.search_recent_tweets,
+            query=query,
+            tweet_fields=tweet_fields,
+            max_results=max_tweet_results,
+            next_token=next_token,
         )
         retweet_list = tweets.data
         tweets_meta = tweets.meta
@@ -216,26 +216,26 @@ def get_retweets_of_tweet(tweet_id: str):
         all_retweets += retweet_list
 
         if not "next_token" in tweets_meta:
-            break # when we don't have "next_token" in meta object, there is no more data
+            break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
 
-
     return all_retweets
 
+
 def get_mentioned_tweets_by_username(username: str):
-    query = f'@{username}'
+    query = f"@{username}"
     print(query)
 
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
         tweets = retry_function_if_fail(
-            client.search_recent_tweets, 
-            query= query, 
-            tweet_fields= tweet_fields, 
-            max_results= max_tweet_results,
-            next_token= next_token
+            client.search_recent_tweets,
+            query=query,
+            tweet_fields=tweet_fields,
+            max_results=max_tweet_results,
+            next_token=next_token,
         )
         tweets_list = tweets.data
         tweets_meta = tweets.meta
@@ -244,23 +244,22 @@ def get_mentioned_tweets_by_username(username: str):
         all_tweets += tweets_list
 
         if not "next_token" in tweets_meta:
-            break # when we don't have "next_token" in meta object, there is no more data
+            break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
 
-
     return all_tweets
 
-def get_likers_of_tweet(tweet_id: str):
 
+def get_likers_of_tweet(tweet_id: str):
     all_liker_users: list[tweepy.User] = []
     next_token = None
     for _ in count(1):
         users = retry_function_if_fail(
             client.get_liking_users,
-            id= tweet_id, 
-            max_results= max_like_results,
-            pagination_token= next_token
+            id=tweet_id,
+            max_results=max_like_results,
+            pagination_token=next_token,
         )
         users_list = users.data
         users_meta = users.meta
@@ -269,29 +268,28 @@ def get_likers_of_tweet(tweet_id: str):
         all_liker_users += users_list
 
         if not "next_token" in users_meta:
-            break # when we don't have "next_token" in meta object, there is no more data
+            break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = users_meta["next_token"]
 
-
     return all_liker_users
 
-def get_user(id= None, username= None):
-    
+
+def get_user(id=None, username=None):
     if id is not None and username is not None:
         raise TypeError("Expected ID or username, not both")
-    
-    user = client.get_user(id= id, username= username, user_fields= user_fields)
+
+    user = client.get_user(id=id, username=username, user_fields=user_fields)
 
     user_data: tweepy.User = user.data
     return user_data
 
-def get_users(ids= None, usernames= None):
-    
+
+def get_users(ids=None, usernames=None):
     if ids is not None and usernames is not None:
         raise TypeError("Expected IDs or usernames, not both")
-    
-    users = client.get_user(ids= ids, usernames= usernames, user_fields= user_fields)
+
+    users = client.get_user(ids=ids, usernames=usernames, user_fields=user_fields)
 
     user_data: tweepy.User = users.data
     return user_data
@@ -300,67 +298,77 @@ def get_users(ids= None, usernames= None):
 def save_liker_user_neo4j(users):
     print(len(users), "Users were saved!")
 
+
 katerina_user_id = 2220997760
 
 # Tweet, Quote Tweet, ReTweet, Replay
 
+
 def extract_twitter_user_information(username: str):
-    # steps to follow 
+    # steps to follow
     # ?get all tweets that user has mentioned in it
     # ?get all tweets of the user
-    # 
+    #
     # for each Tweet
-    # 1. if "Tweet" or "Quote Tweet" 
-    #   -> get its all Replies 
+    # 1. if "Tweet" or "Quote Tweet"
+    #   -> get its all Replies
     #   -> get its Quotes
-    #   -> get its ReTweets 
+    #   -> get its ReTweets
     #   -> get its liker users
-    # 2. if "ReTweet" 
+    # 2. if "ReTweet"
     #   -> we don't need to do anything
-    # 3. if "Reply" 
-    #   -> get its all Replies 
+    # 3. if "Reply"
+    #   -> get its all Replies
     #   -> get its Quotes
-    #   -> get its ReTweets 
+    #   -> get its ReTweets
     #   -> get its liker users
-    # 
-    # 
+    #
+    #
     # finally get all users's infos that we don't have
 
-    mentioned_tweets = get_mentioned_tweets_by_username(username= username)
+    mentioned_tweets = get_mentioned_tweets_by_username(username=username)
     save_tweets_in_neo4j(mentioned_tweets)
 
-    user_tweets = get_user_tweets(user_handler= username)
+    user_tweets = get_user_tweets(user_handler=username)
     save_tweets_in_neo4j(user_tweets)
 
     for tweet in user_tweets:
-        referenced_tweets = list(map(lambda referenced_tweets: referenced_tweets.type, tweet.referenced_tweets)) if tweet.referenced_tweets else None
+        referenced_tweets = (
+            list(
+                map(
+                    lambda referenced_tweets: referenced_tweets.type,
+                    tweet.referenced_tweets,
+                )
+            )
+            if tweet.referenced_tweets
+            else None
+        )
 
         if referenced_tweets and "retweeted" in referenced_tweets:
             pass
         elif referenced_tweets and "replied_to" in referenced_tweets:
             print("'Replied'")
 
-            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id= tweet.id)
+            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id=tweet.id)
             save_tweets_in_neo4j(replies_of_reply)
 
-            quotes_of_reply = get_quotes_of_tweet(tweet_id= tweet.id)
+            quotes_of_reply = get_quotes_of_tweet(tweet_id=tweet.id)
             save_tweets_in_neo4j(quotes_of_reply)
 
-            retweets_of_reply = get_retweets_of_tweet(tweet_id= tweet.id)
+            retweets_of_reply = get_retweets_of_tweet(tweet_id=tweet.id)
             save_tweets_in_neo4j(retweets_of_reply)
 
         elif referenced_tweets is None or "quoted" in referenced_tweets:
             print("'Tweet' or 'Quote'")
 
-            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id= tweet.id)
+            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id=tweet.id)
             save_tweets_in_neo4j(replies_of_reply)
 
-            quotes_of_reply = get_quotes_of_tweet(tweet_id= tweet.id)
+            quotes_of_reply = get_quotes_of_tweet(tweet_id=tweet.id)
             save_tweets_in_neo4j(quotes_of_reply)
 
-            retweets_of_reply = get_retweets_of_tweet(tweet_id= tweet.id)
+            retweets_of_reply = get_retweets_of_tweet(tweet_id=tweet.id)
             save_tweets_in_neo4j(retweets_of_reply)
-
 
 
 extract_twitter_user_information("katerinabohlec")
