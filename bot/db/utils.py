@@ -164,50 +164,31 @@ def make_val_by_type(
     converted_data: str | int | list
 
     if type_val is str:
-        # def fix_quotation_marks(text):
-        #     if type(text) == str:
-        #         fixed_text = text.replace('"', r"\"")
-        #         return fixed_text
-        #     return None
-
-        # value = fix_quotation_marks(value)
-        if type(value) is str:
-            # converted_data = '"' + value + '"'
-            converted_data = value.replace("'", '"')
-            converted_data = r"'{}'".format(converted_data)
-        else:
-            msg = f"given value '{value}' is not string!, type: {type(value)}"
-            msg += " Trying to convert to string!"
-            try:
-                converted_data = str(value)
-            except Exception as exp:
-                logging.error(exp)
-                logging.error("defaulting to save empty text")
-                converted_data = '"'
+        try:
+            if isinstance(value, str):
+                converted_data = value.replace('"', "'")
+                converted_data = r'"{}"'.format(converted_data)
+            else:
+                converted_data = r'"{}"'.format(value)
+            
+        except Exception as exp:
+            logging.error(exp)
+            logging.error("cannot convert to string, defaulting to save empty text")
+            converted_data = '""'
 
     elif type_val is int:
         converted_data = int(value)
 
     elif type_val is datetime:
-        # for time we using UTC time
-        datetime_obj = datetime.strptime(value, "%Y-%m-%d %H:%M:%S%z")
-        datetime_obj_utc = datetime_obj.replace(tzinfo=timezone.utc)
-        converted_data = int(datetime_obj_utc.timestamp() * 1000)
+        converted_data = int(value.timestamp() * 1000)
 
     elif type_val is list:
-        # ans = "["
-        # for a in value:
-        #     # ans += '"' + str(a) + '",'
-        #     ans += r"'{}',".format(a)
-        # ans = ans[:-1]
-        # ans += "]"
-        # converted_data = ans
         converted_data = r"{}".format(value)
 
     return converted_data
 
 
-def tweet_type_finder(data_type: str) -> tuple[str, str]:
+def tweet_type_finder(referenced_tweet: dict[str, str]) -> tuple[str, str]:
     """
     gives refrence data_type of tweet and it finds out
     Is it retweet or reply or quote
@@ -221,7 +202,7 @@ def tweet_type_finder(data_type: str) -> tuple[str, str]:
 
     Parameters:
     ------------
-    data_type : str
+    referenced_tweet : dict[str, str]
         the given type from data
 
     Returns:
@@ -231,13 +212,8 @@ def tweet_type_finder(data_type: str) -> tuple[str, str]:
     type_value : str
         the type of tweet
     """
-    id_start = data_type.find("id=") + 3
-    id_end = data_type.find(" ", id_start)
-    id_value = data_type[id_start:id_end]
-
-    type_start = data_type.find("type=") + 5
-    type_end = data_type.find(">", type_start)
-    type_value = data_type[type_start:type_end]
+    id_value = str(referenced_tweet["id"])
+    type_value = referenced_tweet["type"]
 
     if type_value == "quoted":
         type_value = EdgeLabels.quoted
