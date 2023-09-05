@@ -1,6 +1,12 @@
-import tweepy
+import os
+from dotenv import load_dotenv
+
 import functools
 from itertools import count
+import tweepy
+
+from bot.db.save_neo4j import save_tweets_in_neo4j
+
 
 def retry_function_if_fail(func, /, *args, **keywords):
 
@@ -22,13 +28,14 @@ def retry_function_if_fail(func, /, *args, **keywords):
                 raise RuntimeError("Something went wrong when communicating with Twitter")
 
 
+load_dotenv()
 
 # assign the values accordingly
-consumer_key = "uWkZXY3vdGQ1HXUMKbWYnLjAh"
-consumer_secret = "LyHAs00qHPDlACsWWWJbGr1yBaGloupsRmEIwdVIWUkmNflrJ6"
-bearer_token = "AAAAAAAAAAAAAAAAAAAAAFI1pgEAAAAAcRrdg91PMZS7iro3auBGq9rM3Fk%3D9a9urTHj8Bu8242G1ongyg7l4UzgZNdfEPydaDa7eVHZ9vyenZ"
-access_token = "1625663664916205575-7PRuGfqfUuMIvO0g40Q1QtPg2UiyCV"
-access_token_secret = "MYJY93GGLDglN32alzm14WH1J9trT00keRUfK16FIkLA1"
+consumer_key = os.getenv("CONSUMER_KEY")
+consumer_secret = os.getenv("CONSUMER_SECRET")
+bearer_token = os.getenv("BEARER_TOKEN")
+access_token = os.getenv("ACCESS_TOKEN")
+access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
 
 client = tweepy.Client(
@@ -283,9 +290,6 @@ def get_users(ids= None, usernames= None):
     user_data: tweepy.User = users.data
     return user_data
 
-
-def save_tweets_in_neo4j(tweets):
-    print(len(tweets), " tweets were saved!")
 
 def save_liker_user_neo4j(users):
     print(len(users), "Users were saved!")

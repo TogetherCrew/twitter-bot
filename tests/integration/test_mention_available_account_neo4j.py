@@ -1,4 +1,4 @@
-from neo4j_connection import connect_neo4j
+from bot.db.neo4j_connection import connect_neo4j
 from bot.db.cypher_query_creator import create_twitter_data_query
 
 

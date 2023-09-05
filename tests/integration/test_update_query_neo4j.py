@@ -1,4 +1,4 @@
-from neo4j_connection import connect_neo4j
+from bot.db.neo4j_connection import connect_neo4j
 from bot.db.enums_data import NodeLabels, Properties, TweetProperties
 from bot.db.utils import update_query
 
