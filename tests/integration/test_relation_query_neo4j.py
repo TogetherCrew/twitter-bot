@@ -54,7 +54,8 @@ def test_relation_query_single_property_with_previous_data():
             )
         ],
     )
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)
@@ -96,7 +97,8 @@ def test_relation_query_multiple_properties_no_past_data():
         ],
     )
 
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)
@@ -135,7 +137,8 @@ def test_relation_query_multiple_properties_with_past_data():
         ],
     )
 
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)
