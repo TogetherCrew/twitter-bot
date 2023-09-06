@@ -9,8 +9,14 @@ class BaseProperties:
 class TwitterAccountProperties:
     user_id: str = "userId"
     user_name: str = "userName"
+    name: str = "name"
     bio: str = "bio"
     created_at: str = BaseProperties.created_at
+    url: str = "url"
+    profile_image_url: str = "profileImageUrl"
+    verified: str = "verified"
+    location: str = "location"
+    protected: str = "protected"
 
 
 class TweetProperties:

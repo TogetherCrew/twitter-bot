@@ -6,7 +6,7 @@ from .utils.query_create_relation import relation_query
 from .utils.referenced_tweet_type_finder import tweet_type_finder
 
 
-from .utils.enums_data import (  # isort: skip
+from .utils.enums_data import (
     EdgeLabels,
     HashtagProperties,
     NodeLabels,
