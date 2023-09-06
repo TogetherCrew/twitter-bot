@@ -290,19 +290,29 @@ def get_user(id=None, username=None) -> tweepy.User:
     if id is not None and username is not None:
         raise TypeError("Expected ID or username, not both")
 
-    user = client.get_user(id=id, username=username, user_fields=user_fields)
+    user = retry_function_if_fail(
+        client.get_user,
+        id=id,
+        username=username,
+        user_fields=user_fields,
+    )
 
     user_data: tweepy.User = user.data
     return user_data
 
 
-def get_users(ids=None, usernames=None):
+def get_users(ids=None, usernames=None) -> list[tweepy.User]:
     if ids is not None and usernames is not None:
         raise TypeError("Expected IDs or usernames, not both")
 
-    users = client.get_user(ids=ids, usernames=usernames, user_fields=user_fields)
+    users = retry_function_if_fail(
+        client.get_users,
+        ids=ids,
+        usernames=usernames,
+        user_fields=user_fields,
+    )
 
-    user_data: tweepy.User = users.data
+    user_data: list[tweepy.User] = users.data
     return user_data
 
 
