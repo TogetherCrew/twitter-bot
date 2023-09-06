@@ -1,5 +1,6 @@
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
+from datetime import datetime
 
 
 def test_create_tweeted_person_neo4j():
@@ -7,8 +8,11 @@ def test_create_tweeted_person_neo4j():
     create queries for a person that tweets a tweet (relationships included)
     """
     sample_data = {
-        "tweet_id": "0000",
-        "created_at": "2023-04-13 01:21:51+00:00",
+        "id": "0000",
+        "created_at": datetime.strptime(
+            "2023-04-13 01:21:51+00:00", 
+            "%Y-%m-%d %H:%M:%S%z"
+        ),
         "author_id": "12344321",
         "author_bio": "Amazing man with a perfect profile!",
         "conversation_id": "0000",

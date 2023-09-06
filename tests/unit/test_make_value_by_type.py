@@ -18,7 +18,9 @@ def test_make_value_by_type_input_str():
     updated_value = make_val_by_type(value, str)
 
     assert type(updated_value) is str
-    assert updated_value == r"""'Happy \}Appl%^&*()_!@#$^""][e'"""
+    expected_value = r""""Happy \}Appl%^&*()_!@#$^''][e" """
+    expected_value = expected_value[:-1]
+    assert updated_value == expected_value
 
 
 def test_make_value_by_type_input_str_non_str():
@@ -27,11 +29,11 @@ def test_make_value_by_type_input_str_non_str():
     updated_value = make_val_by_type(value, str)
 
     assert type(updated_value) is str
-    assert updated_value == "5"
+    assert updated_value == '"5"'
 
 
 def test_make_value_by_type_input_datetime():
-    value = "2023-04-16 19:05:38+00:00"
+    value =  datetime.strptime("2023-04-16 19:05:38+00:00", "%Y-%m-%d %H:%M:%S%z")
 
     updated_value = make_val_by_type(value, datetime)
 

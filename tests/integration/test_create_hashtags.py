@@ -1,10 +1,14 @@
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
-
+from datetime import datetime
+from tweepy import ReferencedTweet
 
 def test_create_hashtags():
     sample_data = {
-        "tweet_id": "000000",
-        "created_at": "2023-04-14 20:56:58+00:00",
+        "id": "000000",
+        "created_at": datetime.strptime(
+            "2023-04-14 20:56:58+00:00", 
+            "%Y-%m-%d %H:%M:%S%z"
+        ),
         "author_id": "123456",
         "author_bio": "amazing!",
         "conversation_id": "000000",
@@ -24,25 +28,28 @@ def test_create_hashtags():
             "impression_count": 0,
         },
         "context_annotations": [],
-        "referenced_tweets": "[<ReferencedTweet id=567654 type=retweeted>]",
+        "referenced_tweets": [ReferencedTweet(data={
+            'id': 567654,
+            'type': 'retweeted'
+        })],
     }
 
     queries = create_twitter_data_query([sample_data])
 
     print(queries)
 
-    query1 = "MERGE (a:Hashtag {hashtag: 'jobs'}) "
+    query1 = """MERGE (a:Hashtag {hashtag: "jobs"}) """
     assert query1 in queries
 
-    query2 = "MERGE (a:Hashtag {hashtag: 'web3'}) "
+    query2 = """MERGE (a:Hashtag {hashtag: "web3"}) """
     assert query2 in queries
 
-    query3 = """MERGE (a:Tweet {tweetId:'000000'}) """
-    query3 += """MERGE (b:Hashtag {hashtag:'jobs'}) """
+    query3 = """MERGE (a:Tweet {tweetId:"000000"}) """
+    query3 += """MERGE (b:Hashtag {hashtag:"jobs"}) """
     query3 += """MERGE (a)-[:HASHTAGGED {createdAt: 1681505818000}]->(b)"""
     assert query3 in queries
 
-    query4 = """MERGE (a:Tweet {tweetId:'000000'}) """
-    query4 += """MERGE (b:Hashtag {hashtag:'web3'}) """
+    query4 = """MERGE (a:Tweet {tweetId:"000000"}) """
+    query4 += """MERGE (b:Hashtag {hashtag:"web3"}) """
     query4 += """MERGE (a)-[:HASHTAGGED {createdAt: 1681505818000}]->(b)"""
     assert query4 in queries

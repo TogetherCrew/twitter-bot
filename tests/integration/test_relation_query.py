@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from bot.db.utils.enums_data import EdgeLabels, NodeLabels, Properties, TweetProperties
-from bot.db.utils import relation_query
+from bot.db.utils.query_create_relation import relation_query
 
 
 def test_relation_query_single_property():
@@ -13,15 +13,20 @@ def test_relation_query_single_property():
         relation_name=EdgeLabels.quoted,
         relation_properties=[
             Properties(
-                TweetProperties.created_at, "2023-04-17 14:03:55+00:00", datetime
-            )
+                TweetProperties.created_at, 
+                datetime.strptime(
+                    "2023-04-17 14:03:55+00:00",
+                    "%Y-%m-%d %H:%M:%S%z"
+                ),
+                datetime
+            ),
         ],
     )
 
     print("query: ", query)
 
     assert (
-        "MERGE (a:Tweet {authorId:'123321'}) MERGE (b:Tweet {authorId:'345543'})"
+        """MERGE (a:Tweet {authorId:"123321"}) MERGE (b:Tweet {authorId:"345543"})"""
         in query
     )
     assert """MERGE (a)-[:QUOTED {createdAt: 1681740235000}]->(b)""" in query
@@ -36,7 +41,12 @@ def test_relation_query_multiple_properties():
         relation_name=EdgeLabels.quoted,
         relation_properties=[
             Properties(
-                TweetProperties.created_at, "2023-04-17 14:03:55+00:00", datetime
+                TweetProperties.created_at, 
+                datetime.strptime(
+                    "2023-04-17 14:03:55+00:00",
+                    "%Y-%m-%d %H:%M:%S%z"
+                ),
+                datetime
             ),
             Properties("createdAt2", "sample", str),
         ],
@@ -45,10 +55,10 @@ def test_relation_query_multiple_properties():
     print("query: ", query)
 
     assert (
-        "MERGE (a:Tweet {authorId:'123321'}) MERGE (b:Tweet {authorId:'345543'})"
+        """MERGE (a:Tweet {authorId:"123321"}) MERGE (b:Tweet {authorId:"345543"})"""
         in query
     )
     assert (
-        """MERGE (a)-[:QUOTED {createdAt: 1681740235000, createdAt2: 'sample'}]->(b)"""
+        """MERGE (a)-[:QUOTED {createdAt: 1681740235000, createdAt2: "sample"}]->(b)"""
         in query
     )

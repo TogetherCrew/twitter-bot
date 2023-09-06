@@ -1,11 +1,15 @@
-from bot.db.neo4j_connection import connect_neo4j
+from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
+from datetime import datetime
+from tweepy import ReferencedTweet
 
 
 def test_create_hashtags_neo4j():
     sample_data = {
-        "tweet_id": "000000",
-        "created_at": "2023-04-14 20:56:58+00:00",
+        "id": "000000",
+        "created_at": datetime.strptime(
+            "2023-04-14 20:56:58+00:00", 
+            "%Y-%m-%d %H:%M:%S%z"),
         "author_id": "123456",
         "author_bio": "amazing!",
         "conversation_id": "000000",
@@ -25,14 +29,18 @@ def test_create_hashtags_neo4j():
             "impression_count": 0,
         },
         "context_annotations": [],
-        "referenced_tweets": "[<ReferencedTweet id=567654 type=retweeted>]",
+        "referenced_tweets": [ReferencedTweet(data={
+            'id': 567654,
+            'type': 'retweeted'
+        })],
     }
 
     queries = create_twitter_data_query([sample_data])
 
     print(queries)
 
-    neo4j_ops = connect_neo4j()
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
     neo4j_ops.gds.run_cypher(
         """
         MATCH (n) DETACH DELETE (n)

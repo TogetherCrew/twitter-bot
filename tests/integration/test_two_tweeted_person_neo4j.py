@@ -1,6 +1,8 @@
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
+from tweepy import ReferencedTweet
 
+from datetime import datetime
 
 def test_create_two_person_tweeted_neo4j():
     """
@@ -8,8 +10,11 @@ def test_create_two_person_tweeted_neo4j():
     """
     sample_data = [
         {
-            "tweet_id": "000000",
-            "created_at": "2023-03-17 23:19:30+00:00",
+            "id": "000000",
+            "created_at": datetime.strptime(
+                "2023-03-17 23:19:30+00:00", 
+                "%Y-%m-%d %H:%M:%S%z"
+            ),
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
             "conversation_id": "000000",
@@ -68,8 +73,11 @@ def test_create_two_person_tweeted_neo4j():
             "referenced_tweets": None,
         },
         {
-            "tweet_id": "66666666",
-            "created_at": "2023-03-10 18:43:42+00:00",
+            "id": "66666666",
+            "created_at": datetime.strptime(
+                "2023-03-10 18:43:42+00:00",
+                "%Y-%m-%d %H:%M:%S%z"
+            ),
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
             "conversation_id": "66666666",
@@ -101,7 +109,10 @@ def test_create_two_person_tweeted_neo4j():
                     "entity": {"id": "523872389", "name": "Twitter"},
                 }
             ],
-            "referenced_tweets": "[<ReferencedTweet id=8374981 type=retweeted>]",
+            "referenced_tweets": [ReferencedTweet(data={
+            'id': 8374981,
+            'type': 'retweeted'
+        })]
         },
     ]
 
@@ -135,7 +146,7 @@ def test_create_two_person_tweeted_neo4j():
         tweet = row["tweet"]
 
         assert account["userId"] == "89129821"
-        assert account["bio"] == """We"re together in togetherCrew"""
+        assert account["bio"] == """We're together in togetherCrew"""
 
         assert tweeted_rel["createdAt"] == 1679095170000
 

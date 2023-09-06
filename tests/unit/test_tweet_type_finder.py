@@ -1,8 +1,15 @@
 from bot.db.utils.referenced_tweet_type_finder import tweet_type_finder
 
+from tweepy import ReferencedTweet
 
 def test_tweet_type_finder_replied():
     data = "[<ReferencedTweet id=123456 type=replied_to>]"
+    data = ReferencedTweet(
+        data={
+            "id": 123456,
+            "type": "replied_to"
+        }
+    )
     id, d_type = tweet_type_finder(data)
 
     assert id == "123456"
@@ -10,7 +17,12 @@ def test_tweet_type_finder_replied():
 
 
 def test_tweet_type_finder_retweet():
-    data = "[<ReferencedTweet id=56789765 type=retweeted>]"
+    data = ReferencedTweet(
+        data={
+            "id": 56789765,
+            "type": "retweeted"
+        }
+    )
     id, d_type = tweet_type_finder(data)
 
     assert id == "56789765"
@@ -18,7 +30,12 @@ def test_tweet_type_finder_retweet():
 
 
 def test_tweet_type_finder_quote():
-    data = "[<ReferencedTweet id=876543 type=quoted>]"
+    data = ReferencedTweet(
+        data={
+            "id": "876543",
+            "type": "quoted"
+        }
+    )
     id, d_type = tweet_type_finder(data)
 
     assert id == "876543"

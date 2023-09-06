@@ -75,7 +75,10 @@ def test_create_query_multiple_property_neo4j():
             Properties(TwitterAccountProperties.bio, "My Age is 22 :)", str),
             Properties(
                 TwitterAccountProperties.created_at,
-                "2023-04-17 14:03:55+00:00",
+                datetime.strptime(
+                    "2023-04-17 14:03:55+00:00", 
+                    "%Y-%m-%d %H:%M:%S%z"
+                ),
                 datetime,
             ),
         ],
