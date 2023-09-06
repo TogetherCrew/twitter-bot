@@ -35,7 +35,8 @@ def get_latest_reply(
         f"""
         OPTIONAL MATCH (t:Tweet {query})<-[r:REPLIED]-(m:Tweet)
         WHERE m.authorId <> t.authorId
-        RETURN toString(MAX(toInteger(t.tweetId))) as latest_reply_id
+        WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
+        RETURN MAX(id) as latest_reply_id
         """
     )
     latest_reply_id = df_latest_reply["latest_reply_id"].iloc[0]

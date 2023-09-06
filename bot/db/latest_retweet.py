@@ -26,6 +26,7 @@ def get_latest_retweet(
         query = f"{{authorId: '{user_id}'}}"
     else:
         raise ValueError("`tweet_id` and `user_id` are both None!")
+
     neo4j_connection = Neo4jConnection()
     gds = neo4j_connection.neo4j_ops.gds
 
@@ -34,7 +35,8 @@ def get_latest_retweet(
         f"""
         OPTIONAL MATCH (t:Tweet {query})<-[r:RETWEETED]-(m:Tweet)
         WHERE m.authorId <> t.authorId
-        RETURN toString(MAX(toInteger(m.tweetId))) as latest_retweet_id
+        WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
+        RETURN MAX(id) as latest_retweet_id
         """
     )
     latest_retweet_id = df_latest_retweet["latest_retweet_id"].iloc[0]

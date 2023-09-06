@@ -25,7 +25,8 @@ def get_latest_tweet(
     df_latest_tweeted = gds.run_cypher(
         f"""
         OPTIONAL MATCH (a:TwitterAccount {{userId: '{user_id}'}})-[r:TWEETED]->(m:Tweet)
-        RETURN toString(MAX(toInteger(m.tweetId))) as latest_tweeted_id
+        WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
+        RETURN MAX(id) as latest_tweeted_id
         """
     )
     latest_tweeted_id = df_latest_tweeted["latest_tweeted_id"].iloc[0]

@@ -39,7 +39,8 @@ def get_latest_quote(
         f"""
         OPTIONAL MATCH (t:Tweet {query})<-[r:QUOTED]-(m:Tweet)
         WHERE m.authorId <> t.authorId
-        RETURN toString(MAX(toInteger(m.tweetId))) as latest_quoted_id
+        WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
+        RETURN MAX(id) as latest_quoted_id
         """
     )
     latest_quoted_id = df_latest_quote["latest_quoted_id"].iloc[0]
