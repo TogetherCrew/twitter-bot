@@ -41,10 +41,7 @@ def test_create_query_multiple_property():
             Properties(TwitterAccountProperties.bio, "My Age is 22 :)", str),
             Properties(
                 TwitterAccountProperties.created_at,
-                datetime.strptime(
-                    "2023-04-17 14:03:55+00:00", 
-                    "%Y-%m-%d %H:%M:%S%z"
-                ),
+                datetime.strptime("2023-04-17 14:03:55+00:00", "%Y-%m-%d %H:%M:%S%z"),
                 datetime,
             ),
         ],

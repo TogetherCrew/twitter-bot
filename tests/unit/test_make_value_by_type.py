@@ -33,7 +33,7 @@ def test_make_value_by_type_input_str_non_str():
 
 
 def test_make_value_by_type_input_datetime():
-    value =  datetime.strptime("2023-04-16 19:05:38+00:00", "%Y-%m-%d %H:%M:%S%z")
+    value = datetime.strptime("2023-04-16 19:05:38+00:00", "%Y-%m-%d %H:%M:%S%z")
 
     updated_value = make_val_by_type(value, datetime)
 

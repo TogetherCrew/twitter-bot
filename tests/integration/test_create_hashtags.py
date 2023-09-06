@@ -2,12 +2,12 @@ from bot.db.twitter_data_to_cypher import create_twitter_data_query
 from datetime import datetime
 from tweepy import ReferencedTweet
 
+
 def test_create_hashtags():
     sample_data = {
         "id": "000000",
         "created_at": datetime.strptime(
-            "2023-04-14 20:56:58+00:00", 
-            "%Y-%m-%d %H:%M:%S%z"
+            "2023-04-14 20:56:58+00:00", "%Y-%m-%d %H:%M:%S%z"
         ),
         "author_id": "123456",
         "author_bio": "amazing!",
@@ -28,10 +28,9 @@ def test_create_hashtags():
             "impression_count": 0,
         },
         "context_annotations": [],
-        "referenced_tweets": [ReferencedTweet(data={
-            'id': 567654,
-            'type': 'retweeted'
-        })],
+        "referenced_tweets": [
+            ReferencedTweet(data={"id": 567654, "type": "retweeted"})
+        ],
     }
 
     queries = create_twitter_data_query([sample_data])

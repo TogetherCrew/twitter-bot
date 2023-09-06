@@ -10,8 +10,7 @@ def test_create_tweeted_person_neo4j():
     sample_data = {
         "id": "0000",
         "created_at": datetime.strptime(
-            "2023-04-13 01:21:51+00:00", 
-            "%Y-%m-%d %H:%M:%S%z"
+            "2023-04-13 01:21:51+00:00", "%Y-%m-%d %H:%M:%S%z"
         ),
         "author_id": "12344321",
         "author_bio": "Amazing man with a perfect profile!",
