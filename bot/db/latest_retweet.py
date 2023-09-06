@@ -2,10 +2,11 @@ from .neo4j_connection import Neo4jConnection
 
 
 def get_latest_retweet(
-    user_id: str,
-) -> str:
+    user_id: str | None = None, tweet_id: str | None = None
+) -> str | None:
     """
     get the user handle to get their latest retweet's tweetId
+    or using the tweet_id find its latest retweet
 
     Parameters:
     ------------
@@ -18,14 +19,21 @@ def get_latest_retweet(
         the latest retweet's tweetId for the specific user
         if no retweet was available, then None will be returned
     """
+    query: str
+    if tweet_id is not None:
+        query = f"{{tweetId: '{tweet_id}'}}"
+    elif user_id is not None:
+        query = f"{{authorId: '{user_id}'}}"
+    else:
+        raise ValueError("`tweet_id` and `user_id` are both None!")
     neo4j_connection = Neo4jConnection()
     gds = neo4j_connection.neo4j_ops.gds
 
     # latest retweet as a dataframe
     df_latest_retweet = gds.run_cypher(
         f"""
-        OPTIONAL MATCH (t:Tweet {{authorId: '{user_id}'}})<-[r:RETWEETED]-(m:Tweet)
-        WHERE m.authorId <> '{user_id}'
+        OPTIONAL MATCH (t:Tweet {query})<-[r:RETWEETED]-(m:Tweet)
+        WHERE m.authorId <> t.authorId
         RETURN toString(MAX(toInteger(m.tweetId))) as latest_retweet_id
         """
     )

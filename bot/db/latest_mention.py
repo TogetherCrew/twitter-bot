@@ -3,13 +3,13 @@ from .neo4j_connection import Neo4jConnection
 
 def get_latest_mention(
     user_id: str,
-) -> str:
+) -> str | None:
     """
     get the user handle to get their latest mantion's tweetId
 
     Parameters:
     ------------
-    user_id : str | None
+    user_id : str
         given the userId, find the required information
 
     Returns:
