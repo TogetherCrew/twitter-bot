@@ -91,6 +91,24 @@ user_fields = [
 
 
 def get_user_tweets(user_handler: str, since_id: str) -> list[tweepy.Tweet]:
+    """
+    To get the tweets of a user, get the user_handler
+
+    Parameters:
+    ------------
+    user_handler : str | int
+        given the user_handler, find the all related tweets
+    since_id :  str | None
+        Returns results with a Tweet ID greater than (that is, more recent
+        than) the specified ID. The ID specified is exclusive and responses
+        will not include it.
+
+    Returns:
+    ---------
+    all_tweets : list[tweepy.Tweet]
+        all user's Tweets in last 7 days will be returned
+    """
+
     query = f"from:{user_handler}"
 
     all_tweets: list[tweepy.Tweet] = []
@@ -120,8 +138,24 @@ def get_user_tweets(user_handler: str, since_id: str) -> list[tweepy.Tweet]:
 
 def get_all_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     """
-    Just for "Tweet" and "Quote Tweet"
+    Get all replies (all depth) of a tweet or Quote tweets. The array will be empty 
+    if retweetID or replyID is passed
+
+    Parameters:
+    ------------
+    tweet_id : str | int
+        given the tweetID, find the all replies
+    since_id :  str | None
+        Returns results with a Tweet ID greater than (that is, more recent
+        than) the specified ID. The ID specified is exclusive and responses
+        will not include it.
+
+    Returns:
+    ---------
+    all_tweets : list[tweepy.Tweet]
+        all Reply Tweets in last 7 days will be returned
     """
+
     query = f"conversation_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
@@ -150,6 +184,24 @@ def get_all_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]
 
 
 def get_first_depth_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
+    """
+    Get all replies (first depth) of a tweet.
+
+    Parameters:
+    ------------
+    tweet_id : str | int
+        given the tweetID, find the all replies
+    since_id :  str | None
+        Returns results with a Tweet ID greater than (that is, more recent
+        than) the specified ID. The ID specified is exclusive and responses
+        will not include it.
+
+    Returns:
+    ---------
+    all_tweets : list[tweepy.Tweet]
+        all Reply Tweets in last 7 days will be returned
+    """
+
     query = f"in_reply_to_tweet_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
@@ -178,6 +230,24 @@ def get_first_depth_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweep
 
 
 def get_quotes_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
+    """
+    Get all quotes of a tweet.
+
+    Parameters:
+    ------------
+    tweet_id : str | int
+        given the tweetID, find the all quotes
+    since_id :  str | None
+        Returns results with a Tweet ID greater than (that is, more recent
+        than) the specified ID. The ID specified is exclusive and responses
+        will not include it.
+
+    Returns:
+    ---------
+    all_tweets : list[tweepy.Tweet]
+        all Quote Tweets in last 7 days will be returned
+    """
+
     query = f"quotes_of_tweet_id:{tweet_id}"
 
     all_quotes: list[tweepy.Tweet] = []
@@ -206,6 +276,24 @@ def get_quotes_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
 
 
 def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
+    """
+    Get all retweets of a tweet.
+
+    Parameters:
+    ------------
+    tweet_id : str | int
+        given the tweetID, find the all retweets
+    since_id :  str | None
+        Returns results with a Tweet ID greater than (that is, more recent
+        than) the specified ID. The ID specified is exclusive and responses
+        will not include it.
+
+    Returns:
+    ---------
+    all_tweets : list[tweepy.Tweet]
+        all Retweet Tweets in last 7 days will be returned
+    """
+
     query = f"retweets_of_tweet_id:{tweet_id}"
 
     all_retweets: list[tweepy.Tweet] = []
@@ -234,6 +322,24 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
 
 
 def get_mentioned_tweets_by_username(username: str, since_id: str) -> list[tweepy.Tweet]:
+    """
+    Get all tweets that user has mentioned.
+
+    Parameters:
+    ------------
+    username : str | int
+        given the tweetID, find the all retweets
+    since_id :  str | None
+        Returns results with a Tweet ID greater than (that is, more recent
+        than) the specified ID. The ID specified is exclusive and responses
+        will not include it.
+
+    Returns:
+    ---------
+    all_tweets : list[tweepy.Tweet]
+        all Tweets that user has mentioned in last 7 days will be returned 
+    """
+
     query = f"@{username}"
     print(query)
 
