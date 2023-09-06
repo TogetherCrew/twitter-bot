@@ -4,12 +4,12 @@ from datetime import datetime
 
 from tweepy import ReferencedTweet
 
+
 def test_reply_query_neo4j():
     sample_data = {
         "id": "000000",
         "created_at": datetime.strptime(
-            "2022-12-26 14:35:13+00:00", 
-            "%Y-%m-%d %H:%M:%S%z"
+            "2022-12-26 14:35:13+00:00", "%Y-%m-%d %H:%M:%S%z"
         ),
         "author_id": "12345",
         "author_bio": "he's bio!",
@@ -30,10 +30,9 @@ def test_reply_query_neo4j():
             "impression_count": 199,
         },
         "context_annotations": [],
-        "referenced_tweets": [ReferencedTweet(data={
-            'id': 8765432,
-            'type': 'replied_to'
-        })]
+        "referenced_tweets": [
+            ReferencedTweet(data={"id": 8765432, "type": "replied_to"})
+        ],
     }
 
     queries = create_twitter_data_query([sample_data])

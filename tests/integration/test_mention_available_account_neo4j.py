@@ -13,8 +13,7 @@ def test_mention_available_account_neo4j():
     sample_data = {
         "id": "000000",
         "created_at": datetime.strptime(
-            "2023-04-14 20:56:58+00:00", 
-            "%Y-%m-%d %H:%M:%S%z"
+            "2023-04-14 20:56:58+00:00", "%Y-%m-%d %H:%M:%S%z"
         ),
         "author_id": "123456",
         "author_bio": "amazing!",

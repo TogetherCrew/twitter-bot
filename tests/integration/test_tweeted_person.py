@@ -1,6 +1,7 @@
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
 from datetime import datetime
 
+
 def test_create_tweeted_person():
     """
     create queries for a person that tweets a tweet (relationships included)
@@ -8,8 +9,7 @@ def test_create_tweeted_person():
     sample_data = {
         "id": "0000",
         "created_at": datetime.strptime(
-            "2023-04-13 01:21:51+00:00", 
-            "%Y-%m-%d %H:%M:%S%z"
+            "2023-04-13 01:21:51+00:00", "%Y-%m-%d %H:%M:%S%z"
         ),
         "author_id": "12344321",
         "author_bio": "Amazing man with a perfect profile!",

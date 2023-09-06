@@ -45,6 +45,7 @@ def relation_query(
     query = f"MERGE (a:{node_label1} {{{match_properties1.property_name}:{val1}}}) "
     query += f"MERGE (b:{node_label2} {{{match_properties2.property_name}:{val2}}}) "
     query += f"MERGE (a)-[:{relation_name} "
+    # TODO: use SET here!!
 
     # for properties
     query += "{"

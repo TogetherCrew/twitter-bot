@@ -4,6 +4,7 @@ from tweepy import ReferencedTweet
 
 from datetime import datetime
 
+
 def test_create_two_person_tweeted_neo4j():
     """
     create queries for a person that tweets a tweet (relationships included)
@@ -12,8 +13,7 @@ def test_create_two_person_tweeted_neo4j():
         {
             "id": "000000",
             "created_at": datetime.strptime(
-                "2023-03-17 23:19:30+00:00", 
-                "%Y-%m-%d %H:%M:%S%z"
+                "2023-03-17 23:19:30+00:00", "%Y-%m-%d %H:%M:%S%z"
             ),
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
@@ -75,8 +75,7 @@ def test_create_two_person_tweeted_neo4j():
         {
             "id": "66666666",
             "created_at": datetime.strptime(
-                "2023-03-10 18:43:42+00:00",
-                "%Y-%m-%d %H:%M:%S%z"
+                "2023-03-10 18:43:42+00:00", "%Y-%m-%d %H:%M:%S%z"
             ),
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
@@ -109,10 +108,9 @@ def test_create_two_person_tweeted_neo4j():
                     "entity": {"id": "523872389", "name": "Twitter"},
                 }
             ],
-            "referenced_tweets": [ReferencedTweet(data={
-            'id': 8374981,
-            'type': 'retweeted'
-        })]
+            "referenced_tweets": [
+                ReferencedTweet(data={"id": 8374981, "type": "retweeted"})
+            ],
         },
     ]
 

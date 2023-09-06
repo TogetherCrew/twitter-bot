@@ -3,6 +3,7 @@ from bot.db.twitter_data_to_cypher import create_twitter_data_query
 from datetime import datetime
 from tweepy import ReferencedTweet
 
+
 def test_create_tweeted_person():
     """
     create queries for a person that tweets a tweet (relationships included)
@@ -11,8 +12,7 @@ def test_create_tweeted_person():
         {
             "id": "000000",
             "created_at": datetime.strptime(
-                "2023-03-17 23:19:30+00:00", 
-                "%Y-%m-%d %H:%M:%S%z"
+                "2023-03-17 23:19:30+00:00", "%Y-%m-%d %H:%M:%S%z"
             ),
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
@@ -74,8 +74,7 @@ def test_create_tweeted_person():
         {
             "id": "66666666",
             "created_at": datetime.strptime(
-                "2023-03-10 18:43:42+00:00",
-                "%Y-%m-%d %H:%M:%S%z"
+                "2023-03-10 18:43:42+00:00", "%Y-%m-%d %H:%M:%S%z"
             ),
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
@@ -108,10 +107,9 @@ def test_create_tweeted_person():
                     "entity": {"id": "523872389", "name": "Twitter"},
                 }
             ],
-            "referenced_tweets": [ReferencedTweet(data={
-            'id': 8374981,
-            'type': 'retweeted'
-        })]
+            "referenced_tweets": [
+                ReferencedTweet(data={"id": 8374981, "type": "retweeted"})
+            ],
         },
     ]
 

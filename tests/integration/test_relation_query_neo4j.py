@@ -14,12 +14,9 @@ def test_relation_query_single_property_no_previous_data():
         relation_name=EdgeLabels.quoted,
         relation_properties=[
             Properties(
-                TweetProperties.created_at, 
-                datetime.strptime(
-                    "2023-04-17 14:03:55+00:00", 
-                    "%Y-%m-%d %H:%M:%S%z"
-                ),
-                datetime
+                TweetProperties.created_at,
+                datetime.strptime("2023-04-17 14:03:55+00:00", "%Y-%m-%d %H:%M:%S%z"),
+                datetime,
             )
         ],
     )
@@ -55,12 +52,9 @@ def test_relation_query_single_property_with_previous_data():
         relation_name=EdgeLabels.quoted,
         relation_properties=[
             Properties(
-                TweetProperties.created_at, 
-                datetime.strptime(
-                    "2023-04-17 14:03:55+00:00", 
-                    "%Y-%m-%d %H:%M:%S%z"
-                ),
-                datetime
+                TweetProperties.created_at,
+                datetime.strptime("2023-04-17 14:03:55+00:00", "%Y-%m-%d %H:%M:%S%z"),
+                datetime,
             )
         ],
     )
@@ -101,12 +95,9 @@ def test_relation_query_multiple_properties_no_past_data():
         relation_name=EdgeLabels.quoted,
         relation_properties=[
             Properties(
-                TweetProperties.created_at, 
-                datetime.strptime(
-                    "2023-04-17 14:03:55+00:00", 
-                    "%Y-%m-%d %H:%M:%S%z"
-                ),
-                datetime
+                TweetProperties.created_at,
+                datetime.strptime("2023-04-17 14:03:55+00:00", "%Y-%m-%d %H:%M:%S%z"),
+                datetime,
             ),
             Properties("createdAt2", "sample", str),
         ],
@@ -146,12 +137,9 @@ def test_relation_query_multiple_properties_with_past_data():
         relation_name=EdgeLabels.quoted,
         relation_properties=[
             Properties(
-                TweetProperties.created_at, 
-                datetime.strptime(
-                    "2023-04-17 14:03:55+00:00",
-                    "%Y-%m-%d %H:%M:%S%z"
-                ),
-                datetime
+                TweetProperties.created_at,
+                datetime.strptime("2023-04-17 14:03:55+00:00", "%Y-%m-%d %H:%M:%S%z"),
+                datetime,
             ),
             Properties("createdAt2", "sample", str),
         ],
