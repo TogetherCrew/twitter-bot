@@ -1,5 +1,6 @@
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
+from datetime import datetime
 
 
 def test_mention_available_account_neo4j():
@@ -10,8 +11,11 @@ def test_mention_available_account_neo4j():
     We're making a sample data that the user mention themselves
     """
     sample_data = {
-        "tweet_id": "000000",
-        "created_at": "2023-04-14 20:56:58+00:00",
+        "id": "000000",
+        "created_at": datetime.strptime(
+            "2023-04-14 20:56:58+00:00", 
+            "%Y-%m-%d %H:%M:%S%z"
+        ),
         "author_id": "123456",
         "author_bio": "amazing!",
         "conversation_id": "000000",
