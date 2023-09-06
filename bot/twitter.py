@@ -431,7 +431,7 @@ katerina_user_id = 2220997760
 # Tweet, Quote Tweet, ReTweet, Replay
 
 
-def extract_twitter_user_information(user_id: str):
+def extract_twitter_user_information(user_id=None, username=None):
     # steps to follow
     # ?get all tweets that user has mentioned in it
     # ?get all tweets of the user
@@ -453,8 +453,20 @@ def extract_twitter_user_information(user_id: str):
     #
     # finally get all users's infos that we don't have
 
+    if id is None and username is not None:
+        user = get_user(username=username)
+        user_id = user.id
+        username = user.username
+    elif id is not None and username is None:
+        user = get_user(id=id)
+        user_id = user.id
+        username = user.username
+    elif id is None and username is None:
+        raise TypeError("Expected ID or username or both, not none of them")
+        
+
     latest_mention_id = get_latest_mention(user_id=user_id)
-    mentioned_tweets = get_mentioned_tweets_by_username(username=user_id, since_id=latest_mention_id)
+    mentioned_tweets = get_mentioned_tweets_by_username(username=username, since_id=latest_mention_id)
     save_tweets_in_neo4j(mentioned_tweets)
 
     latest_tweet_id = get_latest_tweet(user_id=user_id)
