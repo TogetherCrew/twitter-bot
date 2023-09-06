@@ -34,7 +34,6 @@ def get_latest_reply(
     df_latest_reply = gds.run_cypher(
         f"""
         OPTIONAL MATCH (t:Tweet {query})<-[r:REPLIED]-(m:Tweet)
-        WHERE m.authorId <> t.authorId
         WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
         RETURN MAX(id) as latest_reply_id
         """

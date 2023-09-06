@@ -89,7 +89,7 @@ def test_get_latest_retweet_userid_input():
     id = get_latest_retweet(user_id="989898")
 
     assert id is not None
-    assert id == "1113"
+    assert id == "1114"
 
 
 def test_get_latest_retweet_tweetid_input():
@@ -122,4 +122,4 @@ def test_get_latest_retweet_tweetid_input():
     id = get_latest_retweet(tweet_id="1111")
 
     assert id is not None
-    assert id == "1113"
+    assert id == "1114"

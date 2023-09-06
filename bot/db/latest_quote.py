@@ -38,7 +38,6 @@ def get_latest_quote(
     df_latest_quote = gds.run_cypher(
         f"""
         OPTIONAL MATCH (t:Tweet {query})<-[r:QUOTED]-(m:Tweet)
-        WHERE m.authorId <> t.authorId
         WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
         RETURN MAX(id) as latest_quoted_id
         """
