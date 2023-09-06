@@ -85,7 +85,7 @@ user_fields = [
 ]
 
 
-def get_user_tweets(user_handler: str, since_id: str):
+def get_user_tweets(user_handler: str, since_id: str) -> list[tweepy.Tweet]:
     query = f"from:{user_handler}"
 
     all_tweets: list[tweepy.Tweet] = []
@@ -113,7 +113,7 @@ def get_user_tweets(user_handler: str, since_id: str):
     return all_tweets
 
 
-def get_all_replies_of_tweet(tweet_id: str, since_id: str):
+def get_all_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     """
     Just for "Tweet" and "Quote Tweet"
     """
@@ -144,7 +144,7 @@ def get_all_replies_of_tweet(tweet_id: str, since_id: str):
     return all_reply
 
 
-def get_first_depth_replies_of_tweet(tweet_id: str, since_id: str):
+def get_first_depth_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     query = f"in_reply_to_tweet_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
@@ -172,7 +172,7 @@ def get_first_depth_replies_of_tweet(tweet_id: str, since_id: str):
     return all_reply
 
 
-def get_quotes_of_tweet(tweet_id: str, since_id: str):
+def get_quotes_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     query = f"quotes_of_tweet_id:{tweet_id}"
 
     all_quotes: list[tweepy.Tweet] = []
@@ -200,7 +200,7 @@ def get_quotes_of_tweet(tweet_id: str, since_id: str):
     return all_quotes
 
 
-def get_retweets_of_tweet(tweet_id: str, since_id: str):
+def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     query = f"retweets_of_tweet_id:{tweet_id}"
 
     all_retweets: list[tweepy.Tweet] = []
@@ -228,7 +228,7 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str):
     return all_retweets
 
 
-def get_mentioned_tweets_by_username(username: str, since_id: str):
+def get_mentioned_tweets_by_username(username: str, since_id: str) -> list[tweepy.Tweet]:
     query = f"@{username}"
     print(query)
 
@@ -257,7 +257,7 @@ def get_mentioned_tweets_by_username(username: str, since_id: str):
     return all_tweets
 
 
-def get_likers_of_tweet(tweet_id: str):
+def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
     all_liker_users: list[tweepy.User] = []
     next_token = None
     for _ in count(1):
@@ -281,7 +281,7 @@ def get_likers_of_tweet(tweet_id: str):
     return all_liker_users
 
 
-def get_user(id=None, username=None):
+def get_user(id=None, username=None) -> tweepy.User:
     if id is not None and username is not None:
         raise TypeError("Expected ID or username, not both")
 
@@ -310,7 +310,7 @@ katerina_user_id = 2220997760
 # Tweet, Quote Tweet, ReTweet, Replay
 
 
-def extract_twitter_user_information(username: str):
+def extract_twitter_user_information(user_id: str):
     # steps to follow
     # ?get all tweets that user has mentioned in it
     # ?get all tweets of the user
@@ -332,10 +332,10 @@ def extract_twitter_user_information(username: str):
     #
     # finally get all users's infos that we don't have
 
-    mentioned_tweets = get_mentioned_tweets_by_username(username=username)
+    mentioned_tweets = get_mentioned_tweets_by_username(username=user_id)
     save_tweets_in_neo4j(mentioned_tweets)
 
-    user_tweets = get_user_tweets(user_handler=username)
+    user_tweets = get_user_tweets(user_handler=user_id)
     save_tweets_in_neo4j(user_tweets)
 
     for tweet in user_tweets:
@@ -377,4 +377,5 @@ def extract_twitter_user_information(username: str):
             save_tweets_in_neo4j(retweets_of_reply)
 
 
-extract_twitter_user_information("katerinabohlec")
+katerina_user_id = 2220997760
+extract_twitter_user_information(katerina_user_id)
