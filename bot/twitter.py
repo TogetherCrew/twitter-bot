@@ -7,6 +7,11 @@ from itertools import count
 import tweepy
 
 from db.save_neo4j import save_tweets_in_neo4j
+from db.latest_mention import get_latest_mention
+from db.latest_tweet import get_latest_tweet
+from db.latest_reply import get_latest_reply
+from db.latest_quote import get_latest_quote
+from db.latest_retweet import get_latest_retweet
 
 
 def retry_function_if_fail(func, /, *args, **keywords):
@@ -332,10 +337,12 @@ def extract_twitter_user_information(user_id: str):
     #
     # finally get all users's infos that we don't have
 
-    mentioned_tweets = get_mentioned_tweets_by_username(username=user_id)
+    latest_mention_id = get_latest_mention(user_id=user_id)
+    mentioned_tweets = get_mentioned_tweets_by_username(username=user_id, since_id=latest_mention_id)
     save_tweets_in_neo4j(mentioned_tweets)
 
-    user_tweets = get_user_tweets(user_handler=user_id)
+    latest_tweet_id = get_latest_tweet(user_id=user_id)
+    user_tweets = get_user_tweets(user_handler=user_id, since_id=latest_tweet_id)
     save_tweets_in_neo4j(user_tweets)
 
     for tweet in user_tweets:
@@ -355,25 +362,31 @@ def extract_twitter_user_information(user_id: str):
         elif referenced_tweets and "replied_to" in referenced_tweets:
             print("'Replied'")
 
-            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id=tweet.id)
+            latest_reply_id = get_latest_reply(tweet_id= tweet.id)
+            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id=tweet.id, since_id=latest_reply_id)
             save_tweets_in_neo4j(replies_of_reply)
 
-            quotes_of_reply = get_quotes_of_tweet(tweet_id=tweet.id)
+            latest_quote_id = get_latest_quote(tweet_id= tweet.id)
+            quotes_of_reply = get_quotes_of_tweet(tweet_id=tweet.id, since_id=latest_quote_id)
             save_tweets_in_neo4j(quotes_of_reply)
 
-            retweets_of_reply = get_retweets_of_tweet(tweet_id=tweet.id)
+            latest_retweet_id = get_latest_retweet(tweet_id= tweet.id)
+            retweets_of_reply = get_retweets_of_tweet(tweet_id=tweet.id, since_id=latest_retweet_id)
             save_tweets_in_neo4j(retweets_of_reply)
 
         elif referenced_tweets is None or "quoted" in referenced_tweets:
             print("'Tweet' or 'Quote'")
 
-            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id=tweet.id)
+            latest_reply_id = get_latest_reply(tweet_id= tweet.id)
+            replies_of_reply = get_first_depth_replies_of_tweet(tweet_id=tweet.id, since_id=latest_reply_id)
             save_tweets_in_neo4j(replies_of_reply)
 
-            quotes_of_reply = get_quotes_of_tweet(tweet_id=tweet.id)
+            latest_quote_id = get_latest_quote(tweet_id= tweet.id)
+            quotes_of_reply = get_quotes_of_tweet(tweet_id=tweet.id, since_id=latest_quote_id)
             save_tweets_in_neo4j(quotes_of_reply)
 
-            retweets_of_reply = get_retweets_of_tweet(tweet_id=tweet.id)
+            latest_retweet_id = get_latest_retweet(tweet_id= tweet.id)
+            retweets_of_reply = get_retweets_of_tweet(tweet_id=tweet.id, since_id=latest_retweet_id)
             save_tweets_in_neo4j(retweets_of_reply)
 
 
