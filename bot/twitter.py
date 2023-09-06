@@ -85,7 +85,7 @@ user_fields = [
 ]
 
 
-def get_user_tweets(user_handler: str):
+def get_user_tweets(user_handler: str, since_id: str):
     query = f"from:{user_handler}"
 
     all_tweets: list[tweepy.Tweet] = []
@@ -96,6 +96,7 @@ def get_user_tweets(user_handler: str):
             query=query,
             tweet_fields=tweet_fields,
             max_results=max_tweet_results,
+            since_id= since_id,
             next_token=next_token,
         )
         tweets_list = tweets.data
@@ -112,7 +113,7 @@ def get_user_tweets(user_handler: str):
     return all_tweets
 
 
-def get_all_replies_of_tweet(tweet_id: str):
+def get_all_replies_of_tweet(tweet_id: str, since_id: str):
     """
     Just for "Tweet" and "Quote Tweet"
     """
@@ -126,6 +127,7 @@ def get_all_replies_of_tweet(tweet_id: str):
             query=query,
             tweet_fields=tweet_fields,
             max_results=max_tweet_results,
+            since_id=since_id,
             next_token=next_token,
         )
         reply_list = tweets.data
@@ -142,7 +144,7 @@ def get_all_replies_of_tweet(tweet_id: str):
     return all_reply
 
 
-def get_first_depth_replies_of_tweet(tweet_id: str):
+def get_first_depth_replies_of_tweet(tweet_id: str, since_id: str):
     query = f"in_reply_to_tweet_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
@@ -153,6 +155,7 @@ def get_first_depth_replies_of_tweet(tweet_id: str):
             query=query,
             tweet_fields=tweet_fields,
             max_results=max_tweet_results,
+            since_id=since_id,
             next_token=next_token,
         )
         reply_list = tweets.data
@@ -169,7 +172,7 @@ def get_first_depth_replies_of_tweet(tweet_id: str):
     return all_reply
 
 
-def get_quotes_of_tweet(tweet_id: str):
+def get_quotes_of_tweet(tweet_id: str, since_id: str):
     query = f"quotes_of_tweet_id:{tweet_id}"
 
     all_quotes: list[tweepy.Tweet] = []
@@ -180,6 +183,7 @@ def get_quotes_of_tweet(tweet_id: str):
             query=query,
             tweet_fields=tweet_fields,
             max_results=max_tweet_results,
+            since_id= since_id,
             next_token=next_token,
         )
         quote_list = tweets.data
@@ -196,7 +200,7 @@ def get_quotes_of_tweet(tweet_id: str):
     return all_quotes
 
 
-def get_retweets_of_tweet(tweet_id: str):
+def get_retweets_of_tweet(tweet_id: str, since_id: str):
     query = f"retweets_of_tweet_id:{tweet_id}"
 
     all_retweets: list[tweepy.Tweet] = []
@@ -207,6 +211,7 @@ def get_retweets_of_tweet(tweet_id: str):
             query=query,
             tweet_fields=tweet_fields,
             max_results=max_tweet_results,
+            since_id=since_id,
             next_token=next_token,
         )
         retweet_list = tweets.data
@@ -223,7 +228,7 @@ def get_retweets_of_tweet(tweet_id: str):
     return all_retweets
 
 
-def get_mentioned_tweets_by_username(username: str):
+def get_mentioned_tweets_by_username(username: str, since_id: str):
     query = f"@{username}"
     print(query)
 
@@ -235,6 +240,7 @@ def get_mentioned_tweets_by_username(username: str):
             query=query,
             tweet_fields=tweet_fields,
             max_results=max_tweet_results,
+            since_id=since_id,
             next_token=next_token,
         )
         tweets_list = tweets.data
