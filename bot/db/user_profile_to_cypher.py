@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from .utils.query_create_entity import create_query
@@ -108,6 +108,30 @@ def create_twitter_user_profile_query(user_data: list[User]):
                     property_format=datetime,
                 )
             )
+        # to save follower and following count as a property
+        if user["public_metrics"] is not None:
+            add_properties.append(
+                Properties(
+                    property_name=TwitterAccountProperties.follower_count,
+                    property_value=user["public_metrics"]["followers_count"],
+                    property_format=int,
+                )
+            )
+            add_properties.append(
+                Properties(
+                    property_name=TwitterAccountProperties.following_count,
+                    property_value=user["public_metrics"]["following_count"],
+                    property_format=int,
+                )
+            )
+        # saved at property
+        add_properties.append(
+            Properties(
+                property_name=TwitterAccountProperties.saved_at,
+                property_value=datetime.now(tz=timezone.utc),
+                property_format=datetime,
+            )
+        )
         query = create_query(
             node_label=NodeLabels.twitter_account,
             merge_property=Properties(
