@@ -413,6 +413,9 @@ def get_users(ids=None, usernames=None) -> list[tweepy.User]:
     if ids is not None and usernames is not None:
         raise TypeError("Expected IDs or usernames, not both")
 
+    ids = ','.join(ids) if ids else None
+    usernames = ','.join(usernames) if usernames else None
+    
     users = retry_function_if_fail(
         client.get_users,
         ids=ids,
@@ -530,8 +533,7 @@ def extract_user_information():
     users_id_chunk = [ users_id[i : i + chunk_size] for i in range(0, len(users_id), chunk_size) ]
 
     for users_id in users_id_chunk:
-        users_id_string = ','.join(users_id)
-        users = get_users(ids=users_id_string)
+        users = get_users(ids=users_id)
         save_user_profile_neo4j(users)
 
 
