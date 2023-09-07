@@ -4,6 +4,7 @@ from numpy import unique
 from .twitter_data_to_cypher import create_twitter_data_query
 from .user_profile_to_cypher import create_twitter_user_profile_query
 from .neo4j_connection import Neo4jConnection
+from tweepy import User
 
 
 def save_tweets_in_neo4j(twitter_data: list[dict[str, Any]], message: str = "") -> None:
@@ -27,7 +28,7 @@ def save_tweets_in_neo4j(twitter_data: list[dict[str, Any]], message: str = "") 
     neo4j_ops.store_data_neo4j(query_list=unique(queries), message=message)
 
 
-def save_user_profile_neo4j(user_data: list[dict[str, Any]], message: str = "") -> None:
+def save_user_profile_neo4j(user_data: list[User], message: str = "") -> None:
     """
     save user profile data into neo4j
 
