@@ -1,5 +1,5 @@
-from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.latest_retweet import get_latest_retweet
+from bot.db.neo4j_connection import Neo4jConnection
 
 
 def test_get_latest_retweet_userid_input_output_none():

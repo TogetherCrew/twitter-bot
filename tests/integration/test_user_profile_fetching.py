@@ -1,9 +1,7 @@
-from bot.db.neo4j_connection import Neo4jConnection
-from datetime import datetime
-
-from bot.db.user_profile_to_cypher import create_twitter_user_profile_query
-
 from tweepy import User
+
+from bot.db.neo4j_connection import Neo4jConnection
+from bot.db.user_profile_to_cypher import create_twitter_user_profile_query
 
 
 def test_user_profile_saving():
@@ -11,20 +9,16 @@ def test_user_profile_saving():
     save
     """
     user_data = {
-        "url": "https://t.co/ui89pZjLNx",
-        "username": "katerinabohlec",
-        "profile_image_url": "https://pbs.twimg.com/profile_images/1033847263397912576/9okABKa5_normal.jpg",
-        "id": "2220997760",
-        "description": "Scientist 👩\u200d🏫 | Writer | Explorer @RnDAO__ @together_crew 📆 https://t.co/m2abdcGZ0D 👩\u200d👧\u200d👧4x mum https://t.co/zIJ2lSbKu2",
+        "url": "https://t.co/theurl",
+        "username": "sample_user",
+        "profile_image_url": "https://person_image",
+        "id": "12345",
+        "description": "peoplepeoplepeople",
         "verified": False,
-        "name": "Katerina (💫,💫) 🚂 MetaFest",
-        "location": "⛺️🌎",
+        "name": "sample_user_name",
+        "location": "Berlin",
         "protected": False,
-        "created_at": "2013-11-29T07:10:24.000Z"
-        # 'created_at': datetime.strptime(
-        #     '2013-11-29 07:10:24+00:00',
-        #     "%Y-%m-%d %H:%M:%S%z"
-        # )
+        "created_at": "2013-11-29T07:10:24.000Z",
     }
     sample_user = User(data=user_data)
 

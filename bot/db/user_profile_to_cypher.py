@@ -1,14 +1,9 @@
 from datetime import datetime, timezone
-from typing import Any
 
-from .utils.query_create_entity import create_query
-
-from .utils.enums_data import (
-    NodeLabels,
-    Properties,
-    TwitterAccountProperties,
-)
 from tweepy import User
+
+from .utils.enums_data import NodeLabels, Properties, TwitterAccountProperties
+from .utils.query_create_entity import create_query
 
 
 def create_twitter_user_profile_query(user_data: list[User]):

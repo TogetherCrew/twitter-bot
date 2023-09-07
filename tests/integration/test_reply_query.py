@@ -1,7 +1,8 @@
-from bot.db.twitter_data_to_cypher import create_twitter_data_query
 from datetime import datetime
 
 from tweepy import ReferencedTweet
+
+from bot.db.twitter_data_to_cypher import create_twitter_data_query
 
 
 def test_reply_query():

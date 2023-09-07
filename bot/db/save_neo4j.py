@@ -1,10 +1,11 @@
 from typing import Any
 
 from numpy import unique
+from tweepy import User
+
+from .neo4j_connection import Neo4jConnection
 from .twitter_data_to_cypher import create_twitter_data_query
 from .user_profile_to_cypher import create_twitter_user_profile_query
-from .neo4j_connection import Neo4jConnection
-from tweepy import User
 
 
 def save_tweets_in_neo4j(twitter_data: list[dict[str, Any]], message: str = "") -> None:

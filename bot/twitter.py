@@ -1,20 +1,17 @@
-import os
-from dotenv import load_dotenv
-
-import logging
 import functools
+import logging
+import os
 from itertools import count
+
 import tweepy
-
-from db.save_neo4j import save_tweets_in_neo4j
-from db.latest_mention import get_latest_mention
-from db.latest_tweet import get_latest_tweet
-from db.latest_reply import get_latest_reply
-from db.latest_quote import get_latest_quote
-from db.latest_retweet import get_latest_retweet
-
 from db.incomplete_profiles import get_incomplete_profile_ids
-from db.save_neo4j import save_user_profile_neo4j
+from db.latest_mention import get_latest_mention
+from db.latest_quote import get_latest_quote
+from db.latest_reply import get_latest_reply
+from db.latest_retweet import get_latest_retweet
+from db.latest_tweet import get_latest_tweet
+from db.save_neo4j import save_tweets_in_neo4j, save_user_profile_neo4j
+from dotenv import load_dotenv
 
 
 def retry_function_if_fail(func, /, *args, **keywords):

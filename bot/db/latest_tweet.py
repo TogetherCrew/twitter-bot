@@ -1,5 +1,6 @@
+from datetime import datetime, timedelta, timezone
+
 from .neo4j_connection import Neo4jConnection
-from datetime import datetime, timezone, timedelta
 
 
 def get_latest_tweet(

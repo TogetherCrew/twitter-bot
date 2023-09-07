@@ -1,5 +1,5 @@
-from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.latest_tweet import get_latest_tweet
+from bot.db.neo4j_connection import Neo4jConnection
 
 
 def test_get_latest_tweet_none():

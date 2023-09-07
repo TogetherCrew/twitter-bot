@@ -24,7 +24,8 @@ def get_latest_mention(
     # latest mantion as a dataframe
     df_latest_mention = gds.run_cypher(
         f"""
-        OPTIONAL MATCH (t:Tweet)-[r:MENTIONED]->(a:TwitterAccount {{userId: '{user_id}'}})
+        OPTIONAL MATCH (t:Tweet)
+            -[r:MENTIONED]->(a:TwitterAccount {{userId: '{user_id}'}})
         WITH MAX(SIZE(t.tweetId)) as max_size, t.tweetId as id
         RETURN MAX(id) as latest_mention_id
         """

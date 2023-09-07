@@ -1,7 +1,6 @@
-from typing import Type
-
-from datetime import datetime
 import logging
+from datetime import datetime
+from typing import Type
 
 
 def make_val_by_type(

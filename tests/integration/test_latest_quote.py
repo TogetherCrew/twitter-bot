@@ -1,5 +1,5 @@
-from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.latest_quote import get_latest_quote
+from bot.db.neo4j_connection import Neo4jConnection
 
 
 def test_get_latest_quote_userid_input_output_none():

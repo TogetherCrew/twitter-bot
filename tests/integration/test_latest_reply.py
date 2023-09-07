@@ -1,5 +1,5 @@
-from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.latest_reply import get_latest_reply
+from bot.db.neo4j_connection import Neo4jConnection
 
 
 def test_get_latest_reply_userid_input_output_none():

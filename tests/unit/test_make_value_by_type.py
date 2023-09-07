@@ -8,7 +8,7 @@ def test_make_value_by_type_input_int():
 
     updated_value = make_val_by_type(value, int)
 
-    assert type(updated_value) is int
+    assert isinstance(updated_value, int)
     assert updated_value == 5
 
 
@@ -17,7 +17,7 @@ def test_make_value_by_type_input_str():
 
     updated_value = make_val_by_type(value, str)
 
-    assert type(updated_value) is str
+    assert isinstance(updated_value, str)
     expected_value = r""""Happy \}Appl%^&*()_!@#$^''][e" """
     expected_value = expected_value[:-1]
     assert updated_value == expected_value
@@ -28,7 +28,7 @@ def test_make_value_by_type_input_str_non_str():
 
     updated_value = make_val_by_type(value, str)
 
-    assert type(updated_value) is str
+    assert isinstance(updated_value, str)
     assert updated_value == '"5"'
 
 
@@ -37,7 +37,7 @@ def test_make_value_by_type_input_datetime():
 
     updated_value = make_val_by_type(value, datetime)
 
-    assert type(updated_value) is int
+    assert isinstance(updated_value, int)
     assert updated_value == 1681671938000
 
 
@@ -46,5 +46,5 @@ def test_make_value_by_type_input_list():
 
     updated_value = make_val_by_type(value, list)
 
-    assert type(updated_value) is str
+    assert isinstance(updated_value, str)
     assert updated_value == str(value)

@@ -1,6 +1,7 @@
+from datetime import datetime
+
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
-from datetime import datetime
 
 
 def test_create_tweeted_person_neo4j():

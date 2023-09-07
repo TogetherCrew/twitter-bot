@@ -1,11 +1,6 @@
 from datetime import datetime, timezone
 from typing import Any
 
-from .utils.query_create_entity import create_query
-from .utils.query_create_relation import relation_query
-from .utils.referenced_tweet_type_finder import tweet_type_finder
-
-
 from .utils.enums_data import (
     EdgeLabels,
     HashtagProperties,
@@ -14,7 +9,9 @@ from .utils.enums_data import (
     TweetProperties,
     TwitterAccountProperties,
 )
-
+from .utils.query_create_entity import create_query
+from .utils.query_create_relation import relation_query
+from .utils.referenced_tweet_type_finder import tweet_type_finder
 
 """
 Tweets's structure: {
