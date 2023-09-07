@@ -14,7 +14,7 @@ from db.latest_quote import get_latest_quote
 from db.latest_retweet import get_latest_retweet
 
 from db.incomplete_profiles import get_incomplete_profile_ids
-from bot.db.save_neo4j import save_user_profile_neo4j
+from db.save_neo4j import save_user_profile_neo4j
 
 def retry_function_if_fail(func, /, *args, **keywords):
     retry_number = (
@@ -455,15 +455,15 @@ def extract_twitter_user_information(user_id=None, username=None):
     #
     # finally get all users's infos that we don't have
 
-    if id is None and username is not None:
+    if user_id is None and username is not None:
         user = get_user(username=username)
         user_id = user.id
         username = user.username
-    elif id is not None and username is None:
-        user = get_user(id=id)
+    elif user_id is not None and username is None:
+        user = get_user(id=user_id)
         user_id = user.id
         username = user.username
-    elif id is None and username is None:
+    elif user_id is None and username is None:
         raise TypeError("Expected ID or username or both, not none of them")
         
 
