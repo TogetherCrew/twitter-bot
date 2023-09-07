@@ -127,7 +127,7 @@ def create_twitter_user_profile_query(user_data: list[User]):
         # saved at property
         add_properties.append(
             Properties(
-                property_name=TwitterAccountProperties.saved_at,
+                property_name=TwitterAccountProperties.latest_saved_at,
                 property_value=datetime.now(tz=timezone.utc),
                 property_format=datetime,
             )

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from .utils.query_create_entity import create_query
@@ -94,6 +94,13 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                 Properties(TweetProperties.video_url, tweet["video_url"], list)
             )
 
+        features.append(
+            Properties(
+                TweetProperties.latest_saved_at,
+                datetime.now(tz=timezone.utc),
+                datetime,
+            )
+        )
         query = create_query(
             NodeLabels.tweet,
             Properties(TweetProperties.tweet_id, tweet["id"], str),
@@ -105,7 +112,14 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             query = create_query(
                 NodeLabels.twitter_account,
                 Properties(TwitterAccountProperties.user_id, tweet["author_id"], str),
-                [Properties(TwitterAccountProperties.bio, tweet["author_bio"], str)],
+                [
+                    Properties(TwitterAccountProperties.bio, tweet["author_bio"], str),
+                    Properties(
+                        TwitterAccountProperties.latest_saved_at,
+                        datetime.now(tz=timezone.utc),
+                        datetime,
+                    ),
+                ],
             )
             cypher_queries.append(query)
 
@@ -115,33 +129,16 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             Properties(TwitterAccountProperties.user_id, tweet["author_id"], str),
             Properties(TweetProperties.tweet_id, tweet["id"], str),
             EdgeLabels.tweeted,
-            [Properties(TweetProperties.created_at, tweet["created_at"], datetime)],
+            [
+                Properties(TweetProperties.created_at, tweet["created_at"], datetime),
+                Properties(
+                    TweetProperties.latest_saved_at,
+                    datetime.now(tz=timezone.utc),
+                    datetime,
+                ),
+            ],
         )
         cypher_queries.append(query)
-
-        if "hashtags" in tweet.keys():
-            # Hashtag section
-            for h in tweet["hashtags"]:
-                query = create_query(
-                    NodeLabels.hashtag,
-                    Properties(HashtagProperties.hashtag, h, str),
-                    [],
-                )
-                cypher_queries.append(query)
-
-                query = relation_query(
-                    NodeLabels.tweet,
-                    NodeLabels.hashtag,
-                    Properties(TweetProperties.tweet_id, tweet["id"], str),
-                    Properties(HashtagProperties.hashtag, h, str),
-                    EdgeLabels.hashtagged,
-                    [
-                        Properties(
-                            TweetProperties.created_at, tweet["created_at"], datetime
-                        )
-                    ],
-                )
-                cypher_queries.append(query)
 
         if tweet["entities"] is not None:
             # Mention section
@@ -153,7 +150,12 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                         [
                             Properties(
                                 TwitterAccountProperties.user_name, m["username"], str
-                            )
+                            ),
+                            Properties(
+                                TwitterAccountProperties.latest_saved_at,
+                                datetime.now(tz=timezone.utc),
+                                datetime,
+                            ),
                         ],
                     )
                     cypher_queries.append(query)
@@ -169,7 +171,47 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                                 TweetProperties.created_at,
                                 tweet["created_at"],
                                 datetime,
-                            )
+                            ),
+                            Properties(
+                                TweetProperties.latest_saved_at,
+                                datetime.now(tz=timezone.utc),
+                                datetime,
+                            ),
+                        ],
+                    )
+                    cypher_queries.append(query)
+            if "hashtags" in tweet["entities"]:
+                for h in tweet["entities"]["hashtags"]:
+                    query = create_query(
+                        NodeLabels.hashtag,
+                        Properties(HashtagProperties.hashtag, h["tag"], str),
+                        [
+                            Properties(
+                                HashtagProperties.latest_saved_at,
+                                datetime.now(tz=timezone.utc),
+                                datetime,
+                            ),
+                        ],
+                    )
+                    cypher_queries.append(query)
+
+                    query = relation_query(
+                        NodeLabels.tweet,
+                        NodeLabels.hashtag,
+                        Properties(TweetProperties.tweet_id, tweet["id"], str),
+                        Properties(HashtagProperties.hashtag, h["tag"], str),
+                        EdgeLabels.hashtagged,
+                        [
+                            Properties(
+                                TweetProperties.created_at,
+                                tweet["created_at"],
+                                datetime,
+                            ),
+                            Properties(
+                                TweetProperties.latest_saved_at,
+                                datetime.now(tz=timezone.utc),
+                                datetime,
+                            ),
                         ],
                     )
                     cypher_queries.append(query)
@@ -177,20 +219,23 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
         # Like section
         if "likes" in tweet.keys():
             for like in tweet["likes"]:
-                # l_features = []
-                # l_features.append(
-                #     Properties(
-                #         TwitterAccountProperties.user_name, like["username"], str
-                #     )
-                # )
+                l_features = []
+                l_features.append(
+                    Properties(
+                        TwitterAccountProperties.user_name, like["username"], str
+                    )
+                )
+                l_features.append(
+                    Properties(
+                        TwitterAccountProperties.latest_saved_at,
+                        datetime.now(tz=timezone.utc),
+                        datetime,
+                    ),
+                )
                 query = create_query(
                     NodeLabels.twitter_account,
                     Properties(TwitterAccountProperties.user_id, like["user_id"], str),
-                    [
-                        Properties(
-                            TwitterAccountProperties.user_name, like["username"], str
-                        )
-                    ],
+                    l_features,
                 )
                 cypher_queries.append(query)
 
@@ -201,177 +246,17 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     Properties(TweetProperties.tweet_id, tweet["id"], str),
                     relation_name=EdgeLabels.liked,
                     relation_properties=[
-                        Properties("", "", list)
-                    ],  # BUG: no createdAt in available data for relation_properties
-                )
-                cypher_queries.append(query)
-
-        # Reply section
-        if "replies" in tweet.keys():
-            for reply in tweet["replies"]:
-                r_features = []
-                # r_features.append(
-                #     Properties(TweetProperties.tweet_id, reply["id"], str)
-                # )
-                r_features.append(
-                    Properties(TweetProperties.author_id, reply["author_id"], str)
-                )
-                r_features.append(Properties(TweetProperties.text, reply["text"], str))
-                r_features.append(
-                    Properties(
-                        TweetProperties.created_at,
-                        second_to_datetime(reply["created_at"]),
-                        datetime,
-                    )
-                )
-                r_features.append(Properties("type", EdgeLabels.replied, str))
-
-                query = create_query(
-                    NodeLabels.tweet,
-                    Properties(TweetProperties.tweet_id, reply["id"], str),
-                    r_features,
-                )
-                cypher_queries.append(query)
-
-                query = create_query(
-                    NodeLabels.twitter_account,
-                    Properties(
-                        TwitterAccountProperties.user_id, reply["author_id"], str
-                    ),
-                    [],
-                )
-                cypher_queries.append(query)
-
-                query = relation_query(
-                    NodeLabels.twitter_account,
-                    NodeLabels.tweet,
-                    Properties(
-                        TwitterAccountProperties.user_id, reply["author_id"], str
-                    ),
-                    Properties(TweetProperties.tweet_id, reply["id"], str),
-                    relation_name=EdgeLabels.tweeted,
-                    relation_properties=[
+                        Properties("", "", list),
                         Properties(
-                            TweetProperties.created_at,
-                            second_to_datetime(reply["created_at"]),
-                            datetime,
-                        )
-                    ],
-                )
-                cypher_queries.append(query)
-
-                query = relation_query(
-                    NodeLabels.tweet,
-                    NodeLabels.tweet,
-                    Properties(TweetProperties.tweet_id, reply["id"], str),
-                    Properties(TweetProperties.tweet_id, tweet["id"], str),
-                    relation_name=EdgeLabels.replied,
-                    relation_properties=[
-                        Properties(
-                            TweetProperties.created_at,
-                            second_to_datetime(reply["created_at"]),
+                            TweetProperties.latest_saved_at,
+                            datetime.now(tz=timezone.utc),
                             datetime,
                         ),
-                    ],
-                )
-                cypher_queries.append(query)
-
-        # Retweet section
-        if "retweets" in tweet.keys():
-            for ret in tweet["retweets"]:
-                ret_features = []
-                ret_features.append(
-                    Properties(TwitterAccountProperties.user_name, ret["username"], str)
-                )
-                ret_features.append(Properties("type", EdgeLabels.retweeted, str))
-                query = create_query(
-                    NodeLabels.twitter_account,
-                    Properties(TwitterAccountProperties.user_id, ret["user_id"], str),
-                    ret_features,
-                )
-                cypher_queries.append(query)
-
-                query = relation_query(
-                    NodeLabels.twitter_account,
-                    NodeLabels.tweet,
-                    Properties(TwitterAccountProperties.user_id, ret["user_id"], str),
-                    Properties(TweetProperties.tweet_id, tweet["id"], str),
-                    relation_name=EdgeLabels.retweeted,
-                    relation_properties=[
-                        Properties("", "", list)
                     ],  # BUG: no createdAt in available data for relation_properties
                 )
                 cypher_queries.append(query)
 
-        # Quote section
-        if "quote_retweets" in tweet.keys():
-            for quote in tweet["quote_retweets"]:
-                q_features = []
-                q_features.append(
-                    Properties(TweetProperties.author_id, quote["author_id"], str)
-                )
-                q_features.append(Properties(TweetProperties.text, quote["text"], str))
-                q_features.append(Properties("type", EdgeLabels.quoted, str))
-                q_features.append(
-                    Properties(
-                        TweetProperties.created_at,
-                        second_to_datetime(quote["created_at"]),
-                        datetime,
-                    )
-                )
-                query = create_query(
-                    NodeLabels.tweet,
-                    Properties(TweetProperties.tweet_id, quote["id"], str),
-                    q_features,
-                )
-                cypher_queries.append(query)
-
-                query = create_query(
-                    NodeLabels.twitter_account,
-                    Properties(
-                        TwitterAccountProperties.user_id,
-                        quote["author_id"],
-                        str,
-                    ),
-                    [],
-                )
-                cypher_queries.append(query)
-
-                query = relation_query(
-                    NodeLabels.twitter_account,
-                    NodeLabels.tweet,
-                    Properties(
-                        TwitterAccountProperties.user_id, quote["author_id"], str
-                    ),
-                    Properties(TweetProperties.tweet_id, quote["id"], str),
-                    EdgeLabels.tweeted,
-                    [
-                        Properties(
-                            TweetProperties.created_at,
-                            second_to_datetime(quote["created_at"]),
-                            datetime,
-                        )
-                    ],
-                )
-                cypher_queries.append(query)
-
-                query = relation_query(
-                    NodeLabels.tweet,
-                    NodeLabels.tweet,
-                    Properties(TweetProperties.tweet_id, tweet["id"], str),
-                    Properties(TweetProperties.tweet_id, quote["id"], str),
-                    EdgeLabels.quoted,
-                    [
-                        Properties(
-                            TweetProperties.created_at,
-                            second_to_datetime(quote["created_at"]),
-                            datetime,
-                        )
-                    ],
-                )
-                cypher_queries.append(query)
-
-        # Check is it exist or not
+        # Checking interaction
         if tweet["referenced_tweets"] is not None:
             for referenced_tweet in tweet["referenced_tweets"]:
                 id_val, type_val = tweet_type_finder(referenced_tweet.data)
@@ -384,7 +269,12 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     relation_properties=[
                         Properties(
                             TweetProperties.created_at, tweet["created_at"], datetime
-                        )
+                        ),
+                        Properties(
+                            TweetProperties.latest_saved_at,
+                            datetime.now(tz=timezone.utc),
+                            datetime,
+                        ),
                     ],
                 )
                 cypher_queries.append(query)

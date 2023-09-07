@@ -4,7 +4,7 @@ from typing import Type
 
 class BaseProperties:
     created_at: str = "createdAt"
-    saved_at: str = "savedAt"
+    latest_saved_at: str = "latestSavedAt"
 
 
 class TwitterAccountProperties:
@@ -13,7 +13,7 @@ class TwitterAccountProperties:
     name: str = "name"
     bio: str = "bio"
     created_at: str = BaseProperties.created_at
-    saved_at: str = BaseProperties.saved_at
+    latest_saved_at: str = BaseProperties.latest_saved_at
     url: str = "url"
     profile_image_url: str = "profileImageUrl"
     verified: str = "verified"
@@ -31,13 +31,13 @@ class TweetProperties:
     image_url: str = "imageUrl"
     video_url: str = "videoUrl"
     author_id: str = "authorId"
-    saved_at: str = BaseProperties.saved_at
+    latest_saved_at: str = BaseProperties.latest_saved_at
 
 
 class HashtagProperties:
     hashtag: str = "hashtag"
     created_at: str = BaseProperties.created_at
-    saved_at: str = BaseProperties.saved_at
+    latest_saved_at: str = BaseProperties.latest_saved_at
 
 
 class NodeLabels:

@@ -44,20 +44,19 @@ def relation_query(
 
     query = f"MERGE (a:{node_label1} {{{match_properties1.property_name}:{val1}}}) "
     query += f"MERGE (b:{node_label2} {{{match_properties2.property_name}:{val2}}}) "
-    query += f"MERGE (a)-[:{relation_name} "
-    # TODO: use SET here!!
+    query += f"MERGE (a)-[r:{relation_name}]->(b) "
 
     # for properties
-    query += "{"
+    if len(relation_properties) != 0:
+        query += "SET "
+
     for idx, property in enumerate(relation_properties):
         val = make_val_by_type(property.property_value, property.property_format)
-        query += f"{property.property_name}: {val}"
+        query += f"r.{property.property_name}={val}"
 
         # if it wasn't the last index
         # add a comma to include the next property
         if idx + 1 != len(relation_properties):
             query += ", "
-
-    query += "}]->(b)"
 
     return query
