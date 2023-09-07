@@ -1,4 +1,5 @@
 from .neo4j_connection import Neo4jConnection
+from datetime import datetime, timezone, timedelta
 
 
 def get_latest_tweet(
@@ -32,3 +33,45 @@ def get_latest_tweet(
     latest_tweeted_id = df_latest_tweeted["latest_tweeted_id"].iloc[0]
 
     return latest_tweeted_id
+
+
+def get_days_ago_tweet_ids(user_id: str, days: int = 7) -> list[str]:
+    """
+    get the tweetIds of a user for given days ago
+
+    Parameters:
+    ------------
+    user_id : str
+        the twitter account id
+    days : int
+        the count of days ago tweetIds to get
+        default is `7` meaning 7 days ago
+
+    Returns:
+    ---------
+    tweet_ids : list[str]
+        a list of tweet ids for the user
+        the ids can be related to either tweet, reply, quote, or retweet
+    """
+    neo4j_connection = Neo4jConnection()
+    gds = neo4j_connection.neo4j_ops.gds
+
+    # the past `days` timestamp
+    epoch_past = (
+        datetime.now().replace(
+            hour=0, minute=0, microsecond=0, second=0, tzinfo=timezone.utc
+        )
+        - timedelta(days=days)
+    ).timestamp() * 1000
+
+    # latest tweet id as a dataframe
+    df_tweet_ids = gds.run_cypher(
+        f"""
+        MATCH (t:Tweet {{authorId: '{user_id}'}})
+        WHERE t.createdAt >= {epoch_past}
+        RETURN t.tweetId as tweet_ids
+        """
+    )
+    tweet_ids = df_tweet_ids["tweet_ids"].values
+
+    return list(tweet_ids)
