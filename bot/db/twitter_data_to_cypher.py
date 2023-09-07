@@ -143,33 +143,36 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                 )
                 cypher_queries.append(query)
 
-        if "account_mentions" in tweet.keys():
+        if tweet["entities"] is not None:
             # Mention section
-            for m in tweet["account_mentions"]:
-                query = create_query(
-                    NodeLabels.twitter_account,
-                    Properties(TwitterAccountProperties.user_id, m["id"], str),
-                    [
-                        Properties(
-                            TwitterAccountProperties.user_name, m["username"], str
-                        )
-                    ],
-                )
-                cypher_queries.append(query)
+            if "mentions" in tweet["entities"]:
+                for m in tweet["entities"]["mentions"]:
+                    query = create_query(
+                        NodeLabels.twitter_account,
+                        Properties(TwitterAccountProperties.user_id, m["id"], str),
+                        [
+                            Properties(
+                                TwitterAccountProperties.user_name, m["username"], str
+                            )
+                        ],
+                    )
+                    cypher_queries.append(query)
 
-                query = relation_query(
-                    NodeLabels.tweet,
-                    NodeLabels.twitter_account,
-                    Properties(TweetProperties.tweet_id, tweet["id"], str),
-                    Properties(TwitterAccountProperties.user_id, m["id"], str),
-                    EdgeLabels.mentioned,
-                    [
-                        Properties(
-                            TweetProperties.created_at, tweet["created_at"], datetime
-                        )
-                    ],
-                )
-                cypher_queries.append(query)
+                    query = relation_query(
+                        NodeLabels.tweet,
+                        NodeLabels.twitter_account,
+                        Properties(TweetProperties.tweet_id, tweet["id"], str),
+                        Properties(TwitterAccountProperties.user_id, m["id"], str),
+                        EdgeLabels.mentioned,
+                        [
+                            Properties(
+                                TweetProperties.created_at,
+                                tweet["created_at"],
+                                datetime,
+                            )
+                        ],
+                    )
+                    cypher_queries.append(query)
 
         # Like section
         if "likes" in tweet.keys():
