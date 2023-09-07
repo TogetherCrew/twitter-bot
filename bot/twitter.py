@@ -13,6 +13,8 @@ from db.latest_reply import get_latest_reply
 from db.latest_quote import get_latest_quote
 from db.latest_retweet import get_latest_retweet
 
+from db.incomplete_profiles import get_incomplete_profile_ids
+from bot.db.save_neo4j import save_user_profile_neo4j
 
 def retry_function_if_fail(func, /, *args, **keywords):
     retry_number = (
@@ -518,5 +520,18 @@ def extract_twitter_user_information(user_id=None, username=None):
             save_tweets_in_neo4j(retweets_of_reply)
 
 
-katerina_user_id = 2220997760
-extract_twitter_user_information(katerina_user_id)
+# katerina_user_id = 2220997760
+# extract_twitter_user_information(katerina_user_id)
+
+def extract_user_information():
+    users_id = get_incomplete_profile_ids()
+    
+    chunk_size = 100
+    users_id_chunk = [ users_id[i : i + chunk_size] for i in range(0, len(users_id), chunk_size) ]
+
+    for users_id in users_id_chunk:
+        users_id_string = ','.join(users_id)
+        users = get_users(ids=users_id_string)
+        save_user_profile_neo4j(users)
+
+
