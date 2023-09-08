@@ -375,6 +375,30 @@ def get_mentioned_tweets_by_username(
     return all_tweets
 
 
+def get_liked_tweets(user_id: str):
+    all_tweets: list[tweepy.Tweet] = []
+    next_token = None
+    
+    for _ in count(1):
+        tweets = retry_function_if_fail(
+            client.get_liked_tweets,
+            id=user_id,
+            tweet_fields=tweet_fields,
+            max_results=max_tweet_results,
+            pagination_token=next_token,
+        )
+        tweets_list = tweets.data
+        tweets_meta = tweets.meta
+
+        tweets_list = tweets_list if tweets_list is not None else []
+        all_tweets += tweets_list
+
+        if not "next_token" in tweets_meta:
+            break  # when we don't have "next_token" in meta object, there is no more data
+        else:
+            next_token = tweets_meta["next_token"]
+
+
 def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
     all_liker_users: list[tweepy.User] = []
     next_token = None
