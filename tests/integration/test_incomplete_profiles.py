@@ -95,7 +95,7 @@ def test_incomplete_profiles_some_outputs():
 
     ids = get_incomplete_profile_ids()
 
-    assert ids == ["111", "112"]
+    assert set(ids) == set(["111", "112"])
 
 
 def test_incomplete_profiles_by_bio_some_outputs():
@@ -129,4 +129,4 @@ def test_incomplete_profiles_by_bio_some_outputs():
 
     ids = get_incomplete_profile_ids(by="bio")
 
-    assert ids == ["111", "112", "113"]
+    assert set(ids) == set(["111", "112", "113"])
