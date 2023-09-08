@@ -2,6 +2,7 @@ import functools
 import logging
 import os
 from itertools import count
+from dotenv import load_dotenv
 
 import tweepy
 from db.incomplete_profiles import get_incomplete_profile_ids
@@ -10,8 +11,9 @@ from db.latest_quote import get_latest_quote
 from db.latest_reply import get_latest_reply
 from db.latest_retweet import get_latest_retweet
 from db.latest_tweet import get_latest_tweet
-from db.save_neo4j import save_tweets_in_neo4j, save_user_profile_neo4j
-from dotenv import load_dotenv
+from db.latest_tweet import get_days_ago_tweet_ids
+from db.save_neo4j import save_tweets_in_neo4j, save_user_profile_neo4j, save_tweet_likes_neo4j
+
 
 
 def retry_function_if_fail(func, /, *args, **keywords):
@@ -382,6 +384,7 @@ def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
             id=tweet_id,
             max_results=max_like_results,
             pagination_token=next_token,
+            user_fields=user_fields
         )
         users_list = users.data
         users_meta = users.meta
@@ -416,8 +419,8 @@ def get_users(ids=None, usernames=None) -> list[tweepy.User]:
     if ids is not None and usernames is not None:
         raise TypeError("Expected IDs or usernames, not both")
 
-    ids = ",".join(ids) if ids else None
-    usernames = ",".join(usernames) if usernames else None
+    ids = ','.join(ids) if ids else None
+    usernames = ','.join(usernames) if usernames else None
 
     users = retry_function_if_fail(
         client.get_users,
@@ -554,3 +557,11 @@ def extract_user_information():
     for users_id in users_id_chunk:
         users = get_users(ids=users_id)
         save_user_profile_neo4j(users)
+
+
+def get_liker_users(user_id: str):
+    tweet_ids = get_days_ago_tweet_ids(user_id= user_id)
+
+    for tweet_id in tweet_ids:
+        liker_users = get_likers_of_tweet(tweet_id=tweet_id)
+        save_tweet_likes_neo4j(tweet_id, liker_users)
