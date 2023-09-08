@@ -12,7 +12,7 @@ from db.latest_reply import get_latest_reply
 from db.latest_retweet import get_latest_retweet
 from db.latest_tweet import get_latest_tweet
 from db.latest_tweet import get_days_ago_tweet_ids
-from db.save_neo4j import save_tweets_in_neo4j, save_user_profile_neo4j, save_tweet_likes_neo4j
+from db.save_neo4j import save_tweets_in_neo4j, save_user_profile_neo4j, save_tweet_likes_neo4j, save_user_likes_neo4j
 
 
 
@@ -375,7 +375,7 @@ def get_mentioned_tweets_by_username(
     return all_tweets
 
 
-def get_liked_tweets(user_id: str):
+def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
     
@@ -397,6 +397,8 @@ def get_liked_tweets(user_id: str):
             break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
+    
+    return all_tweets
 
 
 def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
@@ -580,6 +582,13 @@ def extract_and_save_liker_users(user_id: str):
         liker_users = get_likers_of_tweet(tweet_id=tweet_id)
         save_tweet_likes_neo4j(tweet_id, liker_users)
         save_user_profile_neo4j(liker_users)
+
+
+def extract_and_save_liked_tweets(user_id: str):
+
+    liked_tweets = get_liked_tweets(user_id=user_id)
+    save_user_likes_neo4j(user_id=user_id, tweets_liked=liked_tweets)
+
 
 
 if __name__ == "--main__":
