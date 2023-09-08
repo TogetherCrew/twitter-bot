@@ -589,3 +589,4 @@ def get_liker_users(user_id: str):
     for tweet_id in tweet_ids:
         liker_users = get_likers_of_tweet(tweet_id=tweet_id)
         save_tweet_likes_neo4j(tweet_id, liker_users)
+        save_user_profile_neo4j(liker_users)
