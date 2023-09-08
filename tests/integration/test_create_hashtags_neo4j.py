@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from tweepy import ReferencedTweet
+from tweepy import ReferencedTweet, Tweet
 
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
@@ -9,9 +7,8 @@ from bot.db.twitter_data_to_cypher import create_twitter_data_query
 def test_create_hashtags_neo4j():
     sample_data = {
         "id": "000000",
-        "created_at": datetime.strptime(
-            "2023-04-14 20:56:58+00:00", "%Y-%m-%d %H:%M:%S%z"
-        ),
+        "edit_history_tweet_ids": ["000000"],
+        "created_at": "2023-04-14T20:56:58.000Z",
         "author_id": "123456",
         "author_bio": "amazing!",
         "conversation_id": "000000",
@@ -20,7 +17,6 @@ def test_create_hashtags_neo4j():
         "video_url": [],
         "text_url": [],
         "type": ["retweeted"],
-        "hashtags": ["web3", "jobs"],
         "account_mentions": [],
         "cashtags": [],
         "public_metrics": {
@@ -31,12 +27,18 @@ def test_create_hashtags_neo4j():
             "impression_count": 0,
         },
         "context_annotations": [],
+        "entities": {
+            "hashtags": [
+                {"tag": "web3", "start": 5, "end": 9},
+                {"tag": "jobs", "start": 10, "end": 14},
+            ]
+        },
         "referenced_tweets": [
             ReferencedTweet(data={"id": 567654, "type": "retweeted"})
         ],
     }
-
-    queries = create_twitter_data_query([sample_data])
+    data = Tweet(data=sample_data)
+    queries = create_twitter_data_query([data])
 
     print(queries)
 
@@ -56,5 +58,6 @@ def test_create_hashtags_neo4j():
         h{.*} as h
         """
     )
+    assert len(results) == 2
     for _, row in results.iterrows():
         assert row["h"]["hashtag"] in ["web3", "jobs"]

@@ -103,6 +103,7 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
             Properties(TweetProperties.tweet_id, tweet["id"], str),
             features,
         )
+        print(f"query: {query}")
         cypher_queries.append(query)
 
         if "author_bio" in tweet.keys():

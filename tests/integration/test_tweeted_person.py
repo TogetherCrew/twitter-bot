@@ -1,27 +1,27 @@
-from datetime import datetime
+from tweepy import Tweet
 
+from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
 
 
-def test_create_tweeted_person():
+def test_create_tweeted_person_neo4j():
     """
     create queries for a person that tweets a tweet (relationships included)
     """
     sample_data = {
-        "id": "0000",
-        "created_at": datetime.strptime(
-            "2023-04-13 01:21:51+00:00", "%Y-%m-%d %H:%M:%S%z"
-        ),
+        "id": "223344",
+        "edit_history_tweet_ids": ["223344"],
+        "created_at": "2023-04-13T01:21:51.00Z",
         "author_id": "12344321",
         "author_bio": "Amazing man with a perfect profile!",
-        "conversation_id": "0000",
+        "conversation_id": "223344",
         "text": "IYKYK - @user2 https://somelink",
-        "image_url": ["https://twitter.com/amazingman/status/0000/photo/1"],
-        "video_url": ["https://twitter.com/amazingman/status/0000/video/1"],
+        "image_url": ["https://twitter.com/amazingman/status/223344/photo/1"],
+        "video_url": ["https://twitter.com/amazingman/status/223344/video/1"],
         "text_url": [],
         "type": [],
         "hashtags": [],
-        "account_mentions": [{"username": "user2", "id": "987789"}],
+        "entities": {"mentions": [{"username": "user2", "id": "987789"}]},
         "cashtags": [],
         "public_metrics": {
             "retweet_count": 1,
@@ -33,37 +33,79 @@ def test_create_tweeted_person():
         "context_annotations": [],
         "referenced_tweets": None,
     }
+    data = Tweet(data=sample_data)
+    queries = create_twitter_data_query([data])
 
-    queries = create_twitter_data_query([sample_data])
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
+    neo4j_ops.gds.run_cypher(
+        """
+        MATCH (n) DETACH DELETE (n)
+        """
+    )
+    neo4j_ops.store_data_neo4j(queries, message="test_create_tweeted_person_neo4j")
 
-    print(queries)
-    query1 = """MERGE (a:Tweet {tweetId: "0000"}) """
-    query1 += "SET a.createdAt=1681348911000, "
-    query1 += f"""a.authorId="12344321", a.text="{sample_data['text']}", """
-    query1 += f"""a.likeCounts=5, a.imageUrl={str(sample_data['image_url'])}, """
-    query1 += f"""a.videoUrl={str(sample_data['video_url'])}"""
+    results_tweet = neo4j_ops.gds.run_cypher(
+        """
+        MATCH (t:Tweet)
+        RETURN t{.*} as tweet
+        """
+    )
+    assert len(results_tweet) == 1
+    data = results_tweet["tweet"].values[0]
+    assert data["createdAt"] == 1681348911000
+    assert data["text"] == "IYKYK - @user2 https://somelink"
+    assert data["authorId"] == "12344321"
+    assert data["likeCounts"] == 5
+    assert data["imageUrl"] == ["https://twitter.com/amazingman/status/223344/photo/1"]
+    assert data["videoUrl"] == ["https://twitter.com/amazingman/status/223344/video/1"]
 
-    assert query1 in queries
+    results_account = neo4j_ops.gds.run_cypher(
+        """
+        MATCH (a:TwitterAccount)
+        RETURN a{.*} as account
+        """
+    )
+    assert len(results_account) == 2
 
-    query2 = """MERGE (a:TwitterAccount {userId: "12344321"}) """
-    query2 += """SET a.bio="Amazing man with a perfect profile!" """
-    query2 = query2[:-1]
+    for _, row in results_account.iterrows():
+        data = row["account"]
+        assert data["userId"] in ["12344321", "987789"]
+        if data["userId"] == "12344321":
+            assert "userName" not in data
+            assert data["bio"] == "Amazing man with a perfect profile!"
+        else:
+            assert data["userName"] == "user2"
+            assert data["userId"] == "987789"
+            assert "bio" not in data
 
-    assert query2 in queries
+    results_tweeted_rel = neo4j_ops.gds.run_cypher(
+        """
+        MATCH ()-[r:TWEETED]->()
+        RETURN r{.*} as tweeted_rel
+        """
+    )
+    assert len(results_tweeted_rel) == 1
+    data = results_tweeted_rel["tweeted_rel"].values[0]
+    assert data["createdAt"] == 1681348911000
 
-    query3 = """MERGE (a:TwitterAccount {userId:"12344321"}) """
-    query3 += """MERGE (b:Tweet {tweetId:"0000"}) """
-    query3 += "MERGE (a)-[:TWEETED {createdAt: 1681348911000}]->(b)"
+    results = neo4j_ops.gds.run_cypher(
+        """
+        MATCH (a:Tweet)-[r:MENTIONED]->(b:TwitterAccount)
+        RETURN
+            r{.*} as mentioned,
+            a{.*} as tweet,
+            b{.*} as account
+        """
+    )
+    assert len(results) == 1
+    data = results["mentioned"].values[0]
+    assert data["createdAt"] == 1681348911000
 
-    assert query3 in queries
+    data = results["tweet"].values[0]
+    assert data["tweetId"] == "223344"
+    assert data["authorId"] == "12344321"
 
-    query4 = """MERGE (a:TwitterAccount {userId: "987789"}) SET a.userName="user2" """
-    query4 = query4[:-1]
-
-    assert query4 in queries
-
-    query5 = """MERGE (a:Tweet {tweetId:"0000"}) """
-    query5 += """MERGE (b:TwitterAccount {userId:"987789"}) """
-    query5 += "MERGE (a)-[:MENTIONED {createdAt: 1681348911000}]->(b)"
-
-    assert query5 in queries
+    data = results["account"].values[0]
+    assert data["userId"] == "987789"
+    assert data["userName"] == "user2"

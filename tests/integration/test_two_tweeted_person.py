@@ -1,33 +1,33 @@
-from datetime import datetime
+from tweepy import ReferencedTweet, Tweet
 
-from tweepy import ReferencedTweet
-
+from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
 
 
-def test_create_tweeted_person():
+def test_create_two_person_tweeted_neo4j():
     """
     create queries for a person that tweets a tweet (relationships included)
     """
     sample_data = [
         {
-            "id": "000000",
-            "created_at": datetime.strptime(
-                "2023-03-17 23:19:30+00:00", "%Y-%m-%d %H:%M:%S%z"
-            ),
+            "id": "445566",
+            "created_at": "2023-03-17T23:19:30.00Z",
+            "edit_history_tweet_ids": ["445566"],
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
-            "conversation_id": "000000",
+            "conversation_id": "445566",
             "text": "samplesamplesample",
             "image_url": [],
             "video_url": [],
             "text_url": [],
             "type": [],
             "hashtags": [],
-            "account_mentions": [
-                {"username": "iqwe2qw", "id": "1111111"},
-                {"username": "tashhfa", "id": "222222"},
-            ],
+            "entities": {
+                "mentions": [
+                    {"username": "iqwe2qw", "id": "1111111"},
+                    {"username": "tashhfa", "id": "222222"},
+                ]
+            },
             "cashtags": [],
             "public_metrics": {
                 "retweet_count": 3,
@@ -74,9 +74,8 @@ def test_create_tweeted_person():
         },
         {
             "id": "66666666",
-            "created_at": datetime.strptime(
-                "2023-03-10 18:43:42+00:00", "%Y-%m-%d %H:%M:%S%z"
-            ),
+            "edit_history_tweet_ids": ["66666666"],
+            "created_at": "2023-03-10T18:43:42.00Z",
             "author_id": "89129821",
             "author_bio": "We're together in togetherCrew",
             "conversation_id": "66666666",
@@ -86,10 +85,12 @@ def test_create_tweeted_person():
             "text_url": [],
             "type": ["retweeted"],
             "hashtags": [],
-            "account_mentions": [
-                {"username": "Ac1", "id": "567893212"},
-                {"username": "Ac2", "id": "09458723"},
-            ],
+            "entities": {
+                "mentions": [
+                    {"username": "Ac1", "id": "567893212"},
+                    {"username": "Ac2", "id": "09458723"},
+                ]
+            },
             "cashtags": [],
             "public_metrics": {
                 "retweet_count": 4,
@@ -113,68 +114,92 @@ def test_create_tweeted_person():
             ],
         },
     ]
+    data = []
+    for d in sample_data:
+        data.append(Tweet(data=d))
+    queries = create_twitter_data_query(data)
 
-    queries = create_twitter_data_query(sample_data)
-
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
+    neo4j_ops.gds.run_cypher(
+        """
+        MATCH (n) DETACH DELETE (n)
+        """
+    )
+    neo4j_ops.store_data_neo4j(queries, message="test_create_two_person_tweeted_neo4j")
     print(queries)
-    query1 = """MERGE (a:Tweet {tweetId: "000000"}) SET a.createdAt=1679095170000, """
-    query1 += """a.authorId="89129821", a.text="samplesamplesample", """
-    query1 += "a.likeCounts=15"
 
-    assert query1 in queries
+    results_tweeted = neo4j_ops.gds.run_cypher(
+        """
+        MATCH
+            (a:TwitterAccount {userId: '89129821'})
+                -[r:TWEETED] -> (b:Tweet {tweetId: '445566'})
+        RETURN
+            a{.*} as account,
+            r{.*} as tweeted,
+            b{.*} as tweet
+        """
+    )
+    assert len(results_tweeted) == 1
+    for _, row in results_tweeted.iterrows():
+        account = row["account"]
+        tweeted_rel = row["tweeted"]
+        tweet = row["tweet"]
 
-    query2 = """MERGE (a:TwitterAccount {userId: "89129821"}) """
-    query2 += """SET a.bio="We're together in togetherCrew" """
-    query2 = query2[:-1]
+        assert account["userId"] == "89129821"
+        assert account["bio"] == """We're together in togetherCrew"""
 
-    assert query2 in queries
+        assert tweeted_rel["createdAt"] == 1679095170000
 
-    query3 = """MERGE (a:TwitterAccount {userId:"89129821"}) """
-    query3 += """MERGE (b:Tweet {tweetId:"000000"}) """
-    query3 += "MERGE (a)-[:TWEETED {createdAt: 1679095170000}]->(b)"
+        assert tweet["tweetId"] == "445566"
+        assert tweet["text"] == "samplesamplesample"
+        assert tweet["authorId"] == "89129821"
+        assert tweet["likeCounts"] == 15
 
-    assert query3 in queries
+    results_mentioned = neo4j_ops.gds.run_cypher(
+        """
+        MATCH
+            (a:Tweet {tweetId: '445566'})
+                -[r:MENTIONED] -> (b:TwitterAccount {userId: '1111111'})
+        RETURN
+            r{.*} as mentioned,
+            b{.*} as account
+        """
+    )
+    assert len(results_mentioned) == 1
+    for _, row in results_mentioned.iterrows():
+        account = row["account"]
+        mentioned_rel = row["mentioned"]
 
-    query4 = """MERGE (a:TwitterAccount {userId: "1111111"}) """
-    query4 += """SET a.userName="iqwe2qw" """
-    query4 = query4[:-1]
+        assert account["userId"] == "1111111"
+        assert account["userName"] == "iqwe2qw"
 
-    assert query4 in queries
+        assert mentioned_rel["createdAt"] == 1679095170000
 
-    query5 = """MERGE (a:Tweet {tweetId:"000000"}) """
-    query5 += """MERGE (b:TwitterAccount {userId:"1111111"}) """
-    query5 += "MERGE (a)-[:MENTIONED {createdAt: 1679095170000}]->(b)"
+    results_retweeted = neo4j_ops.gds.run_cypher(
+        """
+        MATCH
+            (a:Tweet {tweetId: '66666666'})
+                -[r:RETWEETED] -> (b:Tweet {tweetId: '8374981'})
+        RETURN
+            a{.*} as source,
+            r{.*} as retweeted,
+            b{.*} as target
+        """
+    )
+    assert len(results_retweeted) == 1
+    for _, row in results_retweeted.iterrows():
+        acc_source = row["source"]
+        acc_target = row["target"]
 
-    assert query5 in queries
+        retweeted_rel = row["retweeted"]
 
-    query6 = """MERGE (a:TwitterAccount {userId: "222222"}) """
-    query6 += """SET a.userName="tashhfa" """
-    query6 = query6[:-1]
+        assert acc_source["tweetId"] == "66666666"
+        assert acc_source["authorId"] == "89129821"
+        assert acc_source["text"] == "RT sample"
 
-    assert query6 in queries
+        assert acc_target["tweetId"] == "8374981"
+        assert "authorId" not in acc_target
+        assert "text" not in acc_target
 
-    query7 = """MERGE (a:Tweet {tweetId: "66666666"}) SET a.createdAt=1678473822000, """
-    query7 += """a.authorId="89129821", a.text="RT sample", a.likeCounts=0"""
-
-    assert query7 in queries
-
-    query8 = """MERGE (a:TwitterAccount {userId: "89129821"}) """
-    query8 += """SET a.bio="We're together in togetherCrew" """
-    query8 = query8[:-1]
-    assert query8 in queries
-
-    query9 = """MERGE (a:TwitterAccount {userId: "567893212"}) """
-    query9 += """SET a.userName="Ac1" """
-    query9 = query9[:-1]
-    assert query9 in queries
-
-    query10 = """MERGE (a:TwitterAccount {userId: "09458723"}) """
-    query10 += """SET a.userName="Ac2" """
-    query10 = query10[:-1]
-    assert query10 in queries
-
-    query11 = """MERGE (a:Tweet {tweetId:"66666666"}) """
-    query11 += """MERGE (b:Tweet {tweetId:"8374981"}) """
-    query11 += "MERGE (a)-[:RETWEETED {createdAt: 1678473822000}]->(b)"
-
-    assert query11 in queries
+        assert retweeted_rel["createdAt"] == 1678473822000

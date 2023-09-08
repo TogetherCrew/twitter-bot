@@ -1,4 +1,4 @@
-from datetime import datetime
+from tweepy import Tweet
 
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
@@ -12,20 +12,19 @@ def test_mention_available_account_neo4j():
     We're making a sample data that the user mention themselves
     """
     sample_data = {
-        "id": "000000",
-        "created_at": datetime.strptime(
-            "2023-04-14 20:56:58+00:00", "%Y-%m-%d %H:%M:%S%z"
-        ),
+        "id": "556644",
+        "edit_history_tweet_ids": ["556644"],
+        "created_at": "2023-04-14T20:56:58.00Z",
         "author_id": "123456",
         "author_bio": "amazing!",
-        "conversation_id": "000000",
+        "conversation_id": "556644",
         "text": "SAMPLE_TEXT",
         "image_url": [],
         "video_url": [],
         "text_url": [],
         "type": [],
         "hashtags": [],
-        "account_mentions": [{"username": "special_user", "id": "123456"}],
+        "entities": {"mentions": [{"username": "special_user", "id": "123456"}]},
         "cashtags": [],
         "public_metrics": {
             "retweet_count": 0,
@@ -37,8 +36,8 @@ def test_mention_available_account_neo4j():
         "context_annotations": [],
         "referenced_tweets": None,
     }
-
-    queries = create_twitter_data_query([sample_data])
+    data = Tweet(data=sample_data)
+    queries = create_twitter_data_query([data])
 
     neo4j_connection = Neo4jConnection()
     neo4j_ops = neo4j_connection.neo4j_ops
@@ -61,7 +60,7 @@ def test_mention_available_account_neo4j():
     assert len(tweet_results) == 1
     data = tweet_results["tweet"].values[0]
 
-    assert data["tweetId"] == "000000"
+    assert data["tweetId"] == "556644"
     assert data["text"] == "SAMPLE_TEXT"
     assert data["authorId"] == "123456"
     assert data["createdAt"] == 1681505818000

@@ -21,12 +21,12 @@ def test_relation_query_single_property():
     )
 
     print("query: ", query)
-
-    assert (
+    expected_relation = (
         """MERGE (a:Tweet {authorId:"123321"}) MERGE (b:Tweet {authorId:"345543"})"""
-        in query
     )
-    assert """MERGE (a)-[:QUOTED {createdAt: 1681740235000}]->(b)""" in query
+    expected_relation += " MERGE (a)-[r:QUOTED]->(b)"
+    expected_relation += " SET r.createdAt=1681740235000"
+    assert expected_relation in query
 
 
 def test_relation_query_multiple_properties():
@@ -47,12 +47,12 @@ def test_relation_query_multiple_properties():
     )
 
     print("query: ", query)
-
-    assert (
+    expected_query = (
         """MERGE (a:Tweet {authorId:"123321"}) MERGE (b:Tweet {authorId:"345543"})"""
-        in query
     )
-    assert (
-        """MERGE (a)-[:QUOTED {createdAt: 1681740235000, createdAt2: "sample"}]->(b)"""
-        in query
-    )
+    expected_query += " MERGE (a)-[r:QUOTED]->(b)"
+    expected_query += " SET r.createdAt=1681740235000"
+    expected_query += """, r.createdAt2="sample" """
+    expected_query = expected_query[:-1]
+
+    assert expected_query == query
