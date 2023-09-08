@@ -48,3 +48,57 @@ def test_make_value_by_type_input_list():
 
     assert isinstance(updated_value, str)
     assert updated_value == str(value)
+
+
+def test_make_value_by_type_input_bool_true():
+    value = True
+
+    updated_value = make_val_by_type(value, bool)
+
+    assert isinstance(updated_value, str)
+    assert updated_value == "true"
+
+
+def test_make_value_by_type_input_bool_false():
+    value = False
+
+    updated_value = make_val_by_type(value, bool)
+
+    assert isinstance(updated_value, str)
+    assert updated_value == "false"
+
+
+def test_make_value_by_type_input_bool_string_true():
+    """
+    in case of no valid input the results should be "false"
+    """
+    value = "True"
+
+    updated_value = make_val_by_type(value, bool)
+
+    assert isinstance(updated_value, str)
+    assert updated_value == "true"
+
+
+def test_make_value_by_type_input_bool_string_false():
+    """
+    in case of no valid input the results should be "false"
+    """
+    value = "False"
+
+    updated_value = make_val_by_type(value, bool)
+
+    assert isinstance(updated_value, str)
+    assert updated_value == "false"
+
+
+def test_make_value_by_type_input_bool_no_valid_input():
+    """
+    in case of no valid input the results should be "false"
+    """
+    value = "samplesample"
+
+    updated_value = make_val_by_type(value, bool)
+
+    assert isinstance(updated_value, str)
+    assert updated_value == "false"
