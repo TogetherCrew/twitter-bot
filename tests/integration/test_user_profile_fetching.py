@@ -4,6 +4,34 @@ from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.user_profile_to_cypher import create_twitter_user_profile_query
 
 
+def test_user_profile_saving_none_data():
+    """
+    give no data to the function and it should not produce any results
+    """
+
+    queries = create_twitter_user_profile_query([])
+
+    neo4j_connection = Neo4jConnection()
+    neo4j_ops = neo4j_connection.neo4j_ops
+
+    neo4j_ops.gds.run_cypher(
+        """
+        MATCH (n) DETACH DELETE (n)
+        """
+    )
+
+    neo4j_ops.store_data_neo4j(query_list=queries)
+
+    results = neo4j_ops.gds.run_cypher(
+        """
+        MATCH (n)
+        RETURN COUNT(n) as entity_count
+        """
+    )
+
+    assert results["entity_count"].iloc[0] == 0
+
+
 def test_user_profile_saving():
     """
     save
@@ -19,6 +47,12 @@ def test_user_profile_saving():
         "location": "Berlin",
         "protected": False,
         "created_at": "2013-11-29T07:10:24.000Z",
+        "public_metrics": {
+            "followers_count": 0,
+            "following_count": 0,
+            "tweet_count": 4,
+            "listed_count": 0,
+        },
     }
     sample_user = User(data=user_data)
 
@@ -54,3 +88,5 @@ def test_user_profile_saving():
     assert account["bio"] == user_data["description"]
     assert account["url"] == user_data["url"]
     assert account["profileImageUrl"] == user_data["profile_image_url"]
+    assert account["followerCount"] == user_data["public_metrics"]["followers_count"]
+    assert account["followingCount"] == user_data["public_metrics"]["following_count"]
