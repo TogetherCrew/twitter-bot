@@ -214,46 +214,6 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     )
                     cypher_queries.append(query)
 
-        # Like section
-        if "likes" in tweet.keys():
-            for like in tweet["likes"]:
-                l_features = []
-                l_features.append(
-                    Properties(
-                        TwitterAccountProperties.user_name, like["username"], str
-                    )
-                )
-                l_features.append(
-                    Properties(
-                        TwitterAccountProperties.latest_saved_at,
-                        datetime.now(tz=timezone.utc),
-                        datetime,
-                    ),
-                )
-                query = create_query(
-                    NodeLabels.twitter_account,
-                    Properties(TwitterAccountProperties.user_id, like["user_id"], str),
-                    l_features,
-                )
-                cypher_queries.append(query)
-
-                query = relation_query(
-                    NodeLabels.twitter_account,
-                    NodeLabels.tweet,
-                    Properties(TwitterAccountProperties.user_id, like["user_id"], str),
-                    Properties(TweetProperties.tweet_id, tweet["id"], str),
-                    relation_name=EdgeLabels.liked,
-                    relation_properties=[
-                        Properties("", "", list),
-                        Properties(
-                            TweetProperties.latest_saved_at,
-                            datetime.now(tz=timezone.utc),
-                            datetime,
-                        ),
-                    ],  # BUG: no createdAt in available data for relation_properties
-                )
-                cypher_queries.append(query)
-
         # Checking interaction
         if tweet["referenced_tweets"] is not None:
             for referenced_tweet in tweet["referenced_tweets"]:
