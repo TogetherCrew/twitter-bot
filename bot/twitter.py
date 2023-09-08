@@ -457,16 +457,10 @@ def get_users(ids=None, usernames=None) -> list[tweepy.User]:
     return user_data
 
 
-def save_liker_user_neo4j(users):
-    print(len(users), "Users were saved!")
-
-
-katerina_user_id = 2220997760
-
 # Tweet, Quote Tweet, ReTweet, Replay
 
 
-def extract_twitter_user_information(user_id=None, username=None):
+def extract_and_save_tweets(user_id=None, username=None):
     # steps to follow
     # ?get all tweets that user has mentioned in it
     # ?get all tweets of the user
@@ -566,11 +560,7 @@ def extract_twitter_user_information(user_id=None, username=None):
             save_tweets_in_neo4j(retweets_of_reply)
 
 
-# katerina_user_id = 2220997760
-# extract_twitter_user_information(katerina_user_id)
-
-
-def extract_user_information():
+def extract_and_save_user_information():
     users_id = get_incomplete_profile_ids()
 
     chunk_size = 100
@@ -583,10 +573,14 @@ def extract_user_information():
         save_user_profile_neo4j(users)
 
 
-def get_liker_users(user_id: str):
+def extract_and_save_liker_users(user_id: str):
     tweet_ids = get_days_ago_tweet_ids(user_id= user_id)
 
     for tweet_id in tweet_ids:
         liker_users = get_likers_of_tweet(tweet_id=tweet_id)
         save_tweet_likes_neo4j(tweet_id, liker_users)
         save_user_profile_neo4j(liker_users)
+
+
+if __name__ == "--main__":
+    katerina_user_id = 2220997760
