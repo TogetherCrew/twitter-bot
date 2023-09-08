@@ -47,9 +47,9 @@ def make_val_by_type(
     elif type_val is list:
         converted_data = r"{}".format(value)
     elif type_val is bool:
-        if value is True:
+        if value is True or value == "True":
             converted_data = "true"
-        elif value is False:
+        elif value is False or value == "False":
             converted_data = "false"
         else:
             logging.warning(
