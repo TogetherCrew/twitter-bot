@@ -32,7 +32,7 @@ def save_tweets_in_neo4j(
     msg = "saving tweets data into neo4j: "
     if message is not None:
         msg += f"{message}: "
-    neo4j_ops.store_data_neo4j(query_list=unique(queries), message=message)
+    neo4j_ops.store_data_neo4j(query_list=unique(queries), message=msg)
 
 
 def save_user_profile_neo4j(user_data: list[User], message: str | None = None) -> None:

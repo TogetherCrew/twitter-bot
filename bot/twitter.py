@@ -12,8 +12,12 @@ from db.latest_reply import get_latest_reply
 from db.latest_retweet import get_latest_retweet
 from db.latest_tweet import get_latest_tweet
 from db.latest_tweet import get_days_ago_tweet_ids
-from db.save_neo4j import save_tweets_in_neo4j, save_user_profile_neo4j, save_tweet_likes_neo4j, save_user_likes_neo4j
-
+from db.save_neo4j import (
+    save_tweets_in_neo4j,
+    save_user_profile_neo4j,
+    save_tweet_likes_neo4j,
+    save_user_likes_neo4j,
+)
 
 
 def retry_function_if_fail(func, /, *args, **keywords):
@@ -378,7 +382,7 @@ def get_mentioned_tweets_by_username(
 def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
-    
+
     for _ in count(1):
         tweets = retry_function_if_fail(
             client.get_liked_tweets,
@@ -397,7 +401,7 @@ def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
             break  # when we don't have "next_token" in meta object, there is no more data
         else:
             next_token = tweets_meta["next_token"]
-    
+
     return all_tweets
 
 
@@ -410,7 +414,7 @@ def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
             id=tweet_id,
             max_results=max_like_results,
             pagination_token=next_token,
-            user_fields=user_fields
+            user_fields=user_fields,
         )
         users_list = users.data
         users_meta = users.meta
@@ -445,8 +449,8 @@ def get_users(ids=None, usernames=None) -> list[tweepy.User]:
     if ids is not None and usernames is not None:
         raise TypeError("Expected IDs or usernames, not both")
 
-    ids = ','.join(ids) if ids else None
-    usernames = ','.join(usernames) if usernames else None
+    ids = ",".join(ids) if ids else None
+    usernames = ",".join(usernames) if usernames else None
 
     users = retry_function_if_fail(
         client.get_users,
@@ -576,7 +580,7 @@ def extract_and_save_user_information():
 
 
 def extract_and_save_liker_users(user_id: str):
-    tweet_ids = get_days_ago_tweet_ids(user_id= user_id)
+    tweet_ids = get_days_ago_tweet_ids(user_id=user_id)
 
     for tweet_id in tweet_ids:
         liker_users = get_likers_of_tweet(tweet_id=tweet_id)
@@ -585,11 +589,10 @@ def extract_and_save_liker_users(user_id: str):
 
 
 def extract_and_save_liked_tweets(user_id: str):
-
     liked_tweets = get_liked_tweets(user_id=user_id)
     save_user_likes_neo4j(user_id=user_id, tweets_liked=liked_tweets)
+    save_tweets_in_neo4j(liked_tweets)
 
 
-
-if __name__ == "--main__":
+if __name__ == "__main__":
     katerina_user_id = 2220997760
