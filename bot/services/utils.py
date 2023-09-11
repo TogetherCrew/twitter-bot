@@ -2,7 +2,6 @@ import functools
 from itertools import count
 
 
-
 def retry_function_if_fail(func, /, *args, **keywords):
     retry_number = (
         keywords["retry_number"] if "retry_number" in keywords else 5

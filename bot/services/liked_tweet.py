@@ -1,9 +1,16 @@
 import tweepy
 
 from .tweeter_client import tweeter_client
-from .utils import retry_function_if_fail, tweet_fields, max_tweet_results, user_fields, max_like_results
+from .utils import (
+    retry_function_if_fail,
+    tweet_fields,
+    max_tweet_results,
+    user_fields,
+    max_like_results,
+)
 
 from itertools import count
+
 
 def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
     all_tweets: list[tweepy.Tweet] = []
@@ -54,4 +61,3 @@ def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
             next_token = users_meta["next_token"]
 
     return all_liker_users
-

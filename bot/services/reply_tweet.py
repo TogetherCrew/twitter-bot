@@ -5,6 +5,7 @@ from .utils import retry_function_if_fail, tweet_fields, max_tweet_results
 
 from itertools import count
 
+
 def get_all_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     """
     Get all replies (all depth) of a tweet or Quote tweets. The array will be empty

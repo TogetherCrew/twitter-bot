@@ -5,6 +5,7 @@ from .utils import retry_function_if_fail, tweet_fields, max_tweet_results
 
 from itertools import count
 
+
 def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     """
     Get all retweets of a tweet.
@@ -49,4 +50,3 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
             next_token = tweets_meta["next_token"]
 
     return all_retweets
-

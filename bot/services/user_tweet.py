@@ -5,6 +5,7 @@ from .utils import retry_function_if_fail, tweet_fields, max_tweet_results
 
 from itertools import count
 
+
 def get_user_tweets(user_handler: str, since_id: str) -> list[tweepy.Tweet]:
     """
     To get the tweets of a user, get the user_handler

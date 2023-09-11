@@ -1,6 +1,9 @@
 from services.liked_tweet import get_liked_tweets, get_likers_of_tweet
 from services.quote_tweet import get_quotes_of_tweet
-from services.reply_tweet import get_all_replies_of_tweet, get_first_depth_replies_of_tweet
+from services.reply_tweet import (
+    get_all_replies_of_tweet,
+    get_first_depth_replies_of_tweet,
+)
 from services.retweet_tweet import get_retweets_of_tweet
 from services.user_info import get_twitter_user, get_twitter_users
 from services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
@@ -20,27 +23,38 @@ from db.save_neo4j import (
 )
 
 
-def extract_and_save_tweets(user_id=None, username=None):
-    # steps to follow
-    # ?get all tweets that user has mentioned in it
-    # ?get all tweets of the user
-    #
-    # for each Tweet
-    # 1. if "Tweet" or "Quote Tweet"
-    #   -> get its all Replies
-    #   -> get its Quotes
-    #   -> get its ReTweets
-    #   -> get its liker users
-    # 2. if "ReTweet"
-    #   -> we don't need to do anything
-    # 3. if "Reply"
-    #   -> get its all Replies
-    #   -> get its Quotes
-    #   -> get its ReTweets
-    #   -> get its liker users
-    #
-    #
-    # finally get all users's infos that we don't have
+def extract_and_save_tweets(user_id: str | int = None, username: str = None) -> None:
+    """
+    steps to follow
+    ?get all tweets that user has mentioned in it
+    ?get all tweets of the user
+
+    for each Tweet
+    1. if "Tweet" or "Quote Tweet"
+      -> get its all Replies
+      -> get its Quotes
+      -> get its ReTweets
+      -> get its liker users
+    2. if "ReTweet"
+      -> we don't need to do anything
+    3. if "Reply"
+      -> get its all Replies
+      -> get its Quotes
+      -> get its ReTweets
+      -> get its liker users
+
+    finally get all users's infos that we don't have
+
+    Parameters:
+    -------------
+    user_id : str | int
+        the user account twitter id, can be both string or integer
+    username : str
+        the user account username
+
+    *Note:* Either one of the `user_id` or the `username` should be given.
+    If not given, a TypeError would be raised.
+    """
 
     if user_id is None and username is not None:
         user = get_twitter_user(username=username)
