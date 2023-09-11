@@ -1,9 +1,9 @@
+from itertools import count
+
 import tweepy
 
-from .tweeter_client import tweeter_client
-from .utils import retry_function_if_fail, tweet_fields, max_tweet_results
-
-from itertools import count
+from .twitter_client import TwitterClient
+from .utils import FetchConfigs, retry_function_if_fail
 
 
 def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
@@ -31,10 +31,10 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
     next_token = None
     for _ in count(1):
         tweets = retry_function_if_fail(
-            tweeter_client.search_recent_tweets,
+            TwitterClient.client.search_recent_tweets,
             query=query,
-            tweet_fields=tweet_fields,
-            max_results=max_tweet_results,
+            tweet_fields=FetchConfigs.tweet_fields,
+            max_results=FetchConfigs.max_tweet_results,
             since_id=since_id,
             next_token=next_token,
         )
@@ -44,8 +44,9 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
         retweet_list = retweet_list if retweet_list is not None else []
         all_retweets += retweet_list
 
-        if not "next_token" in tweets_meta:
-            break  # when we don't have "next_token" in meta object, there is no more data
+        if "next_token" not in tweets_meta:
+            # when we don't have "next_token" in meta object, there is no more data
+            break
         else:
             next_token = tweets_meta["next_token"]
 

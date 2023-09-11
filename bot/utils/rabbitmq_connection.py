@@ -1,8 +1,8 @@
+import os
+
+from dotenv import load_dotenv
 from tc_messageBroker import RabbitMQ
 from tc_messageBroker.rabbit_mq.queue import Queue
-
-import os
-from dotenv import load_dotenv
 
 
 def get_rabbit_mq_credentials() -> dict[str, any]:

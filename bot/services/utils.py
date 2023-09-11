@@ -22,32 +22,33 @@ def retry_function_if_fail(func, /, *args, **keywords):
                 )
 
 
-max_like_results = 100
-max_tweet_results = 100
+class FetchConfigs:
+    max_like_results = 100
+    max_tweet_results = 100
 
-tweet_fields = [
-    "id",
-    "text",
-    "entities",
-    "created_at",
-    "author_id",
-    "conversation_id",
-    "public_metrics",
-    "referenced_tweets",
-    "context_annotations",
-    "in_reply_to_user_id",
-]
+    tweet_fields = [
+        "id",
+        "text",
+        "entities",
+        "created_at",
+        "author_id",
+        "conversation_id",
+        "public_metrics",
+        "referenced_tweets",
+        "context_annotations",
+        "in_reply_to_user_id",
+    ]
 
-user_fields = [
-    "id",
-    "name",
-    "username",
-    "created_at",
-    "public_metrics",
-    "description",
-    "location",
-    "profile_image_url",
-    "protected",
-    "url",
-    "verified",
-]
+    user_fields = [
+        "id",
+        "name",
+        "username",
+        "created_at",
+        "public_metrics",
+        "description",
+        "location",
+        "profile_image_url",
+        "protected",
+        "url",
+        "verified",
+    ]

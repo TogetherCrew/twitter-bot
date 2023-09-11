@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from tweepy import User, Tweet
+from tweepy import Tweet, User
 
 from .utils.enums_data import (
     EdgeLabels,

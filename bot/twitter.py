@@ -1,3 +1,15 @@
+from db.incomplete_profiles import get_incomplete_profile_ids
+from db.latest_mention import get_latest_mention
+from db.latest_quote import get_latest_quote
+from db.latest_reply import get_latest_reply
+from db.latest_retweet import get_latest_retweet
+from db.latest_tweet import get_days_ago_tweet_ids, get_latest_tweet
+from db.save_neo4j import (
+    save_tweet_likes_neo4j,
+    save_tweets_in_neo4j,
+    save_user_likes_neo4j,
+    save_user_profile_neo4j,
+)
 from services.liked_tweet import get_liked_tweets, get_likers_of_tweet
 from services.quote_tweet import get_quotes_of_tweet
 from services.reply_tweet import (
@@ -7,20 +19,6 @@ from services.reply_tweet import (
 from services.retweet_tweet import get_retweets_of_tweet
 from services.user_info import get_twitter_user, get_twitter_users
 from services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
-
-from db.incomplete_profiles import get_incomplete_profile_ids
-from db.latest_mention import get_latest_mention
-from db.latest_quote import get_latest_quote
-from db.latest_reply import get_latest_reply
-from db.latest_retweet import get_latest_retweet
-from db.latest_tweet import get_latest_tweet
-from db.latest_tweet import get_days_ago_tweet_ids
-from db.save_neo4j import (
-    save_tweets_in_neo4j,
-    save_user_profile_neo4j,
-    save_tweet_likes_neo4j,
-    save_user_likes_neo4j,
-)
 
 
 def extract_and_save_tweets(user_id: str | int = None, username: str = None) -> None:

@@ -1,12 +1,12 @@
 from typing import Any
 
 from numpy import unique
-from tweepy import User, Tweet
+from tweepy import Tweet, User
 
 from .neo4j_connection import Neo4jConnection
+from .tweet_likes_to_cypher import create_query_tweet_likes, create_query_user_likes
 from .twitter_data_to_cypher import create_twitter_data_query
 from .user_profile_to_cypher import create_twitter_user_profile_query
-from .tweet_likes_to_cypher import create_query_tweet_likes, create_query_user_likes
 
 
 def save_tweets_in_neo4j(

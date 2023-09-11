@@ -1,7 +1,7 @@
 import tweepy
 
-from .tweeter_client import tweeter_client
-from .utils import retry_function_if_fail, user_fields
+from .twitter_client import TwitterClient
+from .utils import FetchConfigs, retry_function_if_fail
 
 
 def get_twitter_user(id=None, username=None) -> tweepy.User:
@@ -9,10 +9,10 @@ def get_twitter_user(id=None, username=None) -> tweepy.User:
         raise TypeError("Expected ID or username, not both")
 
     user = retry_function_if_fail(
-        tweeter_client.get_user,
+        TwitterClient.client.get_user,
         id=id,
         username=username,
-        user_fields=user_fields,
+        user_fields=FetchConfigs.user_fields,
     )
 
     user_data: tweepy.User = user.data
@@ -27,10 +27,10 @@ def get_twitter_users(ids=None, usernames=None) -> list[tweepy.User]:
     usernames = ",".join(usernames) if usernames else None
 
     users = retry_function_if_fail(
-        tweeter_client.get_users,
+        TwitterClient.client.get_users,
         ids=ids,
         usernames=usernames,
-        user_fields=user_fields,
+        user_fields=FetchConfigs.user_fields,
     )
 
     user_data: list[tweepy.User] = users.data
