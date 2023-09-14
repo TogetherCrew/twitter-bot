@@ -1,25 +1,24 @@
-from db.incomplete_profiles import get_incomplete_profile_ids
-from db.latest_mention import get_latest_mention
-from db.latest_quote import get_latest_quote
-from db.latest_reply import get_latest_reply
-from db.latest_retweet import get_latest_retweet
-from db.latest_tweet import get_days_ago_tweet_ids, get_latest_tweet
-from db.save_neo4j import (
+from bot.db.incomplete_profiles import get_incomplete_profile_ids
+from bot.db.latest_mention import get_latest_mention
+from bot.db.latest_quote import get_latest_quote
+from bot.db.latest_reply import get_latest_reply
+from bot.db.latest_retweet import get_latest_retweet
+from bot.db.latest_tweet import get_days_ago_tweet_ids, get_latest_tweet
+from bot.db.save_neo4j import (
     save_tweet_likes_neo4j,
     save_tweets_in_neo4j,
     save_user_likes_neo4j,
     save_user_profile_neo4j,
 )
-from services.liked_tweet import get_liked_tweets, get_likers_of_tweet
-from services.quote_tweet import get_quotes_of_tweet
-from services.reply_tweet import (
+from bot.services.liked_tweet import get_liked_tweets, get_likers_of_tweet
+from bot.services.quote_tweet import get_quotes_of_tweet
+from bot.services.reply_tweet import (
     get_all_replies_of_tweet,
     get_first_depth_replies_of_tweet,
 )
-from services.retweet_tweet import get_retweets_of_tweet
-from services.user_info import get_twitter_user, get_twitter_users
-from services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
-
+from bot.services.retweet_tweet import get_retweets_of_tweet
+from bot.services.user_info import get_twitter_user, get_twitter_users
+from bot.services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
 
 def extract_and_save_tweets(user_id: str | int = None, username: str = None) -> None:
     """
@@ -158,7 +157,3 @@ def extract_and_save_liked_tweets(user_id: str):
     liked_tweets = get_liked_tweets(user_id=user_id)
     save_user_likes_neo4j(user_id=user_id, tweets_liked=liked_tweets)
     save_tweets_in_neo4j(liked_tweets)
-
-
-if __name__ == "__main__":
-    katerina_user_id = 2220997760
