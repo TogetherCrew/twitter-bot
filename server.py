@@ -60,9 +60,6 @@ def twitter_bot():
     if rabbit_mq.channel is None:
         logging.info("Error: was not connected to RabbitMQ broker!")
     else:
-        time.sleep(3)
-        rabbit_mq.publish(queue_name= Queue.TWITTER_BOT, event= Event.TWITTER_BOT.EXTRACT.TWEETS, content= { "uuid": "asdf-sdf", "username": "cyri113" })
-        
         logging.info("Started Consuming!")
         rabbit_mq.channel.start_consuming()
 
