@@ -4,7 +4,7 @@ from typing import Type
 
 
 def make_val_by_type(
-    value: str | datetime | list,
+    value: str | datetime | list | int,
     type_val: Type[str] | Type[datetime] | Type[int] | Type[list],
 ) -> str | int | list:
     """
@@ -40,10 +40,18 @@ def make_val_by_type(
             converted_data = '""'
 
     elif type_val is int:
-        converted_data = int(value)
+        if isinstance(value, int) or isinstance(value, str):
+            converted_data = int(value)
+        else:
+            logging.error("value must be str or integer if the type_val was datetime!")
 
     elif type_val is datetime:
-        converted_data = int(value.timestamp() * 1000)
+        if isinstance(value, datetime):
+            converted_data = int(value.timestamp() * 1000)
+        else:
+            logging.error(
+                "value must be a datetime instance if the type_val was datetime!"
+            )
 
     elif type_val is list:
         converted_data = r"{}".format(value)

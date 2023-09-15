@@ -134,8 +134,18 @@ def extract_and_save_tweets(
             save_tweets_in_neo4j(retweets_of_reply)
 
 
-def extract_and_save_user_information():
+def extract_and_save_user_information(user_id: str):
+    """
+    Extract and save the uncomplete user profiles
+    also re-extract the user profile since we need his followerCounts to be updated
+
+    Parameters
+    -----------
+    user_id : str
+        the twitter accout id
+    """
     users_id = get_incomplete_profile_ids()
+    users_id.append(user_id)
 
     chunk_size = 100
     users_id_chunk = [
