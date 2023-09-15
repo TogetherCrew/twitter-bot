@@ -11,7 +11,6 @@ exceptiongroup==1.1.0
 idna==3.4
 iniconfig==2.0.0
 jsonschema==4.17.3
-neo4j==5.10.0
 networkx==3.1
 numpy==1.24.1
 oauthlib==3.2.2
@@ -39,3 +38,4 @@ tweepy==4.14.0
 types-pyOpenSSL==23.2.0.2
 tzdata==2023.3
 urllib3==2.0.4
+tc-neo4j-lib-py
