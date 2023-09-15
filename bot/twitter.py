@@ -68,10 +68,13 @@ def extract_and_save_tweets(
         raise TypeError("Expected ID or username or both, not none of them")
 
     latest_mention_id = get_latest_mention(user_id=str(user_id))
-    mentioned_tweets = get_mentioned_tweets_by_username(
-        username=username, since_id=latest_mention_id
-    )
-    save_tweets_in_neo4j(mentioned_tweets)
+    if username is not None:
+        mentioned_tweets = get_mentioned_tweets_by_username(
+            username=username, since_id=latest_mention_id
+        )
+        save_tweets_in_neo4j(mentioned_tweets)
+    else:
+        raise ValueError("username was not fetched from twitter!")
 
     latest_tweet_id = get_latest_tweet(user_id=str(user_id))
     user_tweets = get_user_tweets(user_handler=str(user_id), since_id=latest_tweet_id)

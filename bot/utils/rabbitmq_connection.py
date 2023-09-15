@@ -1,5 +1,5 @@
-from typing import Any
 import os
+from typing import Any
 
 from dotenv import load_dotenv
 from tc_messageBroker import RabbitMQ
