@@ -6,7 +6,7 @@ from .twitter_client import TwitterClient
 from .utils import FetchConfigs, retry_function_if_fail
 
 
-def get_user_tweets(user_handler: str, since_id: str) -> list[tweepy.Tweet]:
+def get_user_tweets(user_handler: str, since_id: str | None) -> list[tweepy.Tweet]:
     """
     To get the tweets of a user, get the user_handler
 
@@ -54,7 +54,7 @@ def get_user_tweets(user_handler: str, since_id: str) -> list[tweepy.Tweet]:
 
 
 def get_mentioned_tweets_by_username(
-    username: str, since_id: str
+    username: str, since_id: str | None
 ) -> list[tweepy.Tweet]:
     """
     Get all tweets that user has mentioned.

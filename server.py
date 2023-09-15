@@ -2,8 +2,8 @@ import functools
 import logging
 from typing import Any
 
-from bot.saga.extract_profiles import find_saga_and_fire_extract_profiles
 from bot.saga.extract_likes import find_saga_and_fire_extract_likes
+from bot.saga.extract_profiles import find_saga_and_fire_extract_profiles
 from bot.saga.extract_tweets import find_saga_and_fire_extract_tweets
 from bot.saga.saga import publish_on_success
 from bot.utils.rabbitmq_connection import get_rabbit_mq_credentials
@@ -35,17 +35,11 @@ def twitter_bot():
     # 24 hours equal to 86400 seconds
     rq_queue = RQ_Queue(connection=redis, default_timeout=86400)
 
-    on_tweets_event_bind = functools.partial(
-        on_tweets_event, redis_queue=rq_queue
-    )
+    on_tweets_event_bind = functools.partial(on_tweets_event, redis_queue=rq_queue)
 
-    on_profiles_event_bind = functools.partial(
-        on_profiles_event, redis_queue=rq_queue
-    )
+    on_profiles_event_bind = functools.partial(on_profiles_event, redis_queue=rq_queue)
 
-    on_likes_event_bind = functools.partial(
-        on_likes_event, redis_queue=rq_queue
-    )
+    on_likes_event_bind = functools.partial(on_likes_event, redis_queue=rq_queue)
 
     rabbit_mq.connect(queue_name=Queue.TWITTER_BOT)
 
@@ -74,7 +68,9 @@ def on_profiles_event(body: dict[str, Any], redis_queue: RQ_Queue):
     logging.info(f"SAGAID:{sagaId} recompute job Adding to queue")
 
     redis_queue.enqueue(
-        find_saga_and_fire_extract_profiles, sagaId=sagaId, on_success=publish_on_success
+        find_saga_and_fire_extract_profiles,
+        sagaId=sagaId,
+        on_success=publish_on_success,
     )
 
 

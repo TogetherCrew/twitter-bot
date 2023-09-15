@@ -4,7 +4,8 @@ from typing import Type
 
 
 def make_val_by_type(
-    value: str, type_val: Type[str] | Type[datetime] | Type[int] | Type[list]
+    value: str | datetime | list,
+    type_val: Type[str] | Type[datetime] | Type[int] | Type[list],
 ) -> str | int | list:
     """
     In this function, we try to translate value based on the given type

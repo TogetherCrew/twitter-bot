@@ -6,7 +6,7 @@ from .twitter_client import TwitterClient
 from .utils import FetchConfigs, retry_function_if_fail
 
 
-def get_all_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:
+def get_all_replies_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy.Tweet]:
     """
     Get all replies (all depth) of a tweet or Quote tweets. The array will be empty
     if retweetID or replyID is passed
@@ -55,7 +55,7 @@ def get_all_replies_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]
 
 
 def get_first_depth_replies_of_tweet(
-    tweet_id: str, since_id: str
+    tweet_id: str, since_id: str | None
 ) -> list[tweepy.Tweet]:
     """
     Get all replies (first depth) of a tweet.

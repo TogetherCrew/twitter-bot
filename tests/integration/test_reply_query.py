@@ -46,7 +46,7 @@ def test_reply_query_neo4j():
 
     results_reply = neo4j_ops.gds.run_cypher(
         """
-        MATCH (a:Tweet {tweetId:'22334455'}) 
+        MATCH (a:Tweet {tweetId:'22334455'})
             -[r:REPLIED]-> (b:Tweet {tweetId:'8765432'})
         RETURN r{.*} as reply
         """

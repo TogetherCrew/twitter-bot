@@ -21,7 +21,9 @@ from bot.services.user_info import get_twitter_user, get_twitter_users
 from bot.services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
 
 
-def extract_and_save_tweets(user_id: str | int = None, username: str = None) -> None:
+def extract_and_save_tweets(
+    user_id: str | int | None = None, username: str = None
+) -> None:
     """
     steps to follow
     ?get all tweets that user has mentioned in it
@@ -65,14 +67,14 @@ def extract_and_save_tweets(user_id: str | int = None, username: str = None) -> 
     elif user_id is None and username is None:
         raise TypeError("Expected ID or username or both, not none of them")
 
-    latest_mention_id = get_latest_mention(user_id=user_id)
+    latest_mention_id = get_latest_mention(user_id=str(user_id))
     mentioned_tweets = get_mentioned_tweets_by_username(
         username=username, since_id=latest_mention_id
     )
     save_tweets_in_neo4j(mentioned_tweets)
 
-    latest_tweet_id = get_latest_tweet(user_id=user_id)
-    user_tweets = get_user_tweets(user_handler=user_id, since_id=latest_tweet_id)
+    latest_tweet_id = get_latest_tweet(user_id=str(user_id))
+    user_tweets = get_user_tweets(user_handler=str(user_id), since_id=latest_tweet_id)
     save_tweets_in_neo4j(user_tweets)
 
     for tweet in user_tweets:
