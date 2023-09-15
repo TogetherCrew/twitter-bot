@@ -20,7 +20,6 @@ def test_relation_query_single_property():
         ],
     )
 
-    print("query: ", query)
     expected_relation = (
         """MERGE (a:Tweet {authorId:"123321"}) MERGE (b:Tweet {authorId:"345543"})"""
     )
@@ -46,7 +45,6 @@ def test_relation_query_multiple_properties():
         ],
     )
 
-    print("query: ", query)
     expected_query = (
         """MERGE (a:Tweet {authorId:"123321"}) MERGE (b:Tweet {authorId:"345543"})"""
     )

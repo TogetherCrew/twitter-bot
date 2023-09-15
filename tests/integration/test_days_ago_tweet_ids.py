@@ -1,7 +1,10 @@
+from datetime import datetime, timedelta, timezone
+
+from tweepy import Tweet
+
 from bot.db.latest_tweet import get_days_ago_tweet_ids
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.save_neo4j import save_tweets_in_neo4j
-from tweepy import Tweet
 
 
 def test_get_days_ago_tweet_ids_none_data():
@@ -35,6 +38,8 @@ def test_get_days_ago_tweet_ids_with_all_tweets_past_days():
         MATCH (n) DETACH DELETE (n)
         """
     )
+
+    today = datetime.now(timezone.utc)
     sample_data = [
         {
             "entities": {
@@ -64,7 +69,7 @@ def test_get_days_ago_tweet_ids_with_all_tweets_past_days():
             "text": "sample hastags #Wellbeing #happylife",
             "edit_history_tweet_ids": ["12345"],
             "conversation_id": "12345",
-            "created_at": "2023-09-07T13:09:52.000Z",
+            "created_at": (today - timedelta(days=6)).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             "author_id": "11111",
         },
         {
@@ -95,7 +100,7 @@ def test_get_days_ago_tweet_ids_with_all_tweets_past_days():
             "text": "Posting a url https://t.co/somelink",
             "edit_history_tweet_ids": ["12346"],
             "conversation_id": "12346",
-            "created_at": "2023-09-07T12:32:00.000Z",
+            "created_at": (today - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             "author_id": "11111",
         },
         {
@@ -121,7 +126,7 @@ def test_get_days_ago_tweet_ids_with_all_tweets_past_days():
             "text": "Another tweet!",
             "edit_history_tweet_ids": ["12347"],
             "conversation_id": "12347",
-            "created_at": "2023-09-07T12:29:07.000Z",
+            "created_at": (today - timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             "author_id": "11111",
         },
         {
@@ -137,7 +142,7 @@ def test_get_days_ago_tweet_ids_with_all_tweets_past_days():
             "text": "mentioning someone in case of something @person",
             "edit_history_tweet_ids": ["12348"],
             "conversation_id": "12348",
-            "created_at": "2023-09-07T12:09:25.000Z",
+            "created_at": (today - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             "entities": {
                 "mentions": [
                     {
