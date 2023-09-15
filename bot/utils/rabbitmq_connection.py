@@ -1,3 +1,4 @@
+from typing import Any
 import os
 
 from dotenv import load_dotenv
@@ -5,13 +6,13 @@ from tc_messageBroker import RabbitMQ
 from tc_messageBroker.rabbit_mq.queue import Queue
 
 
-def get_rabbit_mq_credentials() -> dict[str, any]:
+def get_rabbit_mq_credentials() -> dict[str, Any]:
     """
     returns the rabbitMQ connection credentials
 
     Retuns:
     ----------
-    rabbit_mq_creds : dict[str, any]
+    rabbit_mq_creds : dict[str, Any]
         rabbitMQ credentials,
         a dictionary representive of
             `broker_url` : str

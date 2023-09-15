@@ -22,7 +22,7 @@ from bot.services.user_tweet import get_mentioned_tweets_by_username, get_user_t
 
 
 def extract_and_save_tweets(
-    user_id: str | int | None = None, username: str = None
+    user_id: str | int | None = None, username: str | None = None
 ) -> None:
     """
     steps to follow
