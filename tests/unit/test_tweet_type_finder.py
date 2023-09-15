@@ -1,6 +1,5 @@
-from tweepy import ReferencedTweet
-
 from bot.db.utils.referenced_tweet_type_finder import tweet_type_finder
+from tweepy import ReferencedTweet
 
 
 def test_tweet_type_finder_replied():

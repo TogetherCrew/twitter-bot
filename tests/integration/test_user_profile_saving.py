@@ -1,7 +1,6 @@
-from tweepy import User
-
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.save_neo4j import save_user_profile_neo4j
+from tweepy import User
 
 
 def test_user_profile_saving_none_data():

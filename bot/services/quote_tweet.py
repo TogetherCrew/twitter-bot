@@ -1,9 +1,9 @@
+from itertools import count
+
 import tweepy
 
 from .twitter_client import TwitterClient
-from .utils import retry_function_if_fail, FetchConfigs
-
-from itertools import count
+from .utils import FetchConfigs, retry_function_if_fail
 
 
 def get_quotes_of_tweet(tweet_id: str, since_id: str) -> list[tweepy.Tweet]:

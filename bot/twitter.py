@@ -20,6 +20,7 @@ from bot.services.retweet_tweet import get_retweets_of_tweet
 from bot.services.user_info import get_twitter_user, get_twitter_users
 from bot.services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
 
+
 def extract_and_save_tweets(user_id: str | int = None, username: str = None) -> None:
     """
     steps to follow

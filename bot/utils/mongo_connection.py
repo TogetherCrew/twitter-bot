@@ -29,8 +29,9 @@ def get_mongo_credentials():
 
     return mongo_creds
 
+
 def get_mongo_connection(mongo_creds: dict[str, Any] | None = None) -> str:
-    if mongo_creds is None: 
+    if mongo_creds is None:
         mongo_creds = get_mongo_credentials()
 
     user = mongo_creds["user"]
@@ -41,6 +42,7 @@ def get_mongo_connection(mongo_creds: dict[str, Any] | None = None) -> str:
     connection = f"mongodb://{user}:{password}@{host}:{port}"
 
     return connection
+
 
 def get_saga_db_location(mongo_creds: dict[str, Any] | None = None):
     """

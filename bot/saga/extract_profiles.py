@@ -1,13 +1,9 @@
 import logging
 
-from saga import get_saga_instance
 from bot.twitter import extract_and_save_user_information
-
-from tc_messageBroker.rabbit_mq.queue import Queue
-from tc_messageBroker.rabbit_mq.event import Event
-
 from bot.utils.mongo_connection import get_saga_db_location
-from bot.utils.rabbitmq_connection import prepare_rabbit_mq
+from saga import get_saga_instance
+
 
 def find_saga_and_fire_extract_profiles(sagaId: str):
     saga_mongo_creds = get_saga_db_location()
@@ -23,6 +19,7 @@ def find_saga_and_fire_extract_profiles(sagaId: str):
             f"Warn: Saga not found!, stopping the recompute for sagaId: {sagaId}"
         )
     else:
+
         def extract_and_save_user_information_wrapper(**kwargs):
             extract_and_save_user_information()
 
@@ -36,4 +33,3 @@ def find_saga_and_fire_extract_profiles(sagaId: str):
         )
 
     return sagaId, saga_mongo_creds
-

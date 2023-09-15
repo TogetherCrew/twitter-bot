@@ -1,14 +1,10 @@
 import logging
 
-from saga import get_saga_instance
-from bot.twitter import extract_and_save_liker_users, extract_and_save_liked_tweets
 from bot.services.user_info import get_twitter_user
-
-from tc_messageBroker.rabbit_mq.queue import Queue
-from tc_messageBroker.rabbit_mq.event import Event
-
+from bot.twitter import extract_and_save_liked_tweets, extract_and_save_liker_users
 from bot.utils.mongo_connection import get_saga_db_location
-from bot.utils.rabbitmq_connection import prepare_rabbit_mq
+from saga import get_saga_instance
+
 
 def find_saga_and_fire_extract_likes(sagaId: str):
     saga_mongo_creds = get_saga_db_location()
@@ -25,12 +21,12 @@ def find_saga_and_fire_extract_likes(sagaId: str):
         )
     else:
         twitter_username = saga.data["twitter_username"]
-        twitter_user = get_twitter_user(username= twitter_username)
+        twitter_user = get_twitter_user(username=twitter_username)
         twitter_id = twitter_user.id
 
         def extract_and_save_likes_information_wrapper(**kwargs):
-            extract_and_save_liker_users(user_id= twitter_id)
-            extract_and_save_liked_tweets(user_id= twitter_id)
+            extract_and_save_liker_users(user_id=twitter_id)
+            extract_and_save_liked_tweets(user_id=twitter_id)
 
         def publish_wrapper(**kwargs):
             pass

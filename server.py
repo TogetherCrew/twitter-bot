@@ -1,23 +1,19 @@
-import logging
-import time
-from typing import Any
 import functools
+import logging
+from typing import Any
 
-from redis import Redis
-from rq import Queue as RQ_Queue
-
-from tc_messageBroker.message_broker import RabbitMQ
-from tc_messageBroker.rabbit_mq.queue import Queue
-from tc_messageBroker.rabbit_mq.event import Event
-
-from bot.utils.rabbitmq_connection import get_rabbit_mq_credentials
-from bot.utils.redis_connection import get_redis_credentials
-
-from bot.saga.extract_tweets import find_saga_and_fire_extract_tweets
 from bot.saga.extract_profiles import find_saga_and_fire_extract_profiles
 from bot.saga.extract_likes import find_saga_and_fire_extract_likes
-
+from bot.saga.extract_tweets import find_saga_and_fire_extract_tweets
 from bot.saga.saga import publish_on_success
+from bot.utils.rabbitmq_connection import get_rabbit_mq_credentials
+from bot.utils.redis_connection import get_redis_credentials
+from redis import Redis
+from rq import Queue as RQ_Queue
+from tc_messageBroker.message_broker import RabbitMQ
+from tc_messageBroker.rabbit_mq.event import Event
+from tc_messageBroker.rabbit_mq.queue import Queue
+
 
 def twitter_bot():
     rabbit_mq_creds = get_rabbit_mq_credentials()
@@ -40,15 +36,15 @@ def twitter_bot():
     rq_queue = RQ_Queue(connection=redis, default_timeout=86400)
 
     on_tweets_event_bind = functools.partial(
-        on_tweets_event, redis_queue=rq_queue,
+        on_tweets_event, redis_queue=rq_queue
     )
 
     on_profiles_event_bind = functools.partial(
-        on_profiles_event, redis_creds=rq_queue,
+        on_profiles_event, redis_queue=rq_queue
     )
 
     on_likes_event_bind = functools.partial(
-        on_likes_event, redis_creds=rq_queue,
+        on_likes_event, redis_queue=rq_queue
     )
 
     rabbit_mq.connect(queue_name=Queue.TWITTER_BOT)
@@ -67,33 +63,27 @@ def twitter_bot():
 def on_tweets_event(body: dict[str, Any], redis_queue: RQ_Queue):
     sagaId = body["content"]["uuid"]
     logging.info(f"SAGAID:{sagaId} recompute job Adding to queue")
- 
+
     redis_queue.enqueue(
-        find_saga_and_fire_extract_tweets,
-        sagaId=sagaId,
-        on_success=publish_on_success
+        find_saga_and_fire_extract_tweets, sagaId=sagaId, on_success=publish_on_success
     )
 
 
 def on_profiles_event(body: dict[str, Any], redis_queue: RQ_Queue):
     sagaId = body["content"]["uuid"]
     logging.info(f"SAGAID:{sagaId} recompute job Adding to queue")
- 
+
     redis_queue.enqueue(
-        find_saga_and_fire_extract_profiles,
-        sagaId=sagaId,
-        on_success=publish_on_success
+        find_saga_and_fire_extract_profiles, sagaId=sagaId, on_success=publish_on_success
     )
 
 
 def on_likes_event(body: dict[str, Any], redis_queue: RQ_Queue):
     sagaId = body["content"]["uuid"]
     logging.info(f"SAGAID:{sagaId} recompute job Adding to queue")
- 
+
     redis_queue.enqueue(
-        find_saga_and_fire_extract_likes,
-        sagaId=sagaId,
-        on_success=publish_on_success
+        find_saga_and_fire_extract_likes, sagaId=sagaId, on_success=publish_on_success
     )
 
 
@@ -101,6 +91,3 @@ if __name__ == "__main__":
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
     twitter_bot()
-
-
-

@@ -1,8 +1,7 @@
-from tweepy import Tweet
-
 from bot.db.latest_tweet import get_days_ago_tweet_ids
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.save_neo4j import save_tweets_in_neo4j
+from tweepy import Tweet
 
 
 def test_get_days_ago_tweet_ids_none_data():

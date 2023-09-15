@@ -36,20 +36,20 @@ def test_incomplete_profiles_no_outputs():
     neo4j_ops.gds.run_cypher(
         """
         MERGE (:TwitterAccount {
-            userId: '111', 
-            userName: 'Tom', 
+            userId: '111',
+            userName: 'Tom',
             bio: 'some guy from LA',
             createdAt: 10000000
         })
         MERGE (:TwitterAccount {
-            userId: '112', 
-            userName: 'Jerry', 
+            userId: '112',
+            userName: 'Jerry',
             bio: 'some guy from NC',
             createdAt: 10000001
         })
         MERGE (:TwitterAccount {
-            userId: '113', 
-            userName: 'Tuffy', 
+            userId: '113',
+            userName: 'Tuffy',
             bio: 'some guy from NJ',
             createdAt: 10000002
         })
@@ -85,8 +85,8 @@ def test_incomplete_profiles_some_outputs():
             createdAt: 10000001
         })
         MERGE (:TwitterAccount {
-            userId: '113', 
-            userName: 'Tuffy', 
+            userId: '113',
+            userName: 'Tuffy',
             bio: 'some guy from NJ',
             createdAt: 10000002
         })
@@ -120,8 +120,8 @@ def test_incomplete_profiles_by_bio_some_outputs():
             userId: '112'
         })
         MERGE (:TwitterAccount {
-            userId: '113', 
-            userName: 'Tuffy', 
+            userId: '113',
+            userName: 'Tuffy',
             createdAt: 10000002
         })
         """

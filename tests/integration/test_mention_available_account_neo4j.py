@@ -1,7 +1,6 @@
-from tweepy import Tweet
-
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.twitter_data_to_cypher import create_twitter_data_query
+from tweepy import Tweet
 
 
 def test_mention_available_account_neo4j():

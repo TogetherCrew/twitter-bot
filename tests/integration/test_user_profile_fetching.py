@@ -1,7 +1,6 @@
-from tweepy import User
-
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.user_profile_to_cypher import create_twitter_user_profile_query
+from tweepy import User
 
 
 def test_user_profile_saving_none_data():

@@ -1,7 +1,9 @@
 import logging
 
-from tc_messageBroker.rabbit_mq.saga.saga_base import get_saga
+import numpy as np
 from bot.utils.rabbitmq_connection import prepare_rabbit_mq
+from tc_messageBroker.rabbit_mq.saga.saga_base import Status, get_saga
+
 
 def get_saga_instance(sagaId: str, connection: str, saga_db: str, saga_collection: str):
     saga = get_saga(
@@ -11,6 +13,7 @@ def get_saga_instance(sagaId: str, connection: str, saga_db: str, saga_collectio
         collection=saga_collection,
     )
     return saga
+
 
 def sort_transactions(transactions: list):
     """
@@ -50,6 +53,7 @@ def sort_transactions(transactions: list):
 
     return np.array(transactions_ordered), tx_not_started_count
 
+
 def publish_on_success(connection, result, *args, **kwargs):
     # we must get these three things
     try:
@@ -84,3 +88,23 @@ def publish_on_success(connection, result, *args, **kwargs):
             )
     except Exception as exp:
         logging.info(f"Exception occured in job on_success callback: {exp}")
+
+
+def sort_transactions_orderly(transactions: list):
+    """
+    sort transactions by their `order` property
+
+    Parameters:
+    ------------
+    transactions : list[ITransaction]
+        the list of transactions to order
+
+    Returns:
+    ---------
+    transactions_orderly_sorted : list[ITransaction]
+        transactions sorted by their order
+    """
+    orders = [tx.order for tx in transactions]
+    sorted_indices = np.argsort(orders)
+
+    return np.array(transactions)[sorted_indices]

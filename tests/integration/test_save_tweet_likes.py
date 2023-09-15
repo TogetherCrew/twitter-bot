@@ -1,8 +1,7 @@
 import numpy as np
-from tweepy import User
-
 from bot.db.neo4j_connection import Neo4jConnection
 from bot.db.save_neo4j import save_tweet_likes_neo4j
+from tweepy import User
 
 
 def test_tweet_likes_empty_input():
