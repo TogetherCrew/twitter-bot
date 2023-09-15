@@ -214,7 +214,7 @@ def create_twitter_data_query(twitter_data: list[dict[str, Any]]) -> list[str]:
                     )
                     cypher_queries.append(query)
 
-        # Checking interaction
+        # Checking interactiona
         if tweet["referenced_tweets"] is not None:
             for referenced_tweet in tweet["referenced_tweets"]:
                 id_val, type_val = tweet_type_finder(referenced_tweet.data)

@@ -61,7 +61,7 @@ class Properties:
     def __init__(
         self,
         property_name: str,
-        property_value: str,
+        property_value: str | list | datetime,
         property_format: Type[str] | Type[list] | Type[datetime] | Type[int],
     ) -> None:
         """
