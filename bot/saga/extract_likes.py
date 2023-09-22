@@ -1,9 +1,9 @@
 import logging
 
+from bot.saga.saga import get_saga_instance
 from bot.services.user_info import get_twitter_user
 from bot.twitter import extract_and_save_liked_tweets, extract_and_save_liker_users
 from bot.utils.mongo_connection import get_saga_db_location
-from saga import get_saga_instance
 
 
 def find_saga_and_fire_extract_likes(sagaId: str):

@@ -1,8 +1,8 @@
 import logging
 
+from bot.saga.saga import get_saga_instance
 from bot.twitter import extract_and_save_tweets
 from bot.utils.mongo_connection import get_saga_db_location
-from saga import get_saga_instance
 
 
 def find_saga_and_fire_extract_tweets(sagaId: str):
