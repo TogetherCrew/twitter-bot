@@ -38,4 +38,4 @@ tweepy==4.14.0
 types-pyOpenSSL==23.2.0.2
 tzdata==2023.3
 urllib3==2.0.4
-tc-neo4j-lib-py
+tc-neo4j-lib-py==1.0.1
