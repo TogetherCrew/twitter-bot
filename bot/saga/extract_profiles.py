@@ -3,7 +3,7 @@ import logging
 from bot.services.user_info import get_twitter_user
 from bot.twitter import extract_and_save_user_information
 from bot.utils.mongo_connection import get_saga_db_location
-from saga import get_saga_instance
+from bot.saga.saga import get_saga_instance
 
 
 def find_saga_and_fire_extract_profiles(sagaId: str):
