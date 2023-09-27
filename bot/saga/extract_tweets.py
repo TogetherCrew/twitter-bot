@@ -7,6 +7,7 @@ from bot.utils.mongo_connection import get_saga_db_location
 
 def find_saga_and_fire_extract_tweets(sagaId: str):
     saga_mongo_creds = get_saga_db_location()
+    logging.info(f"saga_mongo_creds: {saga_mongo_creds}")
 
     saga = get_saga_instance(
         sagaId=sagaId,
