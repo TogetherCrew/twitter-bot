@@ -56,8 +56,6 @@ def sort_transactions(transactions: list):
 
 
 def publish_on_success(connection, result, *args, **kwargs):
-    # we must get these three things
-    logging.info(f"args in on_success callback: {args}")
     try:
         sagaId = args[0][0]
         mongo_creds = get_saga_db_location()
