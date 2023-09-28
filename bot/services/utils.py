@@ -1,6 +1,5 @@
 import functools
 import logging
-
 from itertools import count
 
 
