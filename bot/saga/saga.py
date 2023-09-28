@@ -87,7 +87,7 @@ def publish_on_success(connection, result, *args, **kwargs):
                 content={"uuid": sagaId, "data": saga.data},
             )
     except Exception as exp:
-        logging.info(f"Exception occured in job on_success callback: {exp}")
+        logging.error(f"Exception occured in job on_success callback: {exp}")
 
 
 def sort_transactions_orderly(transactions: list):
