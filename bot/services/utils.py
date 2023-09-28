@@ -1,6 +1,6 @@
+import functools
 import logging
 
-import functools
 from itertools import count
 
 
@@ -15,7 +15,7 @@ def retry_function_if_fail(func, /, *args, **keywords):
             return response
 
         except Exception as ex:
-            logging.error("[Exception(retry_function_if_fail)]", ex)
+            logging.error(f"[Exception(retry_function_if_fail)]: {ex}")
 
         finally:
             if counter == retry_number:
