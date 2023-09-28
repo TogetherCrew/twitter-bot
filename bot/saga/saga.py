@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 from bot.utils.mongo_connection import get_saga_db_location
-from bot.utils.rabbitmq_connection import prepare_rabbit_mq, get_rabbit_mq_credentials
+from bot.utils.rabbitmq_connection import get_rabbit_mq_credentials, prepare_rabbit_mq
 from tc_messageBroker.rabbit_mq.saga.saga_base import Status, get_saga
 
 
