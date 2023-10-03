@@ -1,7 +1,8 @@
 import logging
 
 import numpy as np
-from bot.utils.rabbitmq_connection import prepare_rabbit_mq
+from bot.utils.mongo_connection import get_saga_db_location
+from bot.utils.rabbitmq_connection import get_rabbit_mq_credentials, prepare_rabbit_mq
 from tc_messageBroker.rabbit_mq.saga.saga_base import Status, get_saga
 
 
@@ -55,11 +56,10 @@ def sort_transactions(transactions: list):
 
 
 def publish_on_success(connection, result, *args, **kwargs):
-    # we must get these three things
     try:
-        rabbit_creds = args[0][0]
-        sagaId = args[0][1]
-        mongo_creds = args[0][2]
+        sagaId = args[0][0]
+        mongo_creds = get_saga_db_location()
+        rabbit_creds = get_rabbit_mq_credentials()
         logging.info(f"SAGAID: {sagaId}: ON_SUCCESS callback! ")
 
         saga = get_saga_instance(
@@ -87,7 +87,7 @@ def publish_on_success(connection, result, *args, **kwargs):
                 content={"uuid": sagaId, "data": saga.data},
             )
     except Exception as exp:
-        logging.info(f"Exception occured in job on_success callback: {exp}")
+        logging.error(f"Exception occured in job on_success callback: {exp}")
 
 
 def sort_transactions_orderly(transactions: list):
