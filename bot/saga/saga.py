@@ -1,8 +1,9 @@
 import logging
 
+from typing import Any
 import numpy as np
 from bot.utils.rabbitmq_connection import prepare_rabbit_mq
-from tc_messageBroker.rabbit_mq.saga.saga_base import Status, get_saga
+from tc_messageBroker.rabbit_mq.saga.saga_base import Status, get_saga, Saga
 
 
 def get_saga_instance(sagaId: str, connection: str, saga_db: str, saga_collection: str):
@@ -86,6 +87,8 @@ def publish_on_success(connection, result, *args, **kwargs):
                 event=tx.event,
                 content={"uuid": sagaId, "data": saga.data},
             )
+
+            update_progress(mongo_creds, saga)
     except Exception as exp:
         logging.info(f"Exception occured in job on_success callback: {exp}")
 
@@ -108,3 +111,12 @@ def sort_transactions_orderly(transactions: list):
     sorted_indices = np.argsort(orders)
 
     return np.array(transactions)[sorted_indices]
+
+
+def update_progress(mongo_creds: dict[str, Any], saga: Saga):
+    mongodb = saga._get_mongo_db(mongo_creds)
+
+    mongodb.client["RnDAO"]["users"].update_one(
+        {"twitterUsername": saga.data["twitter_username"]},
+        {"$set": {"twitterIsInProgress": False}},
+    )
