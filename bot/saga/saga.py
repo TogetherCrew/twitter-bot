@@ -1,9 +1,9 @@
 import logging
-
 from typing import Any
+
 import numpy as np
 from bot.utils.rabbitmq_connection import prepare_rabbit_mq
-from tc_messageBroker.rabbit_mq.saga.saga_base import Status, get_saga, Saga
+from tc_messageBroker.rabbit_mq.saga.saga_base import Saga, Status, get_saga
 
 
 def get_saga_instance(sagaId: str, connection: str, saga_db: str, saga_collection: str):
