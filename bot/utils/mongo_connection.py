@@ -46,7 +46,7 @@ def get_mongo_connection(mongo_creds: dict[str, Any] | None = None) -> str:
 
 def get_saga_db_location(mongo_creds: dict[str, Any] | None = None):
     """
-    get the saga location in database
+    get the saga location in database and the mongo connection string
     """
     if mongo_creds is None:
         mongo_creds = get_mongo_credentials()

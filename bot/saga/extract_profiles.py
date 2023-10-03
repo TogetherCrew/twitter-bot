@@ -22,7 +22,7 @@ def find_saga_and_fire_extract_profiles(sagaId: str):
     else:
         twitter_username = saga.data["twitter_username"]
         twitter_user = get_twitter_user(username=twitter_username)
-        twitter_id = twitter_user.id
+        twitter_id = str(twitter_user.id)
 
         def extract_and_save_user_information_wrapper(**kwargs):
             extract_and_save_user_information(user_id=twitter_id)
