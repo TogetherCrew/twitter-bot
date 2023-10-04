@@ -1,5 +1,7 @@
-from .neo4j_connection import Neo4jConnection
 from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
+
+from .neo4j_connection import Neo4jConnection
+
 
 def get_latest_reply_in_past_7_days(
     user_id: str | None = None, tweet_id: str | None = None
@@ -43,3 +45,4 @@ def get_latest_reply_in_past_7_days(
     latest_reply_id = df_latest_reply["latest_reply_id"].iloc[0]
 
     return latest_reply_id
+

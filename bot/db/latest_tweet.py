@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
+
 from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
+
 from .neo4j_connection import Neo4jConnection
 
 

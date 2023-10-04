@@ -1,5 +1,7 @@
-from .neo4j_connection import Neo4jConnection
 from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
+
+from .neo4j_connection import Neo4jConnection
+
 
 def get_latest_retweet_in_past_7_days(
     user_id: str | None = None, tweet_id: str | None = None
@@ -35,6 +37,7 @@ def get_latest_retweet_in_past_7_days(
     df_latest_retweet = gds.run_cypher(
         f"""
         OPTIONAL MATCH (t:Tweet {query})<-[r:RETWEETED]-(m:Tweet)
+        WHERE r.createdAt >= {seven_days_ago_timestamp}
         WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
         RETURN MAX(id) as latest_retweet_id
         """
@@ -42,3 +45,4 @@ def get_latest_retweet_in_past_7_days(
     latest_retweet_id = df_latest_retweet["latest_retweet_id"].iloc[0]
 
     return latest_retweet_id
+

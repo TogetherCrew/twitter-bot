@@ -1,5 +1,7 @@
-from .neo4j_connection import Neo4jConnection
 from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
+
+from .neo4j_connection import Neo4jConnection
+
 
 def get_latest_mention_in_past_7_days(
     user_id: str,
@@ -35,3 +37,4 @@ def get_latest_mention_in_past_7_days(
     latest_mention_id = df_latest_mention["latest_mention_id"].iloc[0]
 
     return latest_mention_id
+
