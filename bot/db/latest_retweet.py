@@ -4,7 +4,7 @@ from .neo4j_connection import Neo4jConnection
 
 
 def get_latest_retweet_since(
-    user_id: str | None = None, 
+    user_id: str | None = None,
     tweet_id: str | None = None,
     since: int = get_x_days_ago_UTC_timestamp(7),
 ) -> str | None:
