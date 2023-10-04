@@ -4,8 +4,7 @@ from .neo4j_connection import Neo4jConnection
 
 
 def get_latest_mention_since(
-    user_id: str,
-    since: int = get_x_days_ago_UTC_timestamp(7)
+    user_id: str, since: int = get_x_days_ago_UTC_timestamp(7)
 ) -> str | None:
     """
     get the user handle to get their latest mantion's tweetId

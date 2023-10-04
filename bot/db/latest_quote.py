@@ -6,7 +6,7 @@ from .neo4j_connection import Neo4jConnection
 def get_latest_quote_since(
     user_id: str | None = None, 
     tweet_id: str | None = None,
-    since: int = get_x_days_ago_UTC_timestamp(7)
+    since: int = get_x_days_ago_UTC_timestamp(7),
 ) -> str | None:
     """
     get the user handle to get their latest quote's tweetId
