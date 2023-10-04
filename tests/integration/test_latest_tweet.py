@@ -1,4 +1,4 @@
-from bot.db.latest_tweet import get_latest_tweet
+from bot.db.latest_tweet import get_latest_tweet_in_past_7_days
 from bot.db.neo4j_connection import Neo4jConnection
 
 
@@ -16,7 +16,7 @@ def test_get_latest_tweet_none():
         """
     )
 
-    id = get_latest_tweet(user_id="12345")
+    id = get_latest_tweet_in_past_7_days(user_id="12345")
 
     assert id is None
 
@@ -40,7 +40,7 @@ def test_get_latest_tweet():
         """
     )
 
-    id = get_latest_tweet(user_id="12345")
+    id = get_latest_tweet_in_past_7_days(user_id="12345")
 
     assert id is not None
     assert id == "988776"

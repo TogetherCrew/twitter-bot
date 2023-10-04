@@ -1,7 +1,7 @@
 from .neo4j_connection import Neo4jConnection
+from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
 
-
-def get_latest_reply(
+def get_latest_reply_in_past_7_days(
     user_id: str | None = None, tweet_id: str | None = None
 ) -> str | None:
     """
@@ -29,11 +29,13 @@ def get_latest_reply(
 
     neo4j_connection = Neo4jConnection()
     gds = neo4j_connection.neo4j_ops.gds
+    seven_days_ago_timestamp = get_x_days_ago_UTC_timestamp(7)
 
     # latest reply as a dataframe
     df_latest_reply = gds.run_cypher(
         f"""
         OPTIONAL MATCH (t:Tweet {query})<-[r:REPLIED]-(m:Tweet)
+        WHERE r.createdAt >= {seven_days_ago_timestamp}
         WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
         RETURN MAX(id) as latest_reply_id
         """

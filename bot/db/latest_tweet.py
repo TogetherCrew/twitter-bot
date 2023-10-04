@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta, timezone
-
+from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
 from .neo4j_connection import Neo4jConnection
 
 
-def get_latest_tweet(
+def get_latest_tweet_in_past_7_days(
     user_id: str,
 ) -> str | None:
     """
@@ -22,11 +22,13 @@ def get_latest_tweet(
     """
     neo4j_connection = Neo4jConnection()
     gds = neo4j_connection.neo4j_ops.gds
+    seven_days_ago_timestamp = get_x_days_ago_UTC_timestamp(7)
 
     # latest tweet id as a dataframe
     df_latest_tweeted = gds.run_cypher(
         f"""
         OPTIONAL MATCH (a:TwitterAccount {{userId: '{user_id}'}})-[r:TWEETED]->(m:Tweet)
+        WHERE m.createdAt >= {seven_days_ago_timestamp}
         WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
         RETURN MAX(id) as latest_tweeted_id
         """

@@ -1,4 +1,4 @@
-from bot.db.latest_mention import get_latest_mention
+from bot.db.latest_mention import get_latest_mention_in_past_7_days
 from bot.db.neo4j_connection import Neo4jConnection
 
 
@@ -15,7 +15,7 @@ def test_get_latest_mention_none():
         """
     )
 
-    id = get_latest_mention(user_id="12345")
+    id = get_latest_mention_in_past_7_days(user_id="12345")
 
     assert id is None
 
@@ -40,7 +40,7 @@ def test_get_latest_mention():
         """
     )
 
-    id = get_latest_mention(user_id="11111")
+    id = get_latest_mention_in_past_7_days(user_id="11111")
 
     assert id is not None
     assert id == "00000"
