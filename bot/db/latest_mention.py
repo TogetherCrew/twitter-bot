@@ -37,4 +37,3 @@ def get_latest_mention_in_past_7_days(
     latest_mention_id = df_latest_mention["latest_mention_id"].iloc[0]
 
     return latest_mention_id
-

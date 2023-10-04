@@ -45,4 +45,3 @@ def get_latest_retweet_in_past_7_days(
     latest_retweet_id = df_latest_retweet["latest_retweet_id"].iloc[0]
 
     return latest_retweet_id
-

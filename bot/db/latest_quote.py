@@ -49,4 +49,3 @@ def get_latest_quote_in_past_7_days(
     latest_quoted_id = df_latest_quote["latest_quoted_id"].iloc[0]
 
     return latest_quoted_id
-
