@@ -1,9 +1,9 @@
 from bot.db.incomplete_profiles import get_incomplete_profile_ids
-from bot.db.latest_mention import get_latest_mention
-from bot.db.latest_quote import get_latest_quote
-from bot.db.latest_reply import get_latest_reply
-from bot.db.latest_retweet import get_latest_retweet
-from bot.db.latest_tweet import get_days_ago_tweet_ids, get_latest_tweet
+from bot.db.latest_mention import get_latest_mention_since
+from bot.db.latest_quote import get_latest_quote_since
+from bot.db.latest_reply import get_latest_reply_since
+from bot.db.latest_retweet import get_latest_retweet_since
+from bot.db.latest_tweet import get_days_ago_tweet_ids, get_latest_tweet_since
 from bot.db.save_neo4j import (
     save_tweet_likes_neo4j,
     save_tweets_in_neo4j,
@@ -67,7 +67,7 @@ def extract_and_save_tweets(
     elif user_id is None and username is None:
         raise TypeError("Expected ID or username or both, not none of them")
 
-    latest_mention_id = get_latest_mention(user_id=str(user_id))
+    latest_mention_id = get_latest_mention_since(user_id=str(user_id))
     if username is not None:
         mentioned_tweets = get_mentioned_tweets_by_username(
             username=username, since_id=latest_mention_id
@@ -76,7 +76,7 @@ def extract_and_save_tweets(
     else:
         raise ValueError("username was not fetched from twitter!")
 
-    latest_tweet_id = get_latest_tweet(user_id=str(user_id))
+    latest_tweet_id = get_latest_tweet_since(user_id=str(user_id))
     user_tweets = get_user_tweets(user_handler=str(user_id), since_id=latest_tweet_id)
     save_tweets_in_neo4j(user_tweets)
 
@@ -97,19 +97,19 @@ def extract_and_save_tweets(
         elif referenced_tweets and "replied_to" in referenced_tweets:
             print("'Replied'")
 
-            latest_reply_id = get_latest_reply(tweet_id=tweet.id)
+            latest_reply_id = get_latest_reply_since(tweet_id=tweet.id)
             replies_of_reply = get_first_depth_replies_of_tweet(
                 tweet_id=tweet.id, since_id=latest_reply_id
             )
             save_tweets_in_neo4j(replies_of_reply)
 
-            latest_quote_id = get_latest_quote(tweet_id=tweet.id)
+            latest_quote_id = get_latest_quote_since(tweet_id=tweet.id)
             quotes_of_reply = get_quotes_of_tweet(
                 tweet_id=tweet.id, since_id=latest_quote_id
             )
             save_tweets_in_neo4j(quotes_of_reply)
 
-            latest_retweet_id = get_latest_retweet(tweet_id=tweet.id)
+            latest_retweet_id = get_latest_retweet_since(tweet_id=tweet.id)
             retweets_of_reply = get_retweets_of_tweet(
                 tweet_id=tweet.id, since_id=latest_retweet_id
             )
@@ -118,19 +118,19 @@ def extract_and_save_tweets(
         elif referenced_tweets is None or "quoted" in referenced_tweets:
             print("'Tweet' or 'Quote'")
 
-            latest_reply_id = get_latest_reply(tweet_id=tweet.id)
+            latest_reply_id = get_latest_reply_since(tweet_id=tweet.id)
             replies_of_reply = get_all_replies_of_tweet(
                 tweet_id=tweet.id, since_id=latest_reply_id
             )
             save_tweets_in_neo4j(replies_of_reply)
 
-            latest_quote_id = get_latest_quote(tweet_id=tweet.id)
+            latest_quote_id = get_latest_quote_since(tweet_id=tweet.id)
             quotes_of_reply = get_quotes_of_tweet(
                 tweet_id=tweet.id, since_id=latest_quote_id
             )
             save_tweets_in_neo4j(quotes_of_reply)
 
-            latest_retweet_id = get_latest_retweet(tweet_id=tweet.id)
+            latest_retweet_id = get_latest_retweet_since(tweet_id=tweet.id)
             retweets_of_reply = get_retweets_of_tweet(
                 tweet_id=tweet.id, since_id=latest_retweet_id
             )

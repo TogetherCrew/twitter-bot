@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta, timezone
 
+from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
+
 from .neo4j_connection import Neo4jConnection
 
 
-def get_latest_tweet(
-    user_id: str,
+def get_latest_tweet_since(
+    user_id: str, since: int = get_x_days_ago_UTC_timestamp(7)
 ) -> str | None:
     """
     get the user handle to get their latest mantion's tweetId
@@ -13,6 +15,9 @@ def get_latest_tweet(
     ------------
     user_id : str
         given the userId, find the required information
+    since : int
+        UTC timestamp epoch
+        default is 7 days ago UTC timestamp from now
 
     Returns:
     ---------
@@ -27,6 +32,7 @@ def get_latest_tweet(
     df_latest_tweeted = gds.run_cypher(
         f"""
         OPTIONAL MATCH (a:TwitterAccount {{userId: '{user_id}'}})-[r:TWEETED]->(m:Tweet)
+        WHERE m.createdAt >= {since}
         WITH MAX(SIZE(m.tweetId)) as max_size, m.tweetId as id
         RETURN MAX(id) as latest_tweeted_id
         """

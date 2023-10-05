@@ -1,4 +1,4 @@
-from bot.db.latest_quote import get_latest_quote
+from bot.db.latest_quote import get_latest_quote_since
 from bot.db.neo4j_connection import Neo4jConnection
 
 
@@ -16,7 +16,7 @@ def test_get_latest_quote_userid_input_output_none():
         """
     )
 
-    id = get_latest_quote(user_id="12345")
+    id = get_latest_quote_since(user_id="12345")
 
     assert id is None
 
@@ -35,7 +35,7 @@ def test_get_latest_quote_tweetId_input_output_none():
         """
     )
 
-    id = get_latest_quote(tweet_id="12345")
+    id = get_latest_quote_since(tweet_id="12345")
 
     assert id is None
 
@@ -54,7 +54,7 @@ def test_get_latest_quote_empty_inputs_output_none():
         """
     )
     try:
-        _ = get_latest_quote(user_id=None, tweet_id=None)
+        _ = get_latest_quote_since(user_id=None, tweet_id=None)
     except ValueError as exp:
         assert str(exp) == "`tweet_id` and `user_id` are both None!"
 
@@ -88,7 +88,7 @@ def test_get_latest_quote_userid_input():
         """
     )
 
-    id = get_latest_quote(user_id="989898")
+    id = get_latest_quote_since(user_id="989898")
 
     assert id is not None
     assert id == "1115"
@@ -123,7 +123,7 @@ def test_get_latest_quote_tweetid_input():
         """
     )
 
-    id = get_latest_quote(tweet_id="1111")
+    id = get_latest_quote_since(tweet_id="1111")
 
     assert id is not None
     assert id == "1115"
