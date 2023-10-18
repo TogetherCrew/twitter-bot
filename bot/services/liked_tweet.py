@@ -41,7 +41,9 @@ def get_liked_tweets_since(user_id: str, since: int | None = None):
         tweets, tweets_meta = fetch_liked_tweets(user_id, next_token)
         all_tweets += tweets
 
-        if since and any(tweet.created_at.timestamp() * 1000 < since for tweet in tweets):
+        if since and any(
+            tweet.created_at.timestamp() * 1000 < since for tweet in tweets
+        ):
             break
 
         if "next_token" not in tweets_meta:
@@ -85,7 +87,7 @@ def fetch_liked_tweets(user_id, next_token):
         id=user_id,
         tweet_fields=FetchConfigs.tweet_fields,
         max_results=max_results,
-        pagination_token=next_token
+        pagination_token=next_token,
     )
 
     tweets_list = tweets.data or []
