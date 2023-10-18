@@ -56,8 +56,8 @@ def get_liked_tweets_since(user_id: str, since: int | None = None):
                 map(lambda tweet: tweet.created_at.timestamp() * 1000, tweets_list)
             )
             times_before_since = list(filter(lambda time: time < since, tweets_time))
-            if len(times_before_since) > 1:
-                return all_tweets
+            if len(times_before_since) > 0:
+                break
 
         if "next_token" not in tweets_meta:
             # when we don't have "next_token" in meta object, there is no more data
