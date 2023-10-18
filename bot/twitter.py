@@ -176,4 +176,3 @@ def extract_and_save_liked_tweets(user_id: str):
     )
     save_user_likes_neo4j(user_id=user_id, tweets_liked=liked_tweets)
     save_tweets_in_neo4j(liked_tweets)
-
