@@ -78,6 +78,7 @@ def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
 
     return all_liker_users
 
+
 def fetch_liked_tweets(user_id, next_token):
     max_results = 5
     tweets, tweets_meta = TwitterClient.client.get_liked_tweets(
@@ -86,6 +87,6 @@ def fetch_liked_tweets(user_id, next_token):
         max_results=max_results,
         pagination_token=next_token
     )
-    
+
     tweets_list = tweets.data or []
     return tweets_list, tweets_meta
