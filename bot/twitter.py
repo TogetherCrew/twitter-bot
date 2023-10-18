@@ -21,6 +21,7 @@ from bot.services.user_info import get_twitter_user, get_twitter_users
 from bot.services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
 from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
 
+
 def extract_and_save_tweets(
     user_id: str | int | None = None, username: str | None = None
 ) -> None:
@@ -170,6 +171,9 @@ def extract_and_save_liker_users(user_id: str):
 
 
 def extract_and_save_liked_tweets(user_id: str):
-    liked_tweets = get_liked_tweets_since(user_id=user_id, since=get_x_days_ago_UTC_timestamp(7))
+    liked_tweets = get_liked_tweets_since(
+        user_id=user_id, since=get_x_days_ago_UTC_timestamp(7)
+    )
     save_user_likes_neo4j(user_id=user_id, tweets_liked=liked_tweets)
     save_tweets_in_neo4j(liked_tweets)
+

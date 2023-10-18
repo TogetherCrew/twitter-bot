@@ -32,6 +32,7 @@ def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
 
     return all_tweets
 
+
 def get_liked_tweets_since(user_id: str, since: int = None):
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
@@ -50,10 +51,13 @@ def get_liked_tweets_since(user_id: str, since: int = None):
         tweets_list = tweets_list if tweets_list is not None else []
         all_tweets += tweets_list
 
-        if since: # check if there is a tweet that was created before the `since` 
-            tweets_time = list(map(lambda tweet: tweet.created_at.timestamp() * 1000, tweets_list))
+        if since:  # check if there is a tweet that was created before the `since`
+            tweets_time = list(
+                map(lambda tweet: tweet.created_at.timestamp() * 1000, tweets_list)
+            )
             times_before_since = list(filter(lambda time: time < since, tweets_time))
-            if len(times_before_since) > 1: return all_tweets
+            if len(times_before_since) > 1: 
+                return all_tweets
 
         if "next_token" not in tweets_meta:
             # when we don't have "next_token" in meta object, there is no more data
@@ -62,6 +66,7 @@ def get_liked_tweets_since(user_id: str, since: int = None):
             next_token = tweets_meta["next_token"]
 
     return all_tweets
+
 
 def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
     all_liker_users: list[tweepy.User] = []
@@ -87,3 +92,4 @@ def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
             next_token = users_meta["next_token"]
 
     return all_liker_users
+
