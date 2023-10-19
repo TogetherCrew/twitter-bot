@@ -29,8 +29,8 @@ def extract_and_save(user: tweepy.User) -> None:
     extract_and_save_liked_tweets(user_id=user.id)
     extract_and_save_liker_users(user_id=user.id)
 
-    logging.info(f"{bold_style}Starting Job 3 (Completing missing profiles)")
-    extract_and_save_user_information(user_id=user.id)
+    logging.info(f"{bold_style}Starting Job 3 (Completing missing profiles){end_style}")
+    extract_and_save_user_information(user_id=str(user.id))
 
 
 if __name__ == "__main__":
@@ -64,5 +64,7 @@ if __name__ == "__main__":
     
 
     extract_and_save(user)
+
+    # show analytics results
 
 
