@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # doing extraction and saving
 
     # extract_and_save(user)
-    
+
     logging.info("-" * 25)
     # showing analytics results
 
