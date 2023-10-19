@@ -92,5 +92,5 @@ def fetch_liked_tweets(user_id, next_token):
 
     tweets_meta = tweets.meta
     tweets_list = tweets.data or []
-    
+
     return tweets_list, tweets_meta
