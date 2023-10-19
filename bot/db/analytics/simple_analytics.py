@@ -122,8 +122,10 @@ class SimpleAnalytics(BaseAnalytics):
         1. Number of tweets the user made
         2. Number of replies the user made
         3. Number of retweets the user made
-        4. Number of likes the user made
+        4. *Number of likes the user made
         5. Number of mentions the user made
+
+        * Not possible to compute accurately with the current twitter api
 
         Parameters
         -----------
@@ -138,8 +140,6 @@ class SimpleAnalytics(BaseAnalytics):
             analytics item 2
         retweet_count : int
             analytics item 3
-        like_count : int
-            analytics item 4
         mention_count : int
             analytics item 5
         """
@@ -171,14 +171,14 @@ class SimpleAnalytics(BaseAnalytics):
         )
         retweet_count = result_retweet_count["retweet_count"].iloc[0]
 
-        result_like_counts = self.gds.run_cypher(
-            f"""
-            MATCH (a:TwitterAccount  {{userId: '{user_id}'}} )-[r:LIKED]->(m:Tweet)
-            WHERE m.createdAt >= {self.Epoch7daysAgo} AND a.userId <> m.authorId
-            RETURN COUNT(r) as like_counts
-            """
-        )
-        like_counts = result_like_counts["like_counts"].iloc[0]
+        # result_like_counts = self.gds.run_cypher(
+        #     f"""
+        #     MATCH (a:TwitterAccount  {{userId: '{user_id}'}} )-[r:LIKED]->(m:Tweet)
+        #     WHERE m.createdAt >= {self.Epoch7daysAgo} AND a.userId <> m.authorId
+        #     RETURN COUNT(r) as like_counts
+        #     """
+        # )
+        # like_counts = result_like_counts["like_counts"].iloc[0]
 
         result_mention_count = self.gds.run_cypher(
             f"""
@@ -189,4 +189,4 @@ class SimpleAnalytics(BaseAnalytics):
         )
         mention_count = result_mention_count["mention_count"].iloc[0]
 
-        return (tweet_count, reply_count, retweet_count, like_counts, mention_count)
+        return (tweet_count, reply_count, retweet_count, mention_count)
