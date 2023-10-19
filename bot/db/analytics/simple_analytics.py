@@ -116,7 +116,7 @@ class SimpleAnalytics(BaseAnalytics):
 
         return (replies_count, retweets_count, likes_count, mentions_count)
 
-    def get_user_account_activity(self, user_id: str) -> tuple[int, int, int, int, int]:
+    def get_user_account_activity(self, user_id: str) -> tuple:
         """
         get the user account activity analytics. The list of analytics are
         1. Number of tweets the user made
@@ -146,7 +146,7 @@ class SimpleAnalytics(BaseAnalytics):
 
         result_tweet_count = self.gds.run_cypher(
             f"""
-            MATCH (a:TwitterAccount  {{userId: '{user_id}'}} )-[r:TWEETED]->(t:Tweet) 
+            MATCH (a:TwitterAccount  {{userId: '{user_id}'}} )-[r:TWEETED]->(t:Tweet)
             WHERE r.createdAt >= {self.Epoch7daysAgo}
             RETURN COUNT(r) as tweet_count
             """

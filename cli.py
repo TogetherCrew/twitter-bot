@@ -2,16 +2,15 @@ import argparse
 import logging
 
 import tweepy
-
+from bot.db.analytics.advanced_analytics import AdvancedAnalytics
+from bot.db.analytics.simple_analytics import SimpleAnalytics
+from bot.services.user_info import get_twitter_user
 from bot.twitter import (
     extract_and_save_liked_tweets,
     extract_and_save_liker_users,
     extract_and_save_tweets,
     extract_and_save_user_information,
 )
-from bot.services.user_info import get_twitter_user
-from bot.db.analytics.simple_analytics import SimpleAnalytics
-from bot.db.analytics.advanced_analytics import AdvancedAnalytics
 
 
 def extract_and_save(user: tweepy.User) -> None:
@@ -64,8 +63,7 @@ if __name__ == "__main__":
     logging.info("-" * 25)
 
     # doing extraction and saving
-
-    # extract_and_save(user)
+    extract_and_save(user)
 
     logging.info("-" * 25)
     # showing analytics results
