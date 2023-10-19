@@ -10,7 +10,7 @@ from bot.db.save_neo4j import (
     save_user_likes_neo4j,
     save_user_profile_neo4j,
 )
-from bot.services.liked_tweet import get_liked_tweets, get_likers_of_tweet
+from bot.services.liked_tweet import get_liked_tweets_since, get_likers_of_tweet
 from bot.services.quote_tweet import get_quotes_of_tweet
 from bot.services.reply_tweet import (
     get_all_replies_of_tweet,
@@ -19,6 +19,7 @@ from bot.services.reply_tweet import (
 from bot.services.retweet_tweet import get_retweets_of_tweet
 from bot.services.user_info import get_twitter_user, get_twitter_users
 from bot.services.user_tweet import get_mentioned_tweets_by_username, get_user_tweets
+from bot.utils.get_epoch import get_x_days_ago_UTC_timestamp
 
 
 def extract_and_save_tweets(
@@ -170,6 +171,8 @@ def extract_and_save_liker_users(user_id: str):
 
 
 def extract_and_save_liked_tweets(user_id: str):
-    liked_tweets = get_liked_tweets(user_id=user_id)
+    liked_tweets = get_liked_tweets_since(
+        user_id=user_id, since=get_x_days_ago_UTC_timestamp(7)
+    )
     save_user_likes_neo4j(user_id=user_id, tweets_liked=liked_tweets)
     save_tweets_in_neo4j(liked_tweets)
