@@ -82,7 +82,7 @@ def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
 
 
 def fetch_liked_tweets(user_id, next_token):
-    max_results = 5
+    max_results = FetchConfigs.max_tweet_results
     tweets, tweets_meta = TwitterClient.client.get_liked_tweets(
         id=user_id,
         tweet_fields=FetchConfigs.tweet_fields,
