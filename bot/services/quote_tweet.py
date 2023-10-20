@@ -26,7 +26,8 @@ def get_quotes_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy.Twee
         all Quote Tweets in last 7 days will be returned
     """
     logging.info(
-        f"Start fetching `Quote Tweets` of a Tweet with ID {tweet_id} , It might take long (because of twitter api limits)"
+        f"Start fetching `Quote Tweets` of a Tweet with ID {tweet_id} , 
+        It might take long (because of twitter api limits)"
     )
     query = f"quotes_of_tweet_id:{tweet_id}"
 

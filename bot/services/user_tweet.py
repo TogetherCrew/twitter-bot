@@ -26,7 +26,8 @@ def get_user_tweets(user_handler: str, since_id: str | None) -> list[tweepy.Twee
         all user's Tweets in last 7 days will be returned
     """
     logging.info(
-        f"Start fetching `Tweets` of a User with ID/USERNAME {user_handler} , It might take long (because of twitter api limits)"
+        f"Start fetching `Tweets` of a User with ID/USERNAME {user_handler} , 
+        It might take long (because of twitter api limits)"
     )
     query = f"from:{user_handler}"
 
@@ -81,7 +82,8 @@ def get_mentioned_tweets_by_username(
         all Tweets that user has mentioned in last 7 days will be returned
     """
     logging.info(
-        f"Start fetching `Mentioned Tweets` of a User with USERNAME {username} , It might take long (because of twitter api limits)"
+        f"Start fetching `Mentioned Tweets` of a User with USERNAME {username} , 
+        It might take long (because of twitter api limits)"
     )
     query = f"@{username}"
 
