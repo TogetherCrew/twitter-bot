@@ -1,7 +1,7 @@
+import logging
 from itertools import count
 
 import tweepy
-import logging
 
 from .twitter_client import TwitterClient
 from .utils import FetchConfigs, retry_function_if_fail
@@ -25,7 +25,9 @@ def get_user_tweets(user_handler: str, since_id: str | None) -> list[tweepy.Twee
     all_tweets : list[tweepy.Tweet]
         all user's Tweets in last 7 days will be returned
     """
-    logging.info(f"Start fetching `Tweets` of a User with ID/USERNAME {user_handler} , It might take long (because of twitter api limits)")
+    logging.info(
+        f"Start fetching `Tweets` of a User with ID/USERNAME {user_handler} , It might take long (because of twitter api limits)"
+    )
     query = f"from:{user_handler}"
 
     all_tweets: list[tweepy.Tweet] = []
@@ -52,7 +54,9 @@ def get_user_tweets(user_handler: str, since_id: str | None) -> list[tweepy.Twee
         else:
             next_token = tweets_meta["next_token"]
 
-    logging.info(f"All `Tweets` of the User with ID/USERNAME {user_handler} were fetched")
+    logging.info(
+        f"All `Tweets` of the User with ID/USERNAME {user_handler} were fetched"
+    )
     return all_tweets
 
 
@@ -76,9 +80,10 @@ def get_mentioned_tweets_by_username(
     all_tweets : list[tweepy.Tweet]
         all Tweets that user has mentioned in last 7 days will be returned
     """
-    logging.info(f"Start fetching `Mentioned Tweets` of a User with USERNAME {username} , It might take long (because of twitter api limits)")
+    logging.info(
+        f"Start fetching `Mentioned Tweets` of a User with USERNAME {username} , It might take long (because of twitter api limits)"
+    )
     query = f"@{username}"
-    print(query)
 
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
@@ -104,5 +109,7 @@ def get_mentioned_tweets_by_username(
         else:
             next_token = tweets_meta["next_token"]
 
-    logging.info(f"All `Mentioned Tweets` of the User with USERNAME {username} were fetched")
+    logging.info(
+        f"All `Mentioned Tweets` of the User with USERNAME {username} were fetched"
+    )
     return all_tweets

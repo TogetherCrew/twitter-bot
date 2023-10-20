@@ -26,7 +26,9 @@ def get_all_replies_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy
     all_tweets : list[tweepy.Tweet]
         all Reply Tweets in last 7 days will be returned
     """
-    logging.info(f"Start fetching `Reply Tweets` of a Tweet with ID {tweet_id} , It might take long (because of twitter api limits)")
+    logging.info(
+        f"Start fetching `Reply Tweets` of a Tweet with ID {tweet_id} , It might take long (because of twitter api limits)"
+    )
     query = f"conversation_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
@@ -77,7 +79,9 @@ def get_first_depth_replies_of_tweet(
     all_tweets : list[tweepy.Tweet]
         all Reply Tweets in last 7 days will be returned
     """
-    logging.info(f"Start fetching `Reply Tweets (first-depth)` of a Tweet with ID {tweet_id} , It might take long (because of twitter api limits)")
+    logging.info(
+        f"Start fetching `Reply Tweets (first-depth)` of a Tweet with ID {tweet_id} , It might take long (because of twitter api limits)"
+    )
     query = f"in_reply_to_tweet_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
@@ -104,5 +108,7 @@ def get_first_depth_replies_of_tweet(
         else:
             next_token = tweets_meta["next_token"]
 
-    logging.info(f"All `Reply Tweets (first-depth)` of the Tweet with ID {tweet_id} were fetched")
+    logging.info(
+        f"All `Reply Tweets (first-depth)` of the Tweet with ID {tweet_id} were fetched"
+    )
     return all_reply

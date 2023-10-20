@@ -1,7 +1,7 @@
+import logging
 from itertools import count
 
 import tweepy
-import logging
 
 from .twitter_client import TwitterClient
 from .utils import FetchConfigs, retry_function_if_fail
@@ -25,7 +25,9 @@ def get_quotes_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy.Twee
     all_tweets : list[tweepy.Tweet]
         all Quote Tweets in last 7 days will be returned
     """
-    logging.info(f"Start fetching `Quote Tweets` of a Tweet with ID {tweet_id} , It might take long (because of twitter api limits)")
+    logging.info(
+        f"Start fetching `Quote Tweets` of a Tweet with ID {tweet_id} , It might take long (because of twitter api limits)"
+    )
     query = f"quotes_of_tweet_id:{tweet_id}"
 
     all_quotes: list[tweepy.Tweet] = []
