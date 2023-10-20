@@ -11,8 +11,8 @@ def get_twitter_user(id=None, username=None) -> tweepy.User:
         raise TypeError("Expected ID or username, not both")
 
     logging.info(
-        f"Start fetching `ّUser` information of a User with ID {id} or USERNAME {username}, 
-        It might take long (because of twitter api limits)"
+        f"""Start fetching `ّUser` information of a User with ID {id} or USERNAME {username}, 
+        It might take long (because of twitter api limits)"""
     )
 
     user = retry_function_if_fail(
@@ -35,8 +35,8 @@ def get_twitter_users(ids=None, usernames=None) -> list[tweepy.User]:
         raise TypeError("Expected IDs or usernames, not both")
 
     logging.info(
-        f"Start fetching `ّUsers` information of Users with IDs {ids} or USERNAMEs {usernames}, 
-        It might take long (because of twitter api limits)"
+        f"""Start fetching `ّUsers` information of Users with IDs {ids} or USERNAMEs {usernames}, 
+        It might take long (because of twitter api limits)"""
     )
 
     ids = ",".join(ids) if ids else None
