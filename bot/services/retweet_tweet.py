@@ -26,7 +26,7 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy.Tw
         all Retweet Tweets in last 7 days will be returned
     """
     logging.info(
-        f"""Start fetching `Retweets` of a Tweet with ID {tweet_id}, 
+        f"""Start fetching `Retweets` of a Tweet with ID {tweet_id},
         It might take long (because of twitter api limits)"""
     )
     query = f"retweets_of_tweet_id:{tweet_id}"

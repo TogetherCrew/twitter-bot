@@ -9,7 +9,7 @@ from .utils import FetchConfigs, retry_function_if_fail
 
 def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
     logging.info(
-        f"""Start fetching `Tweets` that a user with ID {user_id} liked, 
+        f"""Start fetching `Tweets` that a user with ID {user_id} liked,
         It might take long (because of twitter api limits)"""
     )
     all_tweets: list[tweepy.Tweet] = []

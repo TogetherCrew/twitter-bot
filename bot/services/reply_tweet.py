@@ -27,7 +27,7 @@ def get_all_replies_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy
         all Reply Tweets in last 7 days will be returned
     """
     logging.info(
-        f"""Start fetching `Reply Tweets` of a Tweet with ID {tweet_id} , 
+        f"""Start fetching `Reply Tweets` of a Tweet with ID {tweet_id},
         It might take long (because of twitter api limits)"""
     )
     query = f"conversation_id:{tweet_id}"
@@ -81,7 +81,7 @@ def get_first_depth_replies_of_tweet(
         all Reply Tweets in last 7 days will be returned
     """
     logging.info(
-        f"""Start fetching `Reply Tweets (first-depth)` of a Tweet with ID {tweet_id}, 
+        f"""Start fetching `Reply Tweets (first-depth)` of a Tweet with ID {tweet_id},
         It might take long (because of twitter api limits)"""
     )
     query = f"in_reply_to_tweet_id:{tweet_id}"
