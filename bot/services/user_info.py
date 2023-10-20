@@ -23,7 +23,9 @@ def get_twitter_user(id=None, username=None) -> tweepy.User:
 
     user_data: tweepy.User = user.data
     
-    logging.info(f"information of the `User` with ID {id} or USERNAME {username} were fetched")
+    logging.info(
+        f"information of the `User` with ID {id} or USERNAME {username} were fetched"
+    )
     return user_data
 
 

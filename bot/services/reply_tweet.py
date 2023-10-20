@@ -1,7 +1,7 @@
+import logging
 from itertools import count
 
 import tweepy
-import logging
 
 from .twitter_client import TwitterClient
 from .utils import FetchConfigs, retry_function_if_fail
