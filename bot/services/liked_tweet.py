@@ -1,16 +1,19 @@
 from itertools import count
 
 import tweepy
+import logging
 
 from .twitter_client import TwitterClient
 from .utils import FetchConfigs, retry_function_if_fail
 
 
 def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
+    logging.info(f"Start fetching `Tweets` that a user with ID {user_id} liked, It might take long (because of twitter api limits)")
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
 
     for _ in count(1):
+        logging.info(f"[LIKED_TWEET] Gathering data for the {_}st round")
         tweets = retry_function_if_fail(
             TwitterClient.client.get_liked_tweets,
             id=user_id,
@@ -30,14 +33,17 @@ def get_liked_tweets(user_id: str) -> list[tweepy.Tweet]:
         else:
             next_token = tweets_meta["next_token"]
 
+    logging.info(f"All `Tweets` that the user with ID {user_id} liked were fetched")
     return all_tweets
 
 
 def get_liked_tweets_since(user_id: str, since: int | None = None):
+    logging.info(f"Start fetching `Tweets` that a user with ID {user_id} liked")
     all_tweets: list[tweepy.Tweet] = []
     next_token = None
 
     for _ in count(1):
+        logging.info(f"[USER_LIKED_TWEET] Gathering data for the {_}st round")
         tweets, tweets_meta = fetch_liked_tweets(user_id, next_token)
         all_tweets += tweets
 
@@ -52,13 +58,17 @@ def get_liked_tweets_since(user_id: str, since: int | None = None):
         else:
             next_token = tweets_meta["next_token"]
 
+    logging.info(f"All `Tweets` that the user with ID {user_id} liked were fetched")
     return all_tweets
 
 
 def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
+    logging.info(f"Start fetching `ّUsers` that liked a tweet with ID {tweet_id}")
     all_liker_users: list[tweepy.User] = []
     next_token = None
+
     for _ in count(1):
+        logging.info(f"[TWEET_LIKER_USER] Gathering data for the {_}st round")
         users = retry_function_if_fail(
             TwitterClient.client.get_liking_users,
             id=tweet_id,
@@ -78,6 +88,7 @@ def get_likers_of_tweet(tweet_id: str) -> list[tweepy.User]:
         else:
             next_token = users_meta["next_token"]
 
+    logging.info(f"All `Users` that liked the tweet with ID {tweet_id} were fetched")
     return all_liker_users
 
 
