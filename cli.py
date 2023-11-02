@@ -12,6 +12,9 @@ from bot.twitter import (
     extract_and_save_user_information,
 )
 
+bold_style = "\033[1m"
+end_style = "\033[0m"
+
 
 def extract_and_save(user: tweepy.User) -> None:
     """
@@ -47,8 +50,6 @@ if __name__ == "__main__":
 
     user = get_twitter_user(username=username)
 
-    bold_style = "\033[1m"
-    end_style = "\033[0m"
     logging.info(f"{bold_style}Username:{end_style} {username}")
     logging.info(f"{bold_style}UserId:{end_style} {user.id}")
     logging.info(f"{bold_style}Starting the extraction process{end_style}")
