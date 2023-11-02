@@ -1,3 +1,4 @@
+import logging
 from itertools import count
 
 import tweepy
@@ -25,12 +26,16 @@ def get_all_replies_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy
     all_tweets : list[tweepy.Tweet]
         all Reply Tweets in last 7 days will be returned
     """
-
+    logging.info(
+        f"""Start fetching `Reply Tweets` of a Tweet with ID {tweet_id},
+        It might take long (because of twitter api limits)"""
+    )
     query = f"conversation_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
+        logging.info(f"[REPLY_TWEETS] Gathering data for the {_}st round")
         tweets = retry_function_if_fail(
             TwitterClient.client.search_recent_tweets,
             query=query,
@@ -51,6 +56,7 @@ def get_all_replies_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy
         else:
             next_token = tweets_meta["next_token"]
 
+    logging.info(f"All `Reply Tweets` of the Tweet with ID {tweet_id} were fetched")
     return all_reply
 
 
@@ -74,12 +80,16 @@ def get_first_depth_replies_of_tweet(
     all_tweets : list[tweepy.Tweet]
         all Reply Tweets in last 7 days will be returned
     """
-
+    logging.info(
+        f"""Start fetching `Reply Tweets (first-depth)` of a Tweet with ID {tweet_id},
+        It might take long (because of twitter api limits)"""
+    )
     query = f"in_reply_to_tweet_id:{tweet_id}"
 
     all_reply: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
+        logging.info(f"[REPLY_TWEETS] Gathering data for the {_}st round")
         tweets = retry_function_if_fail(
             TwitterClient.client.search_recent_tweets,
             query=query,
@@ -100,4 +110,7 @@ def get_first_depth_replies_of_tweet(
         else:
             next_token = tweets_meta["next_token"]
 
+    logging.info(
+        f"All `Reply Tweets (first-depth)` of the Tweet with ID {tweet_id} were fetched"
+    )
     return all_reply

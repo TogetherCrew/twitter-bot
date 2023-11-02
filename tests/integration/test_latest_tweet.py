@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from bot.db.latest_tweet import get_latest_tweet_since
 from bot.db.neo4j_connection import Neo4jConnection
 
@@ -33,10 +35,14 @@ def test_get_latest_tweet():
         MATCH (n) DETACH DELETE (n)
         """
     )
+
+    created_time = int((datetime.now() - timedelta(days=2)).timestamp() * 1000)
     neo4j_ops.gds.run_cypher(
-        """
-        MERGE (a:TwitterAccount {userId: '12345'})
-            -[:TWEETED]->(t:Tweet {tweetId: '988776'})
+        f"""
+        MERGE (a:TwitterAccount {{userId: '12345'}})
+            -[r:TWEETED]->(t:Tweet {{tweetId: '988776'}})
+
+        SET t.createdAt = {created_time}
         """
     )
 

@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from bot.db.latest_mention import get_latest_mention_since
 from bot.db.neo4j_connection import Neo4jConnection
 
@@ -33,10 +35,13 @@ def test_get_latest_mention():
         """
     )
 
+    created_time = int((datetime.now() - timedelta(days=2)).timestamp() * 1000)
+
     neo4j_ops.gds.run_cypher(
-        """
-        MERGE (:Tweet {tweetId: '00000', authorId: '989898'})
-            -[:MENTIONED]->(a:TwitterAccount {userId: '11111'})
+        f"""
+        MERGE (:Tweet {{tweetId: '00000', authorId: '989898'}})
+            -[r:MENTIONED]->(a:TwitterAccount {{userId: '11111'}})
+        SET r.createdAt = {created_time}
         """
     )
 
