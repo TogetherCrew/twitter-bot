@@ -5,7 +5,7 @@
 
 ## Description
 
-This repository contains an application that extracts data from Twitter based on many factors and saves it into a Neo4j graph database. 
+This repository contains an application that extracts data from Twitter based on many factors and saves it into a Neo4j graph database.
 The application can be used to collect a wide range of data, including tweets, users, hashtags, and relationships between them.
 Once the data has been extracted, it can be used to perform a variety of analyses, such as Account overview, your account activity, audience response, and engagement by account.
 
@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 ## Running the app
 
-```
+```bash
 # Run the server 
 python server.py
 
@@ -26,14 +26,16 @@ python worker.py
 ```
 
 You can quickly launch the application using `Docker Compose`:
-```
+
+```bash
 docker-compose -f docker-compose.example.yml up
 ```
 
 ## Running the CLI
 
 To run the CLI, execute the following command from the root directory of the application:
-```
+
+```bash
 python3 cli.py [twitter-username]
 ```
 
