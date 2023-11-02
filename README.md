@@ -16,15 +16,24 @@ pip install -r requirements.txt
 ## Running the app
 
 ```
-
 # Run the server 
 python server.py
 
 # Run the worker
 python worker.py
-
 ```
 
+You can quickly launch the application using `Docker Compose`:
+```
+docker-compose -f docker-compose.example.yml up
+```
+
+## Running the CLI
+
+To run the CLI, execute the following command from the root directory of the application:
+```
+python3 cli.py [twitter-username]
+```
 
 ## Tests
 
