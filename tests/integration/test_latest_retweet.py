@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from bot.db.latest_retweet import get_latest_retweet_since
 from bot.db.neo4j_connection import Neo4jConnection
 
@@ -72,17 +74,23 @@ def test_get_latest_retweet_userid_input():
         """
     )
 
+    created_time = int((datetime.now() - timedelta(days=2)).timestamp() * 1000)
     neo4j_ops.gds.run_cypher(
-        """
-        MERGE (a:Tweet {tweetId: '1111', authorId: '989898'})
-        MERGE (b:Tweet {tweetId: '1112', authorId: '989899'})
-        MERGE (c:Tweet {tweetId: '1113', authorId: '9898100'})
-        MERGE (d:Tweet {tweetId: '1114', authorId: '989898'})
+        f"""
+        MERGE (a:Tweet {{tweetId: '1111', authorId: '989898'}})
+        MERGE (b:Tweet {{tweetId: '1112', authorId: '989899'}})
+        MERGE (c:Tweet {{tweetId: '1113', authorId: '9898100'}})
+        MERGE (d:Tweet {{tweetId: '1114', authorId: '989898'}})
 
-        MERGE (a)-[:RETWEETED]->(b)
-        MERGE (d)-[:RETWEETED]->(a)
-        MERGE (d)-[:RETWEETED]->(b)
-        MERGE (c)-[:RETWEETED]->(d)
+        MERGE (a)-[r:RETWEETED]->(b)
+        MERGE (d)-[r2:RETWEETED]->(a)
+        MERGE (d)-[r3:RETWEETED]->(b)
+        MERGE (c)-[r4:RETWEETED]->(d)
+
+        SET r.createdAt = {created_time}
+        SET r2.createdAt = {created_time}
+        SET r3.createdAt = {created_time}
+        SET r4.createdAt = {created_time}
         """
     )
 
@@ -105,17 +113,23 @@ def test_get_latest_retweet_tweetid_input():
         """
     )
 
+    created_time = int((datetime.now() - timedelta(days=2)).timestamp() * 1000)
     neo4j_ops.gds.run_cypher(
-        """
-        MERGE (a:Tweet {tweetId: '1111', authorId: '989898'})
-        MERGE (b:Tweet {tweetId: '1112', authorId: '989899'})
-        MERGE (c:Tweet {tweetId: '1113', authorId: '9898100'})
-        MERGE (d:Tweet {tweetId: '1114', authorId: '989898'})
+        f"""
+        MERGE (a:Tweet {{tweetId: '1111', authorId: '989898'}})
+        MERGE (b:Tweet {{tweetId: '1112', authorId: '989899'}})
+        MERGE (c:Tweet {{tweetId: '1113', authorId: '9898100'}})
+        MERGE (d:Tweet {{tweetId: '1114', authorId: '989898'}})
 
-        MERGE (a)-[:RETWEETED]->(b)
-        MERGE (c)-[:RETWEETED]->(a)
-        MERGE (d)-[:RETWEETED]->(a)
-        MERGE (c)-[:RETWEETED]->(d)
+        MERGE (a)-[r:RETWEETED]->(b)
+        MERGE (c)-[r2:RETWEETED]->(a)
+        MERGE (d)-[r3:RETWEETED]->(a)
+        MERGE (c)-[r4:RETWEETED]->(d)
+
+        SET r.createdAt = {created_time}
+        SET r2.createdAt = {created_time}
+        SET r3.createdAt = {created_time}
+        SET r4.createdAt = {created_time}
         """
     )
 

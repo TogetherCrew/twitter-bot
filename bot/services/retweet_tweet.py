@@ -1,3 +1,4 @@
+import logging
 from itertools import count
 
 import tweepy
@@ -24,12 +25,16 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy.Tw
     all_tweets : list[tweepy.Tweet]
         all Retweet Tweets in last 7 days will be returned
     """
-
+    logging.info(
+        f"""Start fetching `Retweets` of a Tweet with ID {tweet_id},
+        It might take long (because of twitter api limits)"""
+    )
     query = f"retweets_of_tweet_id:{tweet_id}"
 
     all_retweets: list[tweepy.Tweet] = []
     next_token = None
     for _ in count(1):
+        logging.info(f"[RETWEETS] Gathering data for the {_}st round")
         tweets = retry_function_if_fail(
             TwitterClient.client.search_recent_tweets,
             query=query,
@@ -50,4 +55,5 @@ def get_retweets_of_tweet(tweet_id: str, since_id: str | None) -> list[tweepy.Tw
         else:
             next_token = tweets_meta["next_token"]
 
+    logging.info(f"All `Retweets` of the Tweet with ID {tweet_id} were fetched")
     return all_retweets
