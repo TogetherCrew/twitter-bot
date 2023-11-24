@@ -14,6 +14,23 @@ Once the data has been extracted, it can be used to perform a variety of analyse
 ```bash
 pip install -r requirements.txt
 ```
+## Running the CLI
+
+To run the CLI, make sure you have configure your environment variables (see [.env.example](https://github.com/TogetherCrew/twitter-bot/blob/main/.env.example)). 
+
+Twitter-Bot requires Redis and Neo4j. If you don't have Redis and Neo4j instances running already, you can launch them using:
+
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
+Execute the following command from the root directory of the application:
+
+```bash
+python3 cli.py [twitter-username]
+```
+
+Note: Make sure your have run the installation command.
 
 ## Running the app
 
@@ -29,14 +46,6 @@ You can quickly launch the application using `Docker Compose`:
 
 ```bash
 docker-compose -f docker-compose.example.yml up
-```
-
-## Running the CLI
-
-To run the CLI, execute the following command from the root directory of the application:
-
-```bash
-python3 cli.py [twitter-username]
 ```
 
 ## Tests
