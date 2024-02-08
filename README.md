@@ -11,6 +11,8 @@ Once the data has been extracted, it can be used to perform a variety of analyse
 
 ## Installation
 
+To install the required dependencies run
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -31,6 +33,17 @@ python3 cli.py [twitter-username]
 ```
 
 Note: Make sure your have run the installation command.
+
+## Environment variables
+
+Add your environmental variables in `.env.example`. Rename it to `.env`.
+
+- Neo4j: Data about nodes and their relationships (edges) are stored in neo4j
+- Twitter api: access to twitter's API to extract the data. Go to developers.twitter.com and create your account
+- RabbitMQ: This is used for queuing of external tasks
+- Reddis: This is used for queuing of internal tasks
+- MongoDB: This is used to store the computed metrics
+
 
 ## Running the app
 
