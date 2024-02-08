@@ -36,7 +36,7 @@ Note: Make sure your have run the installation command.
 
 ## Environment variables
 
-Add your environmental variables in `.env.example`. Rename it to `.env`. 
+Add your environmental variables in `.env.example`. Rename it to `.env`.
 
 - Neo4j: Data about nodes and their relationships (edges) are stored in neo4j
 - Twitter api: access to twitter's API to extract the data. Go to developers.twitter.com and create your account
